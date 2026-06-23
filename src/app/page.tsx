@@ -23,22 +23,31 @@ export default function DashboardPage() {
 
   const Section = () => {
     switch (page) {
-      case 'home': return <HomeSection onNavigate={navigate} />
-      case 'executive': return <ExecutiveSection />
-      case 'entry': return <EntrySection />
-      case 'experience': return <ExperienceSection />
-      case 'development': return <DevelopmentSection />
-      case 'turnover': return <TurnoverSection />
-      case 'exit': return <ExitSection />
-      case 'cost': return <CostSection />
-      case 'leadership': return <LeadershipSection />
-      default: return <HomeSection onNavigate={navigate} />
+      case 'home':
+        return <HomeSection onNavigate={navigate} />
+      case 'executive':
+        return <ExecutiveSection />
+      case 'entry':
+        return <EntrySection />
+      case 'experience':
+        return <ExperienceSection />
+      case 'development':
+        return <DevelopmentSection />
+      case 'turnover':
+        return <TurnoverSection />
+      case 'exit':
+        return <ExitSection />
+      case 'cost':
+        return <CostSection />
+      case 'leadership':
+        return <LeadershipSection />
+      default:
+        return <HomeSection onNavigate={navigate} />
     }
   }
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50">
-      {/* Sidebar */}
       <Sidebar
         current={page}
         onNavigate={navigate}
@@ -46,15 +55,21 @@ export default function DashboardPage() {
         onClose={() => setMenuOpen(false)}
       />
 
-      {/* Main */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <Header current={page} menuOpen={menuOpen} onToggleMenu={() => setMenuOpen((v) => !v)} />
-        <main className="flex-1 overflow-y-auto">
+        <Header
+          current={page}
+          menuOpen={menuOpen}
+          onToggleMenu={() => setMenuOpen((v) => !v)}
+        />
+
+        <main
+          key={page}
+          className="flex-1 overflow-y-auto"
+        >
           <Section />
         </main>
       </div>
 
-      {/* Home button (visible on non-home pages) */}
       {page !== 'home' && (
         <button
           onClick={() => navigate('home')}
