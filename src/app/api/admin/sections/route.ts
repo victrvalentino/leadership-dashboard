@@ -102,29 +102,31 @@ export async function POST(req: NextRequest) {
       ? 'published_by'
       : 'edited_by'
 
-    const { data: existingRows } = await supabase
-      .from(table)
-      .select('*')
-      .eq('section_id', section.id)
-      .order('version', { ascending: false })
-      .limit(1)
+    const { data: existingRows, error: existingError } =
+      await supabase
+        .from(table)
+        .select('*')
+        .eq('section_id', section.id)
+        .order('version', { ascending: false })
+        .limit(1)
+
+    if (existingError) {
+      return NextResponse.json(
+        { error: existingError },
+        { status: 500 }
+      )
+    }
 
     const existing = existingRows?.[0]
-
     const nextVersion = existing
       ? (existing.version || 0) + 1
       : 1
 
     if (existing) {
-      const mergedContent = {
-        ...(existing.content_json || {}),
-        ...content
-      }
-
       const { error } = await supabase
         .from(table)
         .update({
-          content_json: mergedContent,
+          content_json: content, // overwrite full object
           version: nextVersion,
           updated_at: new Date().toISOString(),
           [userColumn]: null
