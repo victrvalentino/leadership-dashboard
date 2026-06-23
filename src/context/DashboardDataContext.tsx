@@ -1,134 +1,204 @@
-// src/context/DashboardDataContext.tsx
 'use client'
-// ─────────────────────────────────────────────────────────────────────────
-// Fetches the Google Sheet once on mount, maps every tab via mappers.ts,
-// and exposes the result through React Context. Section components consume
-// this via the small useXxxData() hooks at the bottom — each one is a
-// drop-in replacement for the old `import { xxxData } from '@/data/dashboardData'`.
-//
-// Initial render always has data immediately available (the mappers fall
-// back to the static defaults when the Sheet hasn't loaded yet), so there
-// is no loading spinner and no layout shift — the UI looks identical to
-// the static version while the live fetch happens silently in the background.
-// ─────────────────────────────────────────────────────────────────────────
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { fetchSheetData, type RawSheetData } from '@/lib/googleSheetsApi'
-import {
-  mapExecutive,
-  mapEntry,
-  mapExperience,
-  mapDevelopment,
-  mapTurnover,
-  mapExit,
-  mapCost,
-  mapRiskHeatmap,
-  mapActionBox,
-  mapGovernance,
-} from '@/lib/mappers'
 
-// Silent background refresh — purely optional. Set to 0 to disable.
-const AUTO_REFRESH_MS = 5 * 60 * 1000 // 5 minutes
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react'
+
+import {
+  executiveData,
+  entryData,
+  experienceData,
+  developmentData,
+  turnoverData,
+  exitData,
+  costData,
+  riskHeatmapData,
+  actionBoxData,
+  governanceData,
+} from '@/data/dashboardData'
 
 interface DashboardDataShape {
-  executive: ReturnType<typeof mapExecutive>
-  entry: ReturnType<typeof mapEntry>
-  experience: ReturnType<typeof mapExperience>
-  development: ReturnType<typeof mapDevelopment>
-  turnover: ReturnType<typeof mapTurnover>
-  exit: ReturnType<typeof mapExit>
-  cost: ReturnType<typeof mapCost>
-  riskHeatmap: ReturnType<typeof mapRiskHeatmap>
-  actionBox: ReturnType<typeof mapActionBox>
-  governance: ReturnType<typeof mapGovernance>
-  /** true once the first fetch attempt (success or failure) has completed */
+  executive: typeof executiveData
+  entry: typeof entryData
+  experience: typeof experienceData
+  development: typeof developmentData
+  turnover: typeof turnoverData
+  exit: typeof exitData
+  cost: typeof costData
+  riskHeatmap: typeof riskHeatmapData
+  actionBox: typeof actionBoxData
+  governance: typeof governanceData
   isReady: boolean
-  /** last fetch error message, if any — non-fatal, defaults are shown regardless */
   error: string | null
-  /** manually re-fetch from the Sheets API (e.g. wire to a "Refresh" button) */
   refresh: () => void
 }
 
-function mapAll(raw: RawSheetData) {
-  return {
-    executive: mapExecutive(raw),
-    entry: mapEntry(raw),
-    experience: mapExperience(raw),
-    development: mapDevelopment(raw),
-    turnover: mapTurnover(raw),
-    exit: mapExit(raw),
-    cost: mapCost(raw),
-    riskHeatmap: mapRiskHeatmap(raw),
-    actionBox: mapActionBox(raw),
-    governance: mapGovernance(raw),
-  }
+const DashboardDataContext =
+  createContext<DashboardDataShape | null>(null)
+
+const defaultData = {
+  executive: executiveData,
+  entry: entryData,
+  experience: experienceData,
+  development: developmentData,
+  turnover: turnoverData,
+  exit: exitData,
+  cost: costData,
+  riskHeatmap: riskHeatmapData,
+  actionBox: actionBoxData,
+  governance: governanceData,
 }
 
-const DashboardDataContext = createContext<DashboardDataShape | null>(null)
-
-export function DashboardDataProvider({ children }: { children: ReactNode }) {
-  const [mapped, setMapped] = useState(() => mapAll({}))
+export function DashboardDataProvider({
+  children,
+}: {
+  children: ReactNode
+}) {
+  const [data, setData] = useState(defaultData)
   const [isReady, setIsReady] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [refreshTick, setRefreshTick] = useState(0)
 
   useEffect(() => {
-    let cancelled = false
+    async function loadData() {
+      try {
+        const [
+          executiveRes,
+          entryRes,
+          experienceRes,
+          developmentRes,
+          turnoverRes,
+          exitRes,
+          costRes,
+          riskRes,
+          actionRes,
+          governanceRes,
+        ] = await Promise.all([
+          fetch('/api/dashboard/executive'),
+          fetch('/api/dashboard/entry'),
+          fetch('/api/dashboard/experience'),
+          fetch('/api/dashboard/development'),
+          fetch('/api/dashboard/turnover'),
+          fetch('/api/dashboard/exit'),
+          fetch('/api/dashboard/cost'),
+          fetch('/api/dashboard/riskHeatmap'),
+          fetch('/api/dashboard/actionBox'),
+          fetch('/api/dashboard/governance'),
+        ])
 
-    fetchSheetData(refreshTick > 0)
-      .then((raw) => {
-        if (cancelled) return
-        setMapped(mapAll(raw))
+        const executiveJson = await executiveRes.json()
+        const entryJson = await entryRes.json()
+        const experienceJson = await experienceRes.json()
+        const developmentJson = await developmentRes.json()
+        const turnoverJson = await turnoverRes.json()
+        const exitJson = await exitRes.json()
+        const costJson = await costRes.json()
+        const riskJson = await riskRes.json()
+        const actionJson = await actionRes.json()
+        const governanceJson = await governanceRes.json()
+
+        setData({
+          executive:
+            executiveJson?.data ?? executiveData,
+          entry:
+            entryJson?.data ?? entryData,
+          experience:
+            experienceJson?.data ?? experienceData,
+          development:
+            developmentJson?.data ?? developmentData,
+          turnover:
+            turnoverJson?.data ?? turnoverData,
+          exit:
+            exitJson?.data ?? exitData,
+          cost:
+            costJson?.data ?? costData,
+          riskHeatmap:
+            riskJson?.data ?? riskHeatmapData,
+          actionBox:
+            actionJson?.data ?? actionBoxData,
+          governance:
+            governanceJson?.data ?? governanceData,
+        })
+
         setError(null)
-      })
-      .catch((err) => {
-        if (cancelled) return
-        setError(err instanceof Error ? err.message : 'Failed to load live data')
-      })
-      .finally(() => {
-        if (!cancelled) setIsReady(true)
-      })
-
-    return () => {
-      cancelled = true
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : 'Failed loading dashboard data'
+        )
+      } finally {
+        setIsReady(true)
+      }
     }
+
+    loadData()
   }, [refreshTick])
 
-  useEffect(() => {
-    if (!AUTO_REFRESH_MS) return
-    const id = setInterval(() => setRefreshTick((t) => t + 1), AUTO_REFRESH_MS)
-    return () => clearInterval(id)
-  }, [])
-
-  const value = useMemo<DashboardDataShape>(
+  const value = useMemo(
     () => ({
-      ...mapped,
+      ...data,
       isReady,
       error,
-      refresh: () => setRefreshTick((t) => t + 1),
+      refresh: () =>
+        setRefreshTick((prev) => prev + 1),
     }),
-    [mapped, isReady, error]
+    [data, isReady, error]
   )
 
-  return <DashboardDataContext.Provider value={value}>{children}</DashboardDataContext.Provider>
+  return (
+    <DashboardDataContext.Provider value={value}>
+      {children}
+    </DashboardDataContext.Provider>
+  )
 }
 
 function useDashboardDataContext(): DashboardDataShape {
   const ctx = useContext(DashboardDataContext)
+
   if (!ctx) {
-    throw new Error('useDashboardData hooks must be used within <DashboardDataProvider>')
+    throw new Error(
+      'useDashboardData must be used inside DashboardDataProvider'
+    )
   }
+
   return ctx
 }
 
-// ── Public hooks — one per section, mirrors the old dashboardData.ts exports ──
-export const useDashboardData = useDashboardDataContext
-export const useExecutiveData = () => useDashboardDataContext().executive
-export const useEntryData = () => useDashboardDataContext().entry
-export const useExperienceData = () => useDashboardDataContext().experience
-export const useDevelopmentData = () => useDashboardDataContext().development
-export const useTurnoverData = () => useDashboardDataContext().turnover
-export const useExitData = () => useDashboardDataContext().exit
-export const useCostData = () => useDashboardDataContext().cost
-export const useRiskHeatmapData = () => useDashboardDataContext().riskHeatmap
-export const useActionBoxData = () => useDashboardDataContext().actionBox
-export const useGovernanceData = () => useDashboardDataContext().governance
+export const useDashboardData =
+  useDashboardDataContext
+
+export const useExecutiveData = () =>
+  useDashboardDataContext().executive
+
+export const useEntryData = () =>
+  useDashboardDataContext().entry
+
+export const useExperienceData = () =>
+  useDashboardDataContext().experience
+
+export const useDevelopmentData = () =>
+  useDashboardDataContext().development
+
+export const useTurnoverData = () =>
+  useDashboardDataContext().turnover
+
+export const useExitData = () =>
+  useDashboardDataContext().exit
+
+export const useCostData = () =>
+  useDashboardDataContext().cost
+
+export const useRiskHeatmapData = () =>
+  useDashboardDataContext().riskHeatmap
+
+export const useActionBoxData = () =>
+  useDashboardDataContext().actionBox
+
+export const useGovernanceData = () =>
+  useDashboardDataContext().governance
