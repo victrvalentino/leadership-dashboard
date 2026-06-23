@@ -8,11 +8,12 @@ const supabase = createClient(
 
 export async function GET() {
   try {
-    const { data: section, error: sectionError } = await supabase
-      .from('dashboard_sections')
-      .select('id')
-      .eq('section_key', 'experience')
-      .single()
+    const { data: section, error: sectionError } =
+      await supabase
+        .from('dashboard_sections')
+        .select('id')
+        .eq('section_key', 'experience')
+        .single()
 
     if (sectionError || !section) {
       return NextResponse.json(
@@ -25,11 +26,16 @@ export async function GET() {
       .from('published_content')
       .select('*')
       .eq('section_id', section.id)
-      .order('version', { ascending: false })
+      .order('updated_at', {
+        ascending: false
+      })
       .limit(1)
 
     if (error) {
-      return NextResponse.json({ error }, { status: 500 })
+      return NextResponse.json(
+        { error },
+        { status: 500 }
+      )
     }
 
     if (!data || data.length === 0) {
