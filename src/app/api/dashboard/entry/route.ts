@@ -1,6 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -16,7 +19,11 @@ export async function GET() {
       .eq('section_key', sectionKey)
       .single()
 
+    console.log('ENTRY SECTION:', section)
+
     if (sectionError || !section) {
+      console.log(sectionError)
+
       return NextResponse.json(
         { error: 'Entry section not found' },
         { status: 404 }
@@ -28,7 +35,14 @@ export async function GET() {
       .select('*')
       .eq('section_id', section.id)
       .order('version', { ascending: false })
-      .limit(1)
+
+    console.log(
+      'ENTRY ROWS:',
+      data?.map((x) => ({
+        version: x.version,
+        content: x.content_json
+      }))
+    )
 
     if (error) {
       return NextResponse.json(
@@ -49,6 +63,8 @@ export async function GET() {
       data: data[0].content_json
     })
   } catch (error) {
+    console.log(error)
+
     return NextResponse.json(
       { error: String(error) },
       { status: 500 }
