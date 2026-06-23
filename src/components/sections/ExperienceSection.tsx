@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+import { experienceData } from '@/data/dashboardData'
 import {
   SectionPageHeader,
   KeyMetricsHeader,
@@ -9,20 +11,35 @@ import {
   StatusBadge,
   SimpleHBar
 } from '@/components/ui'
-import { useExperienceData } from '@/context/DashboardDataContext'
 
 type MixItem = {
   label: string
   value: number
 }
 
+type ExperienceContent = {
+  title?: string
+  subtitle?: string
+  totalHeadcount: number
+  male?: number
+  female?: number
+  permanent?: number
+  contract?: number
+  other?: number
+  averageTenure: number
+  attendanceRate: number
+  absenteeismRate: number
+  leadershipSignal: string
+  levelMix: MixItem[] | Record<string, number>
+  tenureMix: MixItem[] | Record<string, number>
+}
+
 function normalizeLevelMix(
   mix: MixItem[] | Record<string, number> | undefined
 ): MixItem[] {
   if (!mix) return []
-
   if (Array.isArray(mix)) {
-    return mix.map((item) => ({
+    return mix.map(item => ({
       ...item,
       value: Number(item.value || 0)
     }))
@@ -41,9 +58,8 @@ function normalizeTenureMix(
   mix: MixItem[] | Record<string, number> | undefined
 ): MixItem[] {
   if (!mix) return []
-
   if (Array.isArray(mix)) {
-    return mix.map((item) => ({
+    return mix.map(item => ({
       ...item,
       value: Number(item.value || 0)
     }))
@@ -63,35 +79,64 @@ function normalizeTenureMix(
 }
 
 export default function ExperienceSection() {
-  const raw = useExperienceData() as any
+  const [data, setData] = useState(
+    experienceData as unknown as ExperienceContent
+  )
 
-  const d = {
-    ...raw,
-    title: raw.title || 'Experience',
-    subtitle:
-      raw.subtitle || 'What Is The Current Team Condition',
-    totalHeadcount: Number(raw.totalHeadcount || 0),
-    male: Number(raw.male ?? raw.genderMix?.male ?? 0),
-    female: Number(raw.female ?? raw.genderMix?.female ?? 0),
-    permanent: Number(
-      raw.permanent ?? raw.employmentStatus?.permanent ?? 0
-    ),
-    contract: Number(
-      raw.contract ?? raw.employmentStatus?.contract ?? 0
-    ),
-    other: Number(
-      raw.other ?? raw.employmentStatus?.other ?? 0
-    ),
-    averageTenure: Number(raw.averageTenure || 0),
-    attendanceRate: Number(raw.attendanceRate || 0),
-    absenteeismRate: Number(raw.absenteeismRate || 0),
-    leadershipSignal: raw.leadershipSignal || '',
-    levelMix: raw.levelMix || {},
-    tenureMix: raw.tenureMix || {}
-  }
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const res = await fetch('/api/dashboard/experience', {
+          cache: 'no-store'
+        })
+
+        if (!res.ok) return
+
+        const json = await res.json()
+
+        if (json?.data) {
+          const d = json.data
+
+          setData({
+            ...d,
+            totalHeadcount: Number(d.totalHeadcount || 0),
+            male: Number(d.male ?? d.genderMix?.male ?? 0),
+            female: Number(d.female ?? d.genderMix?.female ?? 0),
+            permanent: Number(
+              d.permanent ?? d.employmentStatus?.permanent ?? 0
+            ),
+            contract: Number(
+              d.contract ?? d.employmentStatus?.contract ?? 0
+            ),
+            other: Number(
+              d.other ?? d.employmentStatus?.other ?? 0
+            ),
+            averageTenure: Number(d.averageTenure || 0),
+            attendanceRate: Number(d.attendanceRate || 0),
+            absenteeismRate: Number(d.absenteeismRate || 0),
+            levelMix: d.levelMix || {},
+            tenureMix: d.tenureMix || {},
+            leadershipSignal: d.leadershipSignal || '',
+          })
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    loadData()
+  }, [])
+
+  const d = data
 
   const levelMix = normalizeLevelMix(d.levelMix)
   const tenureMix = normalizeTenureMix(d.tenureMix)
+
+  const male = Number(d.male ?? 0)
+  const female = Number(d.female ?? 0)
+  const permanent = Number(d.permanent ?? 0)
+  const contract = Number(d.contract ?? 0)
+  const other = Number(d.other ?? 0)
 
   const cardClass =
     'bg-white rounded-3xl p-4 shadow-sm min-h-[320px] flex flex-col'
@@ -100,8 +145,8 @@ export default function ExperienceSection() {
     <div className="w-full max-w-[1120px] mx-auto px-4 py-2">
       <SectionPageHeader
         icon="👥"
-        title={d.title}
-        subtitle={d.subtitle}
+        title={d.title || 'Experience'}
+        subtitle={d.subtitle || 'What Is The Current Team Condition'}
         accentColor="text-blue-700"
         badgeBg="bg-blue-600"
         badgeText="EXPERIENCE"
@@ -120,15 +165,15 @@ export default function ExperienceSection() {
               <DonutChart
                 size={84}
                 segments={[
-                  { value: d.male, color: '#2563EB' },
-                  { value: d.female, color: '#EC4899' }
+                  { value: male, color: '#2563EB' },
+                  { value: female, color: '#EC4899' }
                 ]}
               />
             </div>
 
             <div className="mt-3 space-y-1 text-sm">
-              <p>🔵 Male {d.male}%</p>
-              <p>🩷 Female {d.female}%</p>
+              <p>🔵 Male {male}%</p>
+              <p>🩷 Female {female}%</p>
             </div>
 
             <div className="border-t mt-auto pt-3 text-center">
@@ -148,17 +193,17 @@ export default function ExperienceSection() {
               <DonutChart
                 size={84}
                 segments={[
-                  { value: d.permanent, color: '#2563EB' },
-                  { value: d.contract, color: '#60A5FA' },
-                  { value: d.other, color: '#BFDBFE' }
+                  { value: permanent, color: '#2563EB' },
+                  { value: contract, color: '#60A5FA' },
+                  { value: other, color: '#BFDBFE' }
                 ]}
               />
             </div>
 
             <div className="mt-3 space-y-1 text-sm">
-              <p>🔵 Permanent {d.permanent}%</p>
-              <p>🔷 Contract {d.contract}%</p>
-              <p>🔹 Other {d.other}%</p>
+              <p>🔵 Permanent {permanent}%</p>
+              <p>🔷 Contract {contract}%</p>
+              <p>🔹 Other {other}%</p>
             </div>
 
             <div className="border-t mt-auto pt-3 text-center">
@@ -175,7 +220,7 @@ export default function ExperienceSection() {
             </h3>
 
             <div className="space-y-2">
-              {levelMix.map((item) => (
+              {levelMix.map(item => (
                 <SimpleHBar
                   key={item.label}
                   label={item.label}
@@ -200,7 +245,7 @@ export default function ExperienceSection() {
             </h3>
 
             <div className="space-y-2">
-              {tenureMix.map((item) => (
+              {tenureMix.map(item => (
                 <SimpleHBar
                   key={item.label}
                   label={item.label}
@@ -215,9 +260,7 @@ export default function ExperienceSection() {
               <p className="text-xs text-gray-500">Average Tenure</p>
               <p className="text-3xl font-black text-gray-700">
                 {d.averageTenure}
-                <span className="text-sm ml-1 font-medium">
-                  Years
-                </span>
+                <span className="text-sm ml-1 font-medium">Years</span>
               </p>
             </div>
           </div>
@@ -229,7 +272,7 @@ export default function ExperienceSection() {
 
             <div className="flex justify-center mt-4">
               <CircularProgress
-                value={d.attendanceRate}
+                value={Number(d.attendanceRate)}
                 color="#F59E0B"
                 label={`${d.attendanceRate}%`}
               />
@@ -251,7 +294,7 @@ export default function ExperienceSection() {
 
             <div className="flex justify-center mt-4">
               <CircularProgress
-                value={d.absenteeismRate}
+                value={Number(d.absenteeismRate)}
                 color="#2563EB"
                 label={`${d.absenteeismRate}%`}
               />
