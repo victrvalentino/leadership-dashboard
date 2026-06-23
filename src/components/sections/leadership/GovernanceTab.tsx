@@ -9,7 +9,7 @@ type Benefit = {
 }
 
 type CadenceStep = {
-  step: string
+  step: string | number
   title: string
   bullets: string[] | string
 }
@@ -128,7 +128,6 @@ export default function GovernanceTab() {
         </div>
       </div>
 
-      {/* Cadence */}
       <div className="rounded-2xl overflow-hidden shadow-sm border border-orange-100">
         <div
           className="px-6 py-3 text-white text-center font-black uppercase tracking-widest"
@@ -139,7 +138,7 @@ export default function GovernanceTab() {
 
         <div className="bg-white p-5 grid grid-cols-1 md:grid-cols-4 gap-4 relative">
           {(data.cadence || []).map((step, i) => (
-            <div key={step.step} className="flex flex-col gap-3">
+            <div key={String(step.step)} className="flex flex-col gap-3">
               <div className="flex items-center gap-2">
                 <div
                   className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-black"
@@ -183,7 +182,6 @@ export default function GovernanceTab() {
         </div>
       </div>
 
-      {/* Ownership */}
       <div className="rounded-2xl overflow-hidden shadow-sm border border-orange-100">
         <div
           className="px-6 py-3 text-white text-center font-black uppercase tracking-widest"
@@ -207,10 +205,7 @@ export default function GovernanceTab() {
                 {normalizeResponsibility(
                   data.pxResponsibilities
                 ).map((r, i) => (
-                  <li
-                    key={i}
-                    className="text-xs text-gray-600 flex gap-1.5"
-                  >
+                  <li key={i} className="text-xs text-gray-600 flex gap-1.5">
                     <span className="text-blue-600">✓</span>
                     <span>{r}</span>
                   </li>
@@ -245,10 +240,7 @@ export default function GovernanceTab() {
                 {normalizeResponsibility(
                   data.leaderResponsibilities
                 ).map((r, i) => (
-                  <li
-                    key={i}
-                    className="text-xs text-gray-600 flex gap-1.5"
-                  >
+                  <li key={i} className="text-xs text-gray-600 flex gap-1.5">
                     <span className="text-green-600">✓</span>
                     <span>{r}</span>
                   </li>
@@ -259,7 +251,6 @@ export default function GovernanceTab() {
         </div>
       </div>
 
-      {/* Benefits */}
       <div className="rounded-2xl p-4 flex flex-wrap items-center gap-6 bg-orange-50">
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white text-lg">

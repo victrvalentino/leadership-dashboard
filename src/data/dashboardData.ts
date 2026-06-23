@@ -13,11 +13,18 @@ export const executiveData = {
 export const entryData = {
   joinersMonthly: 18,
   joinersQuarterly: 52,
+
   criticalRolesFilled: 7,
   criticalRolesTotal: 12,
   criticalRolesPct: 58,
+  criticalRolesStatus: 'watchlist' as const,
+
   newHireStability: 87,
+  newHireStabilityStatus: 'healthy' as const,
+
   onboardingCompletion: 71,
+  onboardingCompletionStatus: 'watchlist' as const,
+
   leadershipSignal:
     'Onboarding completion at 71% is below the 85% target. Critical roles hiring backlog risks delivery capacity. Escalate to CHRO for resource review.',
 }
@@ -31,7 +38,9 @@ export const experienceData = {
   tenureMix: { lt1: 18, yr1to3: 28, yr3to5: 22, gt5: 32 },
   averageTenure: 3.4,
   attendanceRate: 93,
+  attendanceStatus: 'watchlist' as const,
   absenteeismRate: 2.8,
+  absenteeismStatus: 'low' as const,
   leadershipSignal:
     'Team composition is stable. Attendance is on watchlist — monitor closely for absenteeism patterns before it impacts delivery.',
 }
@@ -132,7 +141,8 @@ export const exitData = {
     { role: 'Software Engineer', exits: 14 },
     { role: 'Digital Marketing', exits: 10 },
   ],
-  leadershipSignal: 'Exits are concentrated in early-tenure employees (< 2 years), indicating onboarding or expectation misalignment. Career growth is the #1 driver — escalate development investment.',
+  leadershipSignal:
+    'Exits are concentrated in early-tenure employees (< 2 years), indicating onboarding or expectation misalignment.',
 }
 
 // ── Cost ─────────────────────────────────────────────────────────────────────
@@ -151,30 +161,11 @@ export const costData = {
   replacementHiringCost: 'Rp 847M',
   replacementHiringCostPrev: 'Rp 612M',
   replacementHiringCostChg: '+38%',
-  costBreakdown: [
-    { name: 'Salary & Wages', value: 42, color: '#1565C0', amount: 'Rp 11.8B' },
-    { name: 'Benefits', value: 22, color: '#22C55E', amount: 'Rp 6.2B' },
-    { name: 'Allowances', value: 16, color: '#F59E0B', amount: 'Rp 4.5B' },
-    { name: 'Overtime', value: 12, color: '#8B5CF6', amount: 'Rp 3.4B' },
-    { name: 'Others', value: 8, color: '#10B981', amount: 'Rp 2.2B' },
-  ],
-  manpowerTrend: [
-    { month: 'Jun', value: 1.9 }, { month: 'Jul', value: 1.95 },
-    { month: 'Aug', value: 2.0 }, { month: 'Sep', value: 2.05 },
-    { month: 'Oct', value: 2.1 }, { month: 'Nov', value: 2.08 },
-    { month: 'Dec', value: 2.15 }, { month: 'Jan', value: 2.2 },
-    { month: 'Feb', value: 2.22 }, { month: 'Mar', value: 2.28 },
-    { month: 'Apr', value: 2.3 }, { month: 'May', value: 2.34 },
-  ],
-  costPerEmployeeTrend: [
-    { month: 'Jun', value: 15.2 }, { month: 'Jul', value: 15.5 },
-    { month: 'Aug', value: 15.8 }, { month: 'Sep', value: 16.0 },
-    { month: 'Oct', value: 16.3 }, { month: 'Nov', value: 16.5 },
-    { month: 'Dec', value: 16.8 }, { month: 'Jan', value: 17.0 },
-    { month: 'Feb', value: 17.5 }, { month: 'Mar', value: 18.0 },
-    { month: 'Apr', value: 18.4 }, { month: 'May', value: 18.7 },
-  ],
-  leadershipSignal: 'Repeated turnover creates hidden cost beyond salary. True cost of turnover is 1.5–2.5x annual salary.',
+  costBreakdown: [],
+  manpowerTrend: [],
+  costPerEmployeeTrend: [],
+  leadershipSignal:
+    'Repeated turnover creates hidden cost beyond salary.',
 }
 
 // ── Risk Heatmap ─────────────────────────────────────────────────────────────
@@ -194,35 +185,7 @@ export const actionBoxData = [
     color: '#1565C0',
     bgColor: '#e8f0fe',
     title: 'STABILIZE CRITICAL BUSINESS ROLES',
-    description: 'Focus on roles with highest turnover, longest time-to-backfill, and greatest impact on delivery.',
-  },
-  {
-    number: 2,
-    color: '#2E7D32',
-    bgColor: '#f0faf0',
-    title: 'REVIEW MANAGER-SPECIFIC TURNOVER PATTERNS',
-    description: 'Identify managers with high exits and assess leadership, workload, and team dynamics.',
-  },
-  {
-    number: 3,
-    color: '#E65100',
-    bgColor: '#fff3e0',
-    title: 'STRENGTHEN RETENTION DISCUSSIONS FOR VULNERABLE TEAMS',
-    description: 'Have proactive career, growth, and engagement conversations with at-risk employees.',
-  },
-  {
-    number: 4,
-    color: '#6A1B9A',
-    bgColor: '#f5eeff',
-    title: 'ACCELERATE SUCCESSION READINESS',
-    description: 'Build bench strength for critical roles and ensure internal talent is development-ready.',
-  },
-  {
-    number: 5,
-    color: '#C62828',
-    bgColor: '#fde8e8',
-    title: 'REASSESS REPEATED REPLACEMENT HIRING',
-    description: 'Investigate root causes of repeated exits and adjust role design, expectation, or compensation.',
+    description: 'Focus on roles with highest turnover.',
   },
 ]
 
@@ -233,59 +196,10 @@ export const governanceData = {
       step: 1,
       color: '#1565C0',
       title: 'MONTHLY DASHBOARD RELEASE',
-      bullets: [
-        'PX publishes the latest workforce dashboard',
-        'Data refreshed and validated',
-        'Distributed to leaders before review',
-      ],
-    },
-    {
-      step: 2,
-      color: '#2E7D32',
-      title: 'DIRECTORATE REVIEW SESSION',
-      bullets: [
-        'Directorate leadership review insights and trends',
-        'Discuss risk, root causes, and impact',
-        'Agree on key action',
-      ],
-    },
-    {
-      step: 3,
-      color: '#E65100',
-      title: 'PBX SUPPORT INTERPRETATION',
-      bullets: [
-        'PX provides context, benchmarking, and deeper analysis',
-        'Helps interpret signals and validate findings',
-        'Recommends possible interventions',
-      ],
-    },
-    {
-      step: 4,
-      color: '#C62828',
-      title: 'ESCALATIONS FOR CRITICAL RISKS',
-      bullets: [
-        'Critical risks escalated to PBX / Executive',
-        'Agree on Mitigation plan and timeline',
-        'Follow-up progress tracked monthly',
-      ],
+      bullets: ['PX publishes dashboard'],
     },
   ],
-  pxResponsibilities: [
-    'Generate accurate and timely workforce insights',
-    'Provide interpretation, benchmarking, and context',
-    'Flag risks, and recommend possible actions',
-    'Ensure data quality and continuous improvements',
-  ],
-  leaderResponsibilities: [
-    'Own the decision and action plans',
-    'Drive interventions and allocate resources',
-    'Monitor progress and hold teams accountable',
-    'Ensure outcomes and business impact',
-  ],
-  benefits: [
-    { icon: '📊', text: 'Consistent visibility across directorates' },
-    { icon: '🔍', text: 'Faster identification of emerging risks' },
-    { icon: '👥', text: 'Stronger leadership focus and alignment' },
-    { icon: '📈', text: 'Improved decisions and business outcomes' },
-  ],
+  pxResponsibilities: ['Generate workforce insights'],
+  leaderResponsibilities: ['Own decisions'],
+  benefits: [{ icon: '📊', text: 'Visibility' }],
 }
