@@ -38,14 +38,19 @@ function normalizeLevelMix(
   mix: MixItem[] | Record<string, number> | undefined
 ): MixItem[] {
   if (!mix) return []
-  if (Array.isArray(mix)) return mix
+  if (Array.isArray(mix)) {
+    return mix.map(item => ({
+      ...item,
+      value: Number(item.value || 0)
+    }))
+  }
 
   return Object.entries(mix).map(([label, value]) => ({
     label:
       label === 'AssistantManager'
         ? 'Assistant Manager'
         : label,
-    value
+    value: Number(value || 0)
   }))
 }
 
@@ -53,7 +58,12 @@ function normalizeTenureMix(
   mix: MixItem[] | Record<string, number> | undefined
 ): MixItem[] {
   if (!mix) return []
-  if (Array.isArray(mix)) return mix
+  if (Array.isArray(mix)) {
+    return mix.map(item => ({
+      ...item,
+      value: Number(item.value || 0)
+    }))
+  }
 
   const mapper: Record<string, string> = {
     lt1: '< 1 Year',
@@ -64,7 +74,7 @@ function normalizeTenureMix(
 
   return Object.entries(mix).map(([label, value]) => ({
     label: mapper[label] || label,
-    value
+    value: Number(value || 0)
   }))
 }
 
@@ -85,7 +95,29 @@ export default function ExperienceSection() {
         const json = await res.json()
 
         if (json?.data) {
-          setData(json.data)
+          const d = json.data
+
+          setData({
+            ...d,
+            totalHeadcount: Number(d.totalHeadcount || 0),
+            male: Number(d.male ?? d.genderMix?.male ?? 0),
+            female: Number(d.female ?? d.genderMix?.female ?? 0),
+            permanent: Number(
+              d.permanent ?? d.employmentStatus?.permanent ?? 0
+            ),
+            contract: Number(
+              d.contract ?? d.employmentStatus?.contract ?? 0
+            ),
+            other: Number(
+              d.other ?? d.employmentStatus?.other ?? 0
+            ),
+            averageTenure: Number(d.averageTenure || 0),
+            attendanceRate: Number(d.attendanceRate || 0),
+            absenteeismRate: Number(d.absenteeismRate || 0),
+            levelMix: d.levelMix || {},
+            tenureMix: d.tenureMix || {},
+            leadershipSignal: d.leadershipSignal || '',
+          })
         }
       } catch (error) {
         console.error(error)
@@ -100,11 +132,11 @@ export default function ExperienceSection() {
   const levelMix = normalizeLevelMix(d.levelMix)
   const tenureMix = normalizeTenureMix(d.tenureMix)
 
-  const male = d.male ?? 0
-  const female = d.female ?? 0
-  const permanent = d.permanent ?? 0
-  const contract = d.contract ?? 0
-  const other = d.other ?? 0
+  const male = Number(d.male ?? 0)
+  const female = Number(d.female ?? 0)
+  const permanent = Number(d.permanent ?? 0)
+  const contract = Number(d.contract ?? 0)
+  const other = Number(d.other ?? 0)
 
   const cardClass =
     'bg-white rounded-3xl p-4 shadow-sm min-h-[320px] flex flex-col'
@@ -124,7 +156,6 @@ export default function ExperienceSection() {
         <KeyMetricsHeader color="#2563EB" />
 
         <div className="grid grid-cols-1 md:grid-cols-6 gap-3">
-          {/* Gender */}
           <div className={cardClass}>
             <h3 className="text-sm font-black text-blue-600 uppercase mb-3 text-center">
               Gender Mix
@@ -153,7 +184,6 @@ export default function ExperienceSection() {
             </div>
           </div>
 
-          {/* Employment */}
           <div className={cardClass}>
             <h3 className="text-sm font-black text-blue-600 uppercase mb-3 text-center">
               Employment Status
@@ -184,7 +214,6 @@ export default function ExperienceSection() {
             </div>
           </div>
 
-          {/* Level */}
           <div className={cardClass}>
             <h3 className="text-sm font-black text-blue-600 uppercase mb-3 text-center">
               Level Mix
@@ -210,7 +239,6 @@ export default function ExperienceSection() {
             </div>
           </div>
 
-          {/* Tenure */}
           <div className={cardClass}>
             <h3 className="text-sm font-black text-blue-600 uppercase mb-3 text-center">
               Tenure Mix
@@ -237,7 +265,6 @@ export default function ExperienceSection() {
             </div>
           </div>
 
-          {/* Attendance */}
           <div className={cardClass}>
             <h3 className="text-sm font-black text-blue-600 uppercase mb-3 text-center">
               Attendance
@@ -260,7 +287,6 @@ export default function ExperienceSection() {
             </div>
           </div>
 
-          {/* Absenteeism */}
           <div className={cardClass}>
             <h3 className="text-sm font-black text-blue-600 uppercase mb-3 text-center">
               Absenteeism

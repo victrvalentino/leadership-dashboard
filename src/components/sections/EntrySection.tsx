@@ -39,7 +39,18 @@ export default function EntrySection() {
         const json = await res.json()
 
         if (json?.data) {
-          setData(json.data)
+          const d = json.data
+
+          setData({
+            ...d,
+            joinersMonthly: Number(d.joinersMonthly || 0),
+            joinersQuarterly: Number(d.joinersQuarterly || 0),
+            criticalRolesFilled: Number(d.criticalRolesFilled || 0),
+            criticalRolesTotal: Number(d.criticalRolesTotal || 0),
+            criticalRolesPct: Number(d.criticalRolesPct || 0),
+            newHireStability: Number(d.newHireStability || 0),
+            onboardingCompletion: Number(d.onboardingCompletion || 0),
+          })
         }
       } catch (err) {
         console.error(err)
@@ -82,72 +93,49 @@ export default function EntrySection() {
 
       <div className="w-full h-px bg-gray-200" />
 
-      <div
-        className="rounded-2xl p-6"
-        style={{ backgroundColor: '#f0faf0' }}
-      >
+      <div className="rounded-2xl p-6" style={{ backgroundColor: '#f0faf0' }}>
         <KeyMetricsHeader />
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 items-stretch">
-          {/* Joiners */}
           <div className={cardClass}>
             <div className="text-3xl">👥</div>
-
             <div className="mt-4 h-[44px] flex items-center justify-center">
-              <p className={titleClass}>
-                Joiners
-                <br />
-                (Monthly/Quarterly)
-              </p>
+              <p className={titleClass}>Joiners<br />(Monthly/Quarterly)</p>
             </div>
-
             <div className="w-8 h-px bg-gray-200 mt-3" />
 
-            {/* FIX: remove mt-auto so content doesn't sink */}
             <div className="w-full mt-8 space-y-4">
               <div>
                 <p className="text-xs text-gray-500">Monthly</p>
-                <p className="text-3xl font-black text-green-700">
-                  {d.joinersMonthly}
-                </p>
+                <p className="text-3xl font-black text-green-700">{d.joinersMonthly}</p>
               </div>
 
               <div className="w-full h-px bg-gray-100" />
 
               <div>
                 <p className="text-xs text-gray-500">Quarterly</p>
-                <p className="text-3xl font-black text-green-700">
-                  {d.joinersQuarterly}
-                </p>
+                <p className="text-3xl font-black text-green-700">{d.joinersQuarterly}</p>
               </div>
             </div>
           </div>
 
-          {/* Critical Roles */}
           <div className={cardClass}>
             <div className="text-3xl">⭐</div>
-
             <div className="mt-4 h-[44px] flex items-center justify-center">
-              <p className={titleClass}>
-                Critical Roles Hiring Status
-              </p>
+              <p className={titleClass}>Critical Roles Hiring Status</p>
             </div>
-
             <div className="w-8 h-px bg-gray-200 mt-3" />
 
             <div className="mt-5">
               <CircularProgress
-                value={Number(d.criticalRolesPct)}
+                value={d.criticalRolesPct}
                 size={80}
                 color="#2E7D32"
                 label={`${d.criticalRolesPct}%`}
               />
             </div>
 
-            <p className="mt-4 text-xs text-green-700 font-bold">
-              Filled
-            </p>
-
+            <p className="mt-4 text-xs text-green-700 font-bold">Filled</p>
             <p className="text-xs text-gray-500 px-2">
               {d.criticalRolesFilled} of {d.criticalRolesTotal} roles filled
             </p>
@@ -157,24 +145,14 @@ export default function EntrySection() {
             </div>
           </div>
 
-          {/* Stability */}
           <div className={cardClass}>
             <div className="text-3xl">🛡️</div>
-
             <div className="mt-4 h-[44px] flex items-center justify-center">
-              <p className={titleClass}>
-                New Hire Stability
-              </p>
+              <p className={titleClass}>New Hire Stability</p>
             </div>
-
             <div className="w-8 h-px bg-gray-200 mt-3" />
-
             <p className="mt-6 text-4xl font-black text-green-700">
               {d.newHireStability}%
-            </p>
-
-            <p className="text-xs text-gray-500 px-2 mt-3">
-              New hires retained beyond 3 months
             </p>
 
             <div className="mt-auto pt-5">
@@ -182,24 +160,14 @@ export default function EntrySection() {
             </div>
           </div>
 
-          {/* Onboarding */}
           <div className={cardClass}>
             <div className="text-3xl">📋</div>
-
             <div className="mt-4 h-[44px] flex items-center justify-center">
-              <p className={titleClass}>
-                Onboarding Completion
-              </p>
+              <p className={titleClass}>Onboarding Completion</p>
             </div>
-
             <div className="w-8 h-px bg-gray-200 mt-3" />
-
             <p className="mt-6 text-4xl font-black text-green-700">
               {d.onboardingCompletion}%
-            </p>
-
-            <p className="text-xs text-gray-500 px-2 mt-3">
-              Onboarding completed on time
             </p>
 
             <div className="mt-auto pt-5">
