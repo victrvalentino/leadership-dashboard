@@ -1,120 +1,290 @@
 'use client'
+
+import { useEffect, useState } from 'react'
 import { turnoverData } from '@/data/dashboardData'
 import { SimpleHBar } from '@/components/ui'
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
 } from 'recharts'
 
 function MetricBox({
-  label, value, unit = '', prev, prevLabel,
+  label,
+  value,
+  prev,
+  prevLabel,
 }: {
-  label: string; value: number | string; unit?: string; prev?: string; prevLabel?: string
+  label: string
+  value: string
+  prev?: string
+  prevLabel?: string
 }) {
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-sm text-center space-y-2">
-      <p className="text-xs font-bold uppercase tracking-widest text-gray-500">{label}</p>
-      <p className="text-3xl font-black text-orange-500">
-        {value}<span className="text-lg font-bold text-orange-400">{unit}</span>
+    <div className="bg-white rounded-2xl p-4 shadow-sm text-center space-y-2 min-h-[140px] flex flex-col justify-center">
+      <p className="text-xs font-bold uppercase tracking-widest text-gray-500">
+        {label}
       </p>
-      {prev && <p className="text-xs text-gray-400">{prevLabel}: {prev} <span className="text-red-500">↑</span></p>}
+
+      <p className="text-3xl font-black text-orange-500">
+        {value}
+      </p>
+
+      {prev && (
+        <p className="text-xs text-gray-400">
+          {prevLabel}: {prev}{' '}
+          <span className="text-red-500">↑</span>
+        </p>
+      )}
     </div>
   )
 }
 
+type ChartRow = {
+  name?: string
+  month?: string
+  value: number
+}
+
+type TurnoverContent = {
+  title?: string
+  subtitle?: string
+  turnoverRate: number
+  turnoverRatePrev: number
+  voluntaryTurnover: number
+  voluntaryTurnoverPrev: number
+  criticalPositionTurnover: number
+  criticalPositionTurnoverPrev: number
+  repeatedReplacementRoles: number
+  timeToBackfill: number
+  timeToBackfillPrev: number
+  chroAnalysis1?: string
+  chroAnalysis2?: string
+  chroAnalysis3?: string
+  byRole: ChartRow[]
+  byManager: ChartRow[]
+  trend: ChartRow[]
+}
+
 export default function TurnoverSection() {
-  const d = turnoverData
+  const [data, setData] = useState<TurnoverContent>({
+    ...turnoverData,
+    chroAnalysis1: turnoverData.chroAnalysis[0],
+    chroAnalysis2: turnoverData.chroAnalysis[1],
+    chroAnalysis3: turnoverData.chroAnalysis[2],
+    byRole: turnoverData.byRole,
+    byManager: turnoverData.byManager,
+    trend: turnoverData.trend
+  })
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const res = await fetch('/api/dashboard/turnover', {
+          cache: 'no-store'
+        })
+
+        if (!res.ok) return
+        const json = await res.json()
+
+        if (json?.data) {
+          setData(prev => ({
+            ...prev,
+            ...json.data,
+            byRole: json.data.byRole?.length ? json.data.byRole : prev.byRole,
+            byManager: json.data.byManager?.length ? json.data.byManager : prev.byManager,
+            trend: json.data.trend?.length ? json.data.trend : prev.trend
+          }))
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    loadData()
+  }, [])
+
+  const d = data
+
+  const insights = [
+    d.chroAnalysis1,
+    d.chroAnalysis2,
+    d.chroAnalysis3
+  ].filter(Boolean)
+
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 space-y-6">
-      {/* Page Header */}
-      <div className="flex items-center gap-4 mb-2">
-        <div className="w-16 h-16 rounded-xl flex flex-col items-center justify-center text-white" style={{ backgroundColor: '#E65100' }}>
+      <div className="flex items-center gap-4">
+        <div
+          className="w-16 h-16 rounded-xl flex flex-col items-center justify-center text-white"
+          style={{ backgroundColor: '#E65100' }}
+        >
           <span className="text-2xl">🔄</span>
-          <span className="text-[8px] font-black tracking-widest">TURNOVER</span>
+          <span className="text-[8px] font-black tracking-widest">
+            TURNOVER
+          </span>
         </div>
+
         <div>
-          <h1 className="text-3xl font-bold text-orange-700">Turnover</h1>
-          <p className="text-sm text-gray-500 font-medium">Workforce Continuity Risk</p>
+          <h1 className="text-3xl font-bold text-orange-700">
+            {d.title || 'Turnover'}
+          </h1>
+          <p className="text-sm text-gray-500 font-medium">
+            {d.subtitle || 'Workforce Continuity Risk'}
+          </p>
         </div>
       </div>
+
       <div className="w-full h-px bg-gray-200" />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* Left — Key Metrics */}
         <div className="lg:col-span-2 space-y-4">
-          {/* Header label */}
-          <div className="rounded-t-2xl px-5 py-3 text-center font-black text-sm uppercase tracking-widest text-white" style={{ backgroundColor: '#E65100' }}>
+
+          <div className="rounded-2xl bg-orange-600 px-5 py-3 text-center font-black text-sm uppercase tracking-widest text-white">
             Key Metrics
           </div>
 
-          {/* Top 3 metrics */}
-          <div className="grid grid-cols-3 gap-3" style={{ background: '#fff7f0', borderRadius: '1rem', padding: '1rem' }}>
-            <MetricBox label="Turnover Rate" value={`${d.turnoverRate}%`} prevLabel="vs Last 12 Months" prev={`${d.turnoverRatePrev}%`} />
-            <MetricBox label="Voluntary Turnover" value={`${d.voluntaryTurnover}%`} prevLabel="vs Last 12 Months" prev={`${d.voluntaryTurnoverPrev}%`} />
-            <MetricBox label="Critical Position Turnover" value={`${d.criticalPositionTurnover}%`} prevLabel="vs Last 12 Months" prev={`${d.criticalPositionTurnoverPrev}%`} />
+          <div className="grid grid-cols-3 gap-3 rounded-2xl p-4 bg-orange-50">
+            <MetricBox
+              label="Turnover Rate"
+              value={`${d.turnoverRate}%`}
+              prevLabel="vs Last 12 Months"
+              prev={`${d.turnoverRatePrev}%`}
+            />
+
+            <MetricBox
+              label="Voluntary Turnover"
+              value={`${d.voluntaryTurnover}%`}
+              prevLabel="vs Last 12 Months"
+              prev={`${d.voluntaryTurnoverPrev}%`}
+            />
+
+            <MetricBox
+              label="Critical Position Turnover"
+              value={`${d.criticalPositionTurnover}%`}
+              prevLabel="vs Last 12 Months"
+              prev={`${d.criticalPositionTurnoverPrev}%`}
+            />
           </div>
 
-          {/* Middle row */}
-          <div className="grid grid-cols-3 gap-3 rounded-2xl p-4" style={{ backgroundColor: '#fff7f0' }}>
-            <div className="bg-white rounded-2xl p-4 shadow-sm text-center space-y-1">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-2xl">🔁</div>
-              </div>
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Repeated Replacement Roles</p>
-              <p className="text-4xl font-black text-orange-500">{d.repeatedReplacementRoles}</p>
-              <p className="text-xs text-gray-400">Roles replaced &gt;2 times in 12 months</p>
+          <div className="grid grid-cols-3 gap-3 rounded-2xl p-4 bg-orange-50">
+            <div className="bg-white rounded-2xl p-4 shadow-sm text-center min-h-[170px] flex flex-col items-center">
+              <div className="text-3xl mb-3">🔁</div>
+
+              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">
+                Repeated Replacement Roles
+              </p>
+
+              <p className="text-4xl font-black text-orange-500 mt-4">
+                {d.repeatedReplacementRoles}
+              </p>
+
+              <p className="text-xs text-gray-400 mt-auto">
+                Roles replaced &gt;2 times in 12 months
+              </p>
             </div>
-            <div className="bg-white rounded-2xl p-4 shadow-sm text-center space-y-1">
-              <div className="flex items-center justify-center mb-2">
-                <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-2xl">⏱️</div>
-              </div>
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Time-to-Backfill Critical Roles</p>
-              <p className="text-4xl font-black text-orange-500">{d.timeToBackfill}<span className="text-lg font-bold text-orange-400">Days</span></p>
-              <p className="text-xs text-red-400">vs Last 12 Months: {d.timeToBackfillPrev} Days ↑</p>
+
+            <div className="bg-white rounded-2xl p-4 shadow-sm text-center min-h-[170px] flex flex-col items-center">
+              <div className="text-3xl mb-3">⏱️</div>
+
+              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest leading-tight">
+                Time-to-Backfill
+                <br />
+                Critical Roles
+              </p>
+
+              <p className="text-4xl font-black text-orange-500 mt-3">
+                {d.timeToBackfill}
+                <span className="text-xl"> Days</span>
+              </p>
+
+              <p className="text-xs text-gray-400 mt-auto">
+                vs Last 12 Months: {d.timeToBackfillPrev} ↑
+              </p>
             </div>
+
             <div className="bg-white rounded-2xl p-4 shadow-sm space-y-2">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest text-center">Turnover Background By Role (Top 5)</p>
-              {d.byRole.map((r) => (
-                <SimpleHBar key={r.name} label={r.name} value={r.value} max={30} color="#E65100" />
+              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest text-center mb-2">
+                Turnover Background
+                <br />
+                by Role (Top 5)
+              </p>
+
+              {d.byRole.map((r, i) => (
+                <SimpleHBar
+                  key={`${r.name}-${i}`}
+                  label={r.name || ''}
+                  value={Number(r.value)}
+                  max={100}
+                  color="#E65100"
+                />
               ))}
             </div>
           </div>
 
-          {/* Bottom row */}
-          <div className="grid grid-cols-2 gap-3 rounded-2xl p-4" style={{ backgroundColor: '#fff7f0' }}>
+          <div className="grid grid-cols-2 gap-3 rounded-2xl p-4 bg-orange-50">
             <div className="bg-white rounded-2xl p-4 shadow-sm space-y-2">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest text-center">Turnover by Manager (Top 5)</p>
-              {d.byManager.map((r) => (
-                <SimpleHBar key={r.name} label={r.name} value={r.value} max={25} color="#E65100" />
+              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest text-center mb-3">
+                Turnover by Manager (Top 5)
+              </p>
+
+              {d.byManager.map((r, i) => (
+                <SimpleHBar
+                  key={`${r.name}-${i}`}
+                  label={r.name || ''}
+                  value={Number(r.value)}
+                  max={100}
+                  color="#E65100"
+                />
               ))}
             </div>
+
             <div className="bg-white rounded-2xl p-4 shadow-sm">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest text-center mb-2">Turnover Trend (Last 12 Months)</p>
-              <ResponsiveContainer width="100%" height={130}>
+              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest text-center mb-3">
+                Turnover Trend (Last 12 Months)
+              </p>
+
+              <ResponsiveContainer width="100%" height={140}>
                 <LineChart data={d.trend}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                   <XAxis dataKey="month" tick={{ fontSize: 10 }} />
                   <YAxis tick={{ fontSize: 10 }} unit="%" domain={[5, 20]} />
                   <Tooltip formatter={(v) => `${v}%`} />
-                  <Line type="monotone" dataKey="value" stroke="#E65100" strokeWidth={2} dot={{ r: 3, fill: '#E65100' }} />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke="#E65100"
+                    strokeWidth={2}
+                    dot={{ r: 3, fill: '#E65100' }}
+                  />
                 </LineChart>
               </ResponsiveContainer>
-              <p className="text-xs text-orange-500 font-bold text-right mt-1">TURNOVER TREND</p>
             </div>
           </div>
         </div>
 
-        {/* Right — Leadership Insight */}
         <div className="space-y-4">
-          <div className="rounded-2xl p-4 text-center font-black text-sm uppercase tracking-widest text-white" style={{ backgroundColor: '#E65100' }}>
+          <div className="rounded-2xl p-4 text-center font-black text-sm uppercase tracking-widest text-white bg-orange-600">
             Leadership Insight
           </div>
-          {d.chroAnalysis.map((text, i) => (
-            <div key={i} className="bg-orange-50 rounded-2xl p-4 flex gap-3 items-start border border-orange-100">
+
+          {insights.map((text, i) => (
+            <div
+              key={i}
+              className="bg-orange-50 rounded-2xl p-4 flex gap-3 items-start border border-orange-100"
+            >
               <div className="w-10 h-10 rounded-full border-2 border-orange-400 flex items-center justify-center text-orange-500 flex-shrink-0 text-xl">
                 ⚠️
               </div>
+
               <div>
-                <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-1">CHRO Analysis</p>
+                <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-1">
+                  CHRO Analysis
+                </p>
                 <p className="text-sm text-gray-700">{text}</p>
               </div>
             </div>

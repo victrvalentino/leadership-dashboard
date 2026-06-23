@@ -1,6 +1,6 @@
 'use client'
 import { clsx } from 'clsx'
-import { ArrowUpRight, ArrowDownRight, Home, TrendingUp, AlertTriangle } from 'lucide-react'
+import { ArrowUpRight, ArrowDownRight, Home } from 'lucide-react'
 import React from 'react'
 
 // ── Status Badge ─────────────────────────────────────────────────────────────
@@ -23,24 +23,25 @@ export function StatusBadge({ status }: { status: StatusType }) {
   )
 }
 
-// ── Risk Dot ──────────────────────────────────────────────────────────────────
+// ── Risk Dot ─────────────────────────────────────────────────────────────────
 const RISK_DOT: Record<string, string> = {
   high: 'bg-red-600',
   medium: 'bg-amber-500',
   low: 'bg-green-500',
 }
+
 export function RiskDot({ level }: { level: string }) {
   return <span className={clsx('inline-block w-3.5 h-3.5 rounded-full', RISK_DOT[level] ?? 'bg-gray-300')} />
 }
 
-// ── Trend Arrow ───────────────────────────────────────────────────────────────
+// ── Trend Arrow ──────────────────────────────────────────────────────────────
 export function TrendArrow({ up }: { up: boolean }) {
   return up
     ? <ArrowUpRight className="inline w-4 h-4 text-red-500" />
     : <ArrowDownRight className="inline w-4 h-4 text-green-500" />
 }
 
-// ── Section Page Header (icon + title + subtitle) ─────────────────────────────
+// ── Section Header ───────────────────────────────────────────────────────────
 interface SectionHeaderProps {
   icon: React.ReactNode
   title: string
@@ -49,27 +50,46 @@ interface SectionHeaderProps {
   badgeBg: string
   badgeText: string
 }
-export function SectionPageHeader({ icon, title, subtitle, accentColor, badgeBg, badgeText }: SectionHeaderProps) {
+
+export function SectionPageHeader({
+  icon,
+  title,
+  subtitle,
+  accentColor,
+  badgeBg,
+  badgeText
+}: SectionHeaderProps) {
   return (
     <div className="flex items-center gap-4 mb-6">
-      <div className={clsx('w-16 h-16 rounded-xl flex flex-col items-center justify-center text-white text-xs font-bold', badgeBg)}>
+      <div className={clsx(
+        'w-16 h-16 rounded-xl flex flex-col items-center justify-center text-white text-xs font-bold',
+        badgeBg
+      )}>
         <div className="text-2xl">{icon}</div>
         <span className="text-[9px] font-black tracking-widest mt-0.5">{badgeText}</span>
       </div>
+
       <div>
-        <h1 className={clsx('text-3xl font-bold', accentColor)}>{title}</h1>
-        <p className="text-gray-500 text-sm font-medium">{subtitle}</p>
+        <h1 className={clsx('text-3xl font-bold', accentColor)}>
+          {title}
+        </h1>
+        <p className="text-gray-500 text-sm font-medium">
+          {subtitle}
+        </p>
       </div>
     </div>
   )
 }
 
-// ── Key Metrics Container ─────────────────────────────────────────────────────
+// ── Key Metrics Header ───────────────────────────────────────────────────────
 export function KeyMetricsHeader({ color = '#374151' }: { color?: string }) {
   return (
     <div className="flex items-center gap-3 mb-6">
       <div className="flex-1 h-px bg-gray-300" />
-      <span className="text-sm font-black tracking-widest uppercase px-2" style={{ color }}>
+      <span
+        className="text-sm font-black tracking-widest uppercase px-2"
+        style={{ color }}
+      >
         Key Metrics
       </span>
       <div className="flex-1 h-px bg-gray-300" />
@@ -77,7 +97,7 @@ export function KeyMetricsHeader({ color = '#374151' }: { color?: string }) {
   )
 }
 
-// ── Leadership Signal Bar ─────────────────────────────────────────────────────
+// ── Leadership Signal ────────────────────────────────────────────────────────
 interface LeadershipSignalProps {
   text: string
   color?: string
@@ -85,6 +105,7 @@ interface LeadershipSignalProps {
   label?: string
   icon?: React.ReactNode
 }
+
 export function LeadershipSignal({
   text,
   color = '#1565C0',
@@ -93,24 +114,32 @@ export function LeadershipSignal({
   icon,
 }: LeadershipSignalProps) {
   return (
-    <div className="rounded-2xl p-4 flex items-start gap-4 mt-4" style={{ backgroundColor: bgColor }}>
+    <div
+      className="rounded-2xl p-4 flex items-start gap-4 mt-4"
+      style={{ backgroundColor: bgColor }}
+    >
       <div
         className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xl"
         style={{ backgroundColor: color }}
       >
         {icon ?? '📢'}
       </div>
+
       <div className="border-l-2 border-gray-300 pl-4">
-        <p className="text-xs font-black tracking-widest uppercase mb-1" style={{ color }}>
+        <p
+          className="text-xs font-black tracking-widest uppercase mb-1"
+          style={{ color }}
+        >
           {label}
         </p>
+
         <p className="text-sm text-gray-700">{text}</p>
       </div>
     </div>
   )
 }
 
-// ── Simple Metric Card ────────────────────────────────────────────────────────
+// ── Metric Card ──────────────────────────────────────────────────────────────
 interface MetricCardProps {
   label: string
   value: string | number
@@ -119,20 +148,40 @@ interface MetricCardProps {
   bgColor?: string
   children?: React.ReactNode
 }
-export function MetricCard({ label, value, subValue, status, bgColor = 'bg-white', children }: MetricCardProps) {
+
+export function MetricCard({
+  label,
+  value,
+  subValue,
+  status,
+  bgColor = 'bg-white',
+  children
+}: MetricCardProps) {
   return (
-    <div className={clsx('rounded-2xl p-4 shadow-sm border border-gray-100 flex flex-col items-center text-center gap-2', bgColor)}>
+    <div className={clsx(
+      'rounded-2xl p-4 shadow-sm border border-gray-100 flex flex-col items-center text-center gap-2 h-full min-h-[320px]',
+      bgColor
+    )}>
       {children}
-      <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">{label}</p>
+
+      <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">
+        {label}
+      </p>
+
       <div className="w-12 h-px bg-gray-200" />
+
       <p className="text-3xl font-black text-gray-700">{value}</p>
-      {subValue && <p className="text-xs text-gray-400">{subValue}</p>}
+
+      {subValue && (
+        <p className="text-xs text-gray-400">{subValue}</p>
+      )}
+
       {status && <StatusBadge status={status} />}
     </div>
   )
 }
 
-// ── Home Button ───────────────────────────────────────────────────────────────
+// ── Home Button ──────────────────────────────────────────────────────────────
 export function HomeButton({ onClick }: { onClick: () => void }) {
   return (
     <button
@@ -145,7 +194,7 @@ export function HomeButton({ onClick }: { onClick: () => void }) {
   )
 }
 
-// ── Progress Bar with Target ──────────────────────────────────────────────────
+// ── Progress Bar ─────────────────────────────────────────────────────────────
 export function ProgressBar({
   value,
   target,
@@ -155,21 +204,24 @@ export function ProgressBar({
   target: number
   color?: string
 }) {
-  const pct = Math.min((value / 100) * 100, 100)
-  const tpct = Math.min((target / 100) * 100, 100)
+  const pct = Math.min(Number(value), 100)
+  const tpct = Math.min(Number(target), 100)
+
   return (
     <div className="relative w-full h-3 bg-gray-200 rounded-full mt-2">
       <div
-        className="h-3 rounded-full transition-all"
+        className="h-3 rounded-full"
         style={{ width: `${pct}%`, backgroundColor: color }}
       />
-      {/* target marker */}
+
       <div
         className="absolute top-0 h-3 flex flex-col items-center"
         style={{ left: `${tpct}%`, transform: 'translateX(-50%)' }}
       >
-        <div className="w-0 h-0 border-l-4 border-r-4 border-t-6 border-l-transparent border-r-transparent"
-          style={{ borderTopColor: color }} />
+        <div
+          className="w-0 h-0 border-l-4 border-r-4 border-t-6 border-l-transparent border-r-transparent"
+          style={{ borderTopColor: color }}
+        />
       </div>
     </div>
   )
@@ -189,57 +241,113 @@ export function CircularProgress({
   strokeWidth?: number
   label?: string
 }) {
+  const numericValue = Number(value)
   const r = (size - strokeWidth) / 2
   const circ = 2 * Math.PI * r
-  const dash = (value / 100) * circ
+  const dash = (numericValue / 100) * circ
+
   return (
     <div className="relative inline-flex items-center justify-center">
       <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#e5e7eb" strokeWidth={strokeWidth} />
         <circle
-          cx={size / 2} cy={size / 2} r={r} fill="none"
-          stroke={color} strokeWidth={strokeWidth}
-          strokeDasharray={`${dash} ${circ}`} strokeLinecap="round"
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          stroke="#e5e7eb"
+          strokeWidth={strokeWidth}
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          stroke={color}
+          strokeWidth={strokeWidth}
+          strokeDasharray={`${dash} ${circ}`}
+          strokeLinecap="round"
         />
       </svg>
-      <span className="absolute text-sm font-black" style={{ color }}>{label ?? `${value}%`}</span>
+
+      <span className="absolute text-sm font-black" style={{ color }}>
+        {label ?? `${numericValue}%`}
+      </span>
     </div>
   )
 }
 
-// ── Donut Segment SVG ─────────────────────────────────────────────────────────
+// ── Donut Chart (FIXED) ─────────────────────────────────────────────────────
 export function DonutChart({
   segments,
   size = 100,
   center,
 }: {
-  segments: { value: number; color: string }[]
+  segments: { value: number | string; color: string }[]
   size?: number
   center?: React.ReactNode
 }) {
-  const total = segments.reduce((s, x) => s + x.value, 0)
-  const cx = size / 2, cy = size / 2, r = size * 0.38, iR = size * 0.24
+  const normalized = segments.map(seg => ({
+    ...seg,
+    value: Number(seg.value) || 0
+  }))
+
+  const total = normalized.reduce((s, x) => s + x.value, 0)
+
+  if (total <= 0) {
+    return (
+      <div
+        style={{ width: size, height: size }}
+        className="rounded-full bg-gray-200"
+      />
+    )
+  }
+
+  const cx = size / 2
+  const cy = size / 2
+  const r = size * 0.38
+  const iR = size * 0.24
+
   let cumAngle = -Math.PI / 2
-  const slices = segments.map((seg) => {
+
+  const slices = normalized.map((seg) => {
     const angle = (seg.value / total) * 2 * Math.PI
+
     const x1 = cx + r * Math.cos(cumAngle)
     const y1 = cy + r * Math.sin(cumAngle)
     const x2 = cx + r * Math.cos(cumAngle + angle)
     const y2 = cy + r * Math.sin(cumAngle + angle)
+
     const ix1 = cx + iR * Math.cos(cumAngle)
     const iy1 = cy + iR * Math.sin(cumAngle)
     const ix2 = cx + iR * Math.cos(cumAngle + angle)
     const iy2 = cy + iR * Math.sin(cumAngle + angle)
+
     const large = angle > Math.PI ? 1 : 0
-    const d = `M${x1},${y1} A${r},${r} 0 ${large} 1 ${x2},${y2} L${ix2},${iy2} A${iR},${iR} 0 ${large} 0 ${ix1},${iy1} Z`
+
+    const d = `M${x1},${y1}
+      A${r},${r} 0 ${large} 1 ${x2},${y2}
+      L${ix2},${iy2}
+      A${iR},${iR} 0 ${large} 0 ${ix1},${iy1}
+      Z`
+
     cumAngle += angle
     return { d, color: seg.color }
   })
+
   return (
     <div className="relative inline-flex items-center justify-center">
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        {slices.map((s, i) => <path key={i} d={s.d} fill={s.color} stroke="white" strokeWidth={1} />)}
+        {slices.map((s, i) => (
+          <path
+            key={i}
+            d={s.d}
+            fill={s.color}
+            stroke="white"
+            strokeWidth={1}
+          />
+        ))}
       </svg>
+
       {center && (
         <div className="absolute inset-0 flex items-center justify-center text-center">
           {center}
@@ -249,15 +357,39 @@ export function DonutChart({
   )
 }
 
-// ── Simple Bar ────────────────────────────────────────────────────────────────
-export function SimpleHBar({ label, value, max, color }: { label: string; value: number; max: number; color: string }) {
+// ── Simple Horizontal Bar ────────────────────────────────────────────────────
+export function SimpleHBar({
+  label,
+  value,
+  max,
+  color
+}: {
+  label: string
+  value: number
+  max: number
+  color: string
+}) {
+  const pct = Math.min((Number(value) / Number(max)) * 100, 100)
+
   return (
-    <div className="flex items-center gap-2 text-xs">
-      <span className="w-28 text-gray-600 truncate">{label}</span>
-      <div className="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
-        <div className="h-full rounded-full" style={{ width: `${(value / max) * 100}%`, backgroundColor: color }} />
+    <div className="grid grid-cols-[55px_1fr_40px] items-center gap-2 text-xs w-full">
+      <span className="text-gray-600 text-[11px] leading-tight truncate">
+        {label}
+      </span>
+
+      <div className="w-full h-3 bg-blue-100 rounded-full overflow-hidden">
+        <div
+          className="h-full rounded-full transition-all"
+          style={{
+            width: `${pct}%`,
+            backgroundColor: color
+          }}
+        />
       </div>
-      <span className="w-8 text-right font-bold text-gray-700">{value}%</span>
+
+      <span className="text-right font-bold text-gray-700">
+        {value}%
+      </span>
     </div>
   )
 }
