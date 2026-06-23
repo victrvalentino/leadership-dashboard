@@ -8,13 +8,25 @@ const supabase = createClient(
 
 export async function GET() {
   try {
-    const executiveSectionId =
-      '21fce94f-5285-46d0-af9b-c3afdfc5cd66'
+    const sectionKey = 'executive'
+
+    const { data: section, error: sectionError } = await supabase
+      .from('dashboard_sections')
+      .select('id')
+      .eq('section_key', sectionKey)
+      .single()
+
+    if (sectionError || !section) {
+      return NextResponse.json(
+        { error: 'Executive section not found' },
+        { status: 404 }
+      )
+    }
 
     const { data, error } = await supabase
       .from('published_content')
       .select('*')
-      .eq('section_id', executiveSectionId)
+      .eq('section_id', section.id)
       .order('version', { ascending: false })
       .limit(1)
 
