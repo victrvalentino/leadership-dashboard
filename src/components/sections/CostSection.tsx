@@ -1,6 +1,18 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import {
+  DollarSign,
+  HandCoins,
+  CalendarDays,
+  Users,
+  TrendingUp,
+  UserPlus,
+  Lightbulb,
+  RefreshCw,
+  Banknote,
+  type LucideIcon
+} from 'lucide-react'
 import { costData } from '@/data/dashboardData'
 import { DonutChart } from '@/components/ui'
 import {
@@ -13,27 +25,123 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 
+const TEAL = '#12897B'
+const PANEL = '#DFF2EF'
+const LINE_BLUE = '#2563EB'
+
 function CostKPI({
+  Icon,
   label,
+  sub,
   value,
+  prevLabel = 'vs Last',
   prev,
   chg,
 }: {
+  Icon: LucideIcon
   label: string
+  sub?: string
   value: string
+  prevLabel?: string
   prev: string
-  chg: string
+  chg?: string
 }) {
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-sm space-y-1">
-      <p className="text-xs font-bold uppercase tracking-widest text-gray-500">
-        {label}
+    <div className="bg-white rounded-2xl p-4 min-h-[185px] flex flex-col justify-between text-center shadow-sm">
+      <div>
+        <p className="text-xs md:text-sm font-bold uppercase tracking-wide text-gray-800 leading-tight">
+          {label}
+        </p>
+        {sub && (
+          <p className="text-[11px] font-semibold text-gray-500">({sub})</p>
+        )}
+      </div>
+
+      <div className="flex items-center justify-center gap-3 my-3">
+        <div
+          className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0"
+          style={{ backgroundColor: TEAL }}
+        >
+          <Icon className="w-8 h-8 text-white" strokeWidth={1.75} />
+        </div>
+
+        <p
+          className="text-2xl md:text-[26px] font-black leading-none"
+          style={{ color: TEAL }}
+        >
+          {value}
+        </p>
+      </div>
+
+      <p className="text-xs font-bold text-gray-700">
+        {prevLabel}: {prev}{' '}
+        {chg && (
+          <>
+            <span className="text-green-600">↑</span>{' '}
+            <span className="text-gray-800">
+              {chg.replace(/^\+/, '')}
+            </span>
+          </>
+        )}
       </p>
-      <p className="text-2xl font-black text-teal-700">{value}</p>
-      <p className="text-xs text-gray-400">
-        vs Last: {prev}{' '}
-        <span className="text-red-500 font-bold">{chg}</span>
+    </div>
+  )
+}
+
+function TrendCard({
+  title,
+  unitLabel,
+  data,
+  domain,
+  unit
+}: {
+  title: string
+  unitLabel: string
+  data: { month: string; value: number }[]
+  domain: [number, number]
+  unit: string
+}) {
+  return (
+    <div className="bg-white rounded-2xl p-4 shadow-sm">
+      <p className="text-sm font-bold uppercase tracking-wide text-center text-gray-800 leading-tight">
+        {title}
       </p>
+      <p className="text-[11px] font-semibold text-gray-500 text-center mb-2">
+        (Last 12 Months)
+      </p>
+      <p className="text-[10px] font-semibold text-gray-500 text-left">
+        {unitLabel}
+      </p>
+
+      <ResponsiveContainer width="100%" height={140}>
+        <LineChart data={data}>
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="#f0f0f0"
+            vertical={false}
+          />
+          <XAxis
+            dataKey="month"
+            tick={{ fontSize: 9 }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <YAxis
+            tick={{ fontSize: 9 }}
+            domain={domain}
+            axisLine={false}
+            tickLine={false}
+          />
+          <Tooltip formatter={(v) => `Rp ${v}${unit}`} />
+          <Line
+            type="monotone"
+            dataKey="value"
+            stroke={LINE_BLUE}
+            strokeWidth={2}
+            dot={{ r: 3, fill: LINE_BLUE, strokeWidth: 0 }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   )
 }
@@ -66,8 +174,11 @@ type CostContent = {
   costPerEmployeePrev: string
   costPerEmployeeChg: string
 
-  growthYoY: string
-  growthYoYPrev: string
+  growthYoY?: string
+  growthYoYPrev?: string
+  growthTrend?: string
+  growthTrendPrev?: string
+  growthTrendChg?: string
 
   replacementHiringCost: string
   replacementHiringCostPrev: string
@@ -78,7 +189,27 @@ type CostContent = {
   manpowerTrend: TrendRow[]
   costBreakdown: CostBreakdownRow[]
   costPerEmployeeTrend: TrendRow[]
+  signalItems?: { icon: string; text: string }[]
 }
+
+const DEFAULT_SIGNAL_ITEMS: { Icon: LucideIcon; text: string }[] = [
+  {
+    Icon: RefreshCw,
+    text: 'High turnover drives recurring recruitment and onboarding cost'
+  },
+  {
+    Icon: TrendingUp,
+    text: 'Productivity loss while critical roles remain vacant'
+  },
+  {
+    Icon: Users,
+    text: 'Knowledge loss impacts delivery quality and speed'
+  },
+  {
+    Icon: Banknote,
+    text: 'True cost of turnover is 1.5 - 2.5x annual salary'
+  }
+]
 
 export default function CostSection() {
   const [data, setData] = useState<CostContent>({
@@ -127,233 +258,252 @@ export default function CostSection() {
 
   const d = data
 
+  const growthValue = d.growthTrend || d.growthYoY || ''
+  const growthPrev = d.growthTrendPrev || d.growthYoYPrev || ''
+  const growthChg = d.growthTrendChg || '+2.9pp'
+
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 space-y-6">
-      <div className="flex items-center gap-4 mb-2">
+      {/* Header */}
+      <div>
+        <div className="flex items-center gap-4">
+          <div
+            className="w-24 h-24 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0"
+            style={{ backgroundColor: TEAL }}
+          >
+            <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center">
+              <DollarSign className="w-6 h-6 text-white" strokeWidth={1.75} />
+            </div>
+            <span className="text-[10px] font-bold tracking-widest">
+              COST
+            </span>
+          </div>
+
+          <div>
+            <h1
+              className="text-4xl md:text-[42px] leading-none font-black"
+              style={{ color: TEAL }}
+            >
+              {d.title || 'Cost'}
+            </h1>
+            <p className="text-base md:text-lg text-gray-900 font-bold mt-2">
+              {d.subtitle || 'People Cost & Investment'}
+            </p>
+          </div>
+        </div>
+
         <div
-          className="w-16 h-16 rounded-xl flex flex-col items-center justify-center text-white"
-          style={{ backgroundColor: '#00695C' }}
-        >
-          <span className="text-2xl">💰</span>
-          <span className="text-[8px] font-black tracking-widest">
-            COST
-          </span>
+          className="w-full h-px mt-4"
+          style={{ backgroundColor: TEAL }}
+        />
+      </div>
+
+      {/* Workforce economics panel */}
+      <div
+        className="rounded-2xl p-6 space-y-5"
+        style={{ backgroundColor: PANEL }}
+      >
+        <div className="text-center">
+          <h2 className="text-3xl font-black uppercase text-gray-900">
+            Workforce Economics
+          </h2>
+
+          <div className="flex items-center gap-4 mt-2">
+            <div className="flex-1 h-px bg-gray-400/70" />
+            <p className="text-lg font-black uppercase tracking-widest text-gray-500">
+              People Cost Visibility
+            </p>
+            <div className="flex-1 h-px bg-gray-400/70" />
+          </div>
         </div>
 
         <div>
-          <h1 className="text-3xl font-bold text-teal-800">
-            {d.title || 'Cost'}
-          </h1>
-          <p className="text-sm text-gray-500 font-medium">
-            {d.subtitle || 'People Cost & Investment'}
-          </p>
+          <span
+            className="text-white text-xs font-black px-4 py-1.5 rounded uppercase tracking-wider"
+            style={{ backgroundColor: TEAL }}
+          >
+            Key Metrics
+          </span>
         </div>
-      </div>
-
-      <div className="w-full h-px bg-gray-200" />
-
-      <div
-        className="rounded-2xl p-6 space-y-5"
-        style={{ backgroundColor: '#e0f2f1' }}
-      >
-        <div className="text-center">
-          <h2 className="text-2xl font-black uppercase text-gray-900">
-            Workforce Economics
-          </h2>
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mt-1">
-            People Cost Visibility
-          </p>
-        </div>
-
-        <span className="bg-teal-700 text-white text-xs font-black px-3 py-1 rounded uppercase tracking-wider">
-          Key Metrics
-        </span>
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           <CostKPI
+            Icon={HandCoins}
             label="Monthly Manpower Cost"
             value={d.monthlyManpowerCost}
+            prevLabel="vs Last Months"
             prev={d.monthlyManpowerCostPrev}
             chg={d.monthlyManpowerCostChg}
           />
 
           <CostKPI
+            Icon={CalendarDays}
             label="Annualized Cost"
             value={d.annualizedCost}
+            prevLabel="vs Last Year"
             prev={d.annualizedCostPrev}
             chg={d.annualizedCostChg}
           />
 
           <CostKPI
+            Icon={Users}
             label="Cost Per Employee"
             value={d.costPerEmployee}
+            prevLabel="vs Last Year"
             prev={d.costPerEmployeePrev}
             chg={d.costPerEmployeeChg}
           />
 
-          <div className="bg-white rounded-2xl p-4 shadow-sm space-y-1">
-            <p className="text-xs font-bold uppercase tracking-widest text-gray-500">
-              Growth Per Trend (YoY)
-            </p>
-            <p className="text-2xl font-black text-teal-700">
-              {d.growthYoY}
-            </p>
-            <p className="text-xs text-gray-400">
-              vs Last Year: {d.growthYoYPrev}{' '}
-              <span className="text-red-500 font-bold">+2.9pp</span>
-            </p>
-          </div>
+          <CostKPI
+            Icon={TrendingUp}
+            label="Growth Per Trend"
+            sub="YoY"
+            value={growthValue}
+            prevLabel="vs Last Year"
+            prev={growthPrev}
+            chg={growthChg}
+          />
 
           <CostKPI
+            Icon={UserPlus}
             label="Replacement Hiring Cost"
             value={d.replacementHiringCost}
+            prevLabel="vs Last Year"
             prev={d.replacementHiringCostPrev}
             chg={d.replacementHiringCostChg}
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white rounded-2xl p-4 shadow-sm">
-            <p className="text-xs font-black uppercase tracking-widest text-center text-gray-700 mb-1">
-              Manpower Cost Trend
-            </p>
-            <p className="text-[10px] text-gray-400 text-center mb-2">
-              (Last 12 Months)
-            </p>
-            <p className="text-[10px] text-gray-500 text-left">
-              Rp (Billion)
-            </p>
+          <TrendCard
+            title="Manpower Cost Trend"
+            unitLabel="Rp (Billion)"
+            data={d.manpowerTrend}
+            domain={[0, 3]}
+            unit="B"
+          />
 
-            <ResponsiveContainer width="100%" height={130}>
-              <LineChart data={d.manpowerTrend}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="month" tick={{ fontSize: 9 }} />
-                <YAxis tick={{ fontSize: 9 }} domain={[0, 3]} />
-                <Tooltip formatter={(v) => `Rp ${v}B`} />
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  stroke="#00695C"
-                  strokeWidth={2}
-                  dot={{ r: 2, fill: '#00695C' }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center gap-2">
-            <p className="text-xs font-black uppercase tracking-widest text-center text-gray-700">
+          {/* Cost breakdown */}
+          <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col">
+            <p className="text-sm font-bold uppercase tracking-wide text-center text-gray-800 leading-tight">
               Cost Breakdown
             </p>
 
-            <p className="text-[10px] text-gray-400">(Annualized)</p>
+            <p className="text-[11px] font-semibold text-gray-500 text-center mb-2">
+              (Annualized)
+            </p>
 
-            <DonutChart
-              segments={d.costBreakdown.map((s) => ({
-                value: Number(s.value),
-                color: s.color,
-              }))}
-              size={120}
-              center={
-                <div className="text-center">
-                  <p className="text-sm font-black text-teal-700">
-                    {d.annualizedCost}
-                  </p>
-                  <p className="text-[10px] text-gray-500">Total</p>
-                </div>
-              }
-            />
+            <div className="flex-1 flex items-center justify-center gap-4">
+              <DonutChart
+                segments={d.costBreakdown.map((s) => ({
+                  value: Number(s.value),
+                  color: s.color,
+                }))}
+                size={130}
+                center={
+                  <div className="text-center">
+                    <p className="text-sm font-black text-gray-900">
+                      {d.annualizedCost}
+                    </p>
+                    <p className="text-[10px] font-semibold text-gray-500">
+                      Total
+                    </p>
+                  </div>
+                }
+              />
 
-            <div className="grid grid-cols-1 gap-0.5 text-xs w-full">
-              {d.costBreakdown.map((s) => (
-                <div key={s.name} className="flex items-center gap-2">
-                  <div
-                    className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: s.color }}
-                  />
-                  <span className="text-gray-600">
-                    {s.name} ({s.amount} {s.value}%)
-                  </span>
-                </div>
-              ))}
+              <div className="space-y-2">
+                {d.costBreakdown.map((s) => (
+                  <div key={s.name} className="flex items-start gap-2">
+                    <div
+                      className="w-3 h-3 rounded-full flex-shrink-0 mt-0.5"
+                      style={{ backgroundColor: s.color }}
+                    />
+                    <div className="text-[11px] leading-tight">
+                      <p className="font-bold text-gray-700">{s.name}</p>
+                      <p className="text-gray-500">
+                        {s.amount} ({s.value}%)
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-4 shadow-sm">
-            <p className="text-xs font-black uppercase tracking-widest text-center text-gray-700 mb-1">
-              Cost Per Employee Trend
-            </p>
-            <p className="text-[10px] text-gray-400 text-center mb-2">
-              (Last 12 Months)
-            </p>
-            <p className="text-[10px] text-gray-500 text-left">
-              Rp (Million)
-            </p>
-
-            <ResponsiveContainer width="100%" height={130}>
-              <LineChart data={d.costPerEmployeeTrend}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="month" tick={{ fontSize: 9 }} />
-                <YAxis tick={{ fontSize: 9 }} domain={[0, 25]} />
-                <Tooltip formatter={(v) => `Rp ${v}M`} />
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  stroke="#00695C"
-                  strokeWidth={2}
-                  dot={{ r: 2, fill: '#00695C' }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          <TrendCard
+            title="Cost Per Employee Trend"
+            unitLabel="Rp (Million)"
+            data={d.costPerEmployeeTrend}
+            domain={[0, 25]}
+            unit="M"
+          />
         </div>
       </div>
 
-      <div className="rounded-2xl p-4 flex flex-wrap items-center gap-6 bg-teal-50">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-full bg-teal-700 flex items-center justify-center text-white text-xl flex-shrink-0">
-            💡
+      {/* Leadership signal */}
+      <div
+        className="rounded-2xl px-6 py-5 flex flex-wrap items-center gap-5"
+        style={{ backgroundColor: PANEL }}
+      >
+        <div className="flex items-center gap-4 max-w-full md:max-w-[320px]">
+          <div
+            className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0"
+            style={{ backgroundColor: TEAL }}
+          >
+            <Lightbulb className="w-10 h-10 text-white" strokeWidth={1.75} />
           </div>
 
           <div>
-            <p className="text-xs font-black uppercase tracking-widest text-teal-700">
+            <p
+              className="text-lg font-black uppercase tracking-wide"
+              style={{ color: TEAL }}
+            >
               Leadership Signal
             </p>
-            <p className="text-xs text-gray-600 font-medium">
+            <p className="text-sm font-semibold text-gray-800">
               {d.leadershipSignal}
             </p>
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-4">
-          {[
-            {
-              icon: '💱',
-              text: 'High turnover drives recurring recruitment and onboarding cost',
-            },
-            {
-              icon: '📊',
-              text: 'Productivity loss while critical roles remain vacant',
-            },
-            {
-              icon: '👥',
-              text: 'Knowledge loss impacts delivery quality and speed',
-            },
-            {
-              icon: '💰',
-              text: 'True cost of turnover is 1.5 - 2.5x annual salary',
-            },
-          ].map((s, i) => (
-            <div
-              key={i}
-              className="flex items-center gap-2 text-xs max-w-[150px]"
-            >
-              <div className="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center text-white flex-shrink-0">
-                {s.icon}
-              </div>
-              <span className="text-gray-600">{s.text}</span>
-            </div>
-          ))}
+        <div className="hidden md:block w-px self-stretch bg-gray-400/60" />
+
+        <div className="flex-1 grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {d.signalItems?.length
+            ? d.signalItems.map((s, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <div
+                    className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-xl"
+                    style={{
+                      border: `2px solid ${TEAL}`,
+                      color: TEAL
+                    }}
+                  >
+                    {s.icon}
+                  </div>
+                  <span className="text-xs font-semibold text-gray-700 leading-snug">
+                    {s.text}
+                  </span>
+                </div>
+              ))
+            : DEFAULT_SIGNAL_ITEMS.map((s, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <div
+                    className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ border: `2px solid ${TEAL}` }}
+                  >
+                    <s.Icon
+                      className="w-6 h-6"
+                      style={{ color: TEAL }}
+                      strokeWidth={1.75}
+                    />
+                  </div>
+                  <span className="text-xs font-semibold text-gray-700 leading-snug">
+                    {s.text}
+                  </span>
+                </div>
+              ))}
         </div>
       </div>
     </div>

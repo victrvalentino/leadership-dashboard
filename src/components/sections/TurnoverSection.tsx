@@ -1,6 +1,15 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import {
+  Users,
+  LogOut,
+  ScanFace,
+  RefreshCw,
+  Clock,
+  AlertTriangle,
+  type LucideIcon
+} from 'lucide-react'
 import { turnoverData } from '@/data/dashboardData'
 import { SimpleHBar } from '@/components/ui'
 import {
@@ -13,31 +22,95 @@ import {
   ResponsiveContainer
 } from 'recharts'
 
+const ORANGE = '#F4611A'
+
+function BannerHeader({
+  text,
+  withBars = false
+}: {
+  text: string
+  withBars?: boolean
+}) {
+  return (
+    <div className="flex items-center">
+      {withBars && (
+        <div
+          className="flex-1 h-2.5 rounded-full"
+          style={{ backgroundColor: ORANGE }}
+        />
+      )}
+
+      <div
+        className={`${withBars ? '' : 'w-full text-center '}rounded-xl px-8 py-3`}
+        style={{ backgroundColor: ORANGE }}
+      >
+        <p className="text-white text-lg md:text-xl font-black uppercase tracking-wide text-center whitespace-nowrap">
+          {text}
+        </p>
+      </div>
+
+      {withBars && (
+        <div
+          className="flex-1 h-2.5 rounded-full"
+          style={{ backgroundColor: ORANGE }}
+        />
+      )}
+    </div>
+  )
+}
+
+function IconCircle({
+  Icon,
+  size = 'w-16 h-16',
+  iconSize = 'w-8 h-8'
+}: {
+  Icon: LucideIcon
+  size?: string
+  iconSize?: string
+}) {
+  return (
+    <div
+      className={`${size} rounded-full flex items-center justify-center flex-shrink-0`}
+      style={{ backgroundColor: ORANGE }}
+    >
+      <Icon className={`${iconSize} text-white`} strokeWidth={1.75} />
+    </div>
+  )
+}
+
 function MetricBox({
   label,
   value,
   prev,
   prevLabel,
+  Icon
 }: {
   label: string
   value: string
   prev?: string
   prevLabel?: string
+  Icon: LucideIcon
 }) {
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-sm text-center space-y-2 min-h-[140px] flex flex-col justify-center">
-      <p className="text-xs font-bold uppercase tracking-widest text-gray-500">
+    <div className="bg-white rounded-2xl p-4 shadow-sm min-h-[160px] flex flex-col justify-between">
+      <p className="text-xs md:text-sm font-bold uppercase tracking-wide text-gray-800 text-center leading-tight">
         {label}
       </p>
 
-      <p className="text-3xl font-black text-orange-500">
-        {value}
-      </p>
+      <div className="flex items-center justify-center gap-4 my-3">
+        <IconCircle Icon={Icon} />
+
+        <p
+          className="text-4xl font-black"
+          style={{ color: ORANGE }}
+        >
+          {value}
+        </p>
+      </div>
 
       {prev && (
-        <p className="text-xs text-gray-400">
-          {prevLabel}: {prev}{' '}
-          <span className="text-red-500">↑</span>
+        <p className="text-xs font-bold text-gray-700 text-center">
+          {prevLabel}: {prev} <span className="text-red-500">↑</span>
         </p>
       )}
     </div>
@@ -117,180 +190,243 @@ export default function TurnoverSection() {
     d.chroAnalysis3
   ].filter(Boolean)
 
+  const cardTitleClass =
+    'text-xs md:text-sm font-bold text-gray-800 uppercase tracking-wide text-center leading-tight'
+
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 space-y-6">
-      <div className="flex items-center gap-4">
-        <div
-          className="w-16 h-16 rounded-xl flex flex-col items-center justify-center text-white"
-          style={{ backgroundColor: '#E65100' }}
-        >
-          <span className="text-2xl">🔄</span>
-          <span className="text-[8px] font-black tracking-widest">
-            TURNOVER
-          </span>
+      {/* Header */}
+      <div>
+        <div className="flex items-center gap-4">
+          <div
+            className="w-24 h-24 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0"
+            style={{ backgroundColor: ORANGE }}
+          >
+            <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center">
+              <RefreshCw className="w-6 h-6 text-white" strokeWidth={1.75} />
+            </div>
+            <span className="text-[10px] font-bold tracking-widest">
+              TURNOVER
+            </span>
+          </div>
+
+          <div>
+            <h1
+              className="text-4xl md:text-[42px] leading-none font-black"
+              style={{ color: ORANGE }}
+            >
+              {d.title || 'Turnover'}
+            </h1>
+            <p className="text-base md:text-lg text-gray-900 font-bold mt-2">
+              {d.subtitle || 'Workforce Continuity Risk'}
+            </p>
+          </div>
         </div>
 
-        <div>
-          <h1 className="text-3xl font-bold text-orange-700">
-            {d.title || 'Turnover'}
-          </h1>
-          <p className="text-sm text-gray-500 font-medium">
-            {d.subtitle || 'Workforce Continuity Risk'}
-          </p>
-        </div>
+        <div
+          className="w-full h-px mt-4"
+          style={{ backgroundColor: ORANGE }}
+        />
       </div>
 
-      <div className="w-full h-px bg-gray-200" />
-
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        {/* Left: key metrics */}
         <div className="lg:col-span-2 space-y-4">
+          <BannerHeader text="Key Metrics" withBars />
 
-          <div className="rounded-2xl bg-orange-600 px-5 py-3 text-center font-black text-sm uppercase tracking-widest text-white">
-            Key Metrics
-          </div>
+          <div className="rounded-2xl p-4 space-y-4" style={{ backgroundColor: '#FDEDE3' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <MetricBox
+                label="Turnover Rate"
+                value={`${d.turnoverRate}%`}
+                prevLabel="vs Last 12 Months"
+                prev={`${d.turnoverRatePrev}%`}
+                Icon={Users}
+              />
 
-          <div className="grid grid-cols-3 gap-3 rounded-2xl p-4 bg-orange-50">
-            <MetricBox
-              label="Turnover Rate"
-              value={`${d.turnoverRate}%`}
-              prevLabel="vs Last 12 Months"
-              prev={`${d.turnoverRatePrev}%`}
-            />
+              <MetricBox
+                label="Voluntary Turnover"
+                value={`${d.voluntaryTurnover}%`}
+                prevLabel="vs Last 12 Months"
+                prev={`${d.voluntaryTurnoverPrev}%`}
+                Icon={LogOut}
+              />
 
-            <MetricBox
-              label="Voluntary Turnover"
-              value={`${d.voluntaryTurnover}%`}
-              prevLabel="vs Last 12 Months"
-              prev={`${d.voluntaryTurnoverPrev}%`}
-            />
-
-            <MetricBox
-              label="Critical Position Turnover"
-              value={`${d.criticalPositionTurnover}%`}
-              prevLabel="vs Last 12 Months"
-              prev={`${d.criticalPositionTurnoverPrev}%`}
-            />
-          </div>
-
-          <div className="grid grid-cols-3 gap-3 rounded-2xl p-4 bg-orange-50">
-            <div className="bg-white rounded-2xl p-4 shadow-sm text-center min-h-[170px] flex flex-col items-center">
-              <div className="text-3xl mb-3">🔁</div>
-
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">
-                Repeated Replacement Roles
-              </p>
-
-              <p className="text-4xl font-black text-orange-500 mt-4">
-                {d.repeatedReplacementRoles}
-              </p>
-
-              <p className="text-xs text-gray-400 mt-auto">
-                {d.repeatedReplacementRolesCaption ||
-                  'Roles replaced >2 times in 12 months'}
-              </p>
+              <MetricBox
+                label="Critical Position Turnover"
+                value={`${d.criticalPositionTurnover}%`}
+                prevLabel="vs Last 12 Months"
+                prev={`${d.criticalPositionTurnoverPrev}%`}
+                Icon={ScanFace}
+              />
             </div>
 
-            <div className="bg-white rounded-2xl p-4 shadow-sm text-center min-h-[170px] flex flex-col items-center">
-              <div className="text-3xl mb-3">⏱️</div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {/* Repeated replacement roles */}
+              <div className="bg-white rounded-2xl p-4 shadow-sm min-h-[190px] flex flex-col justify-between">
+                <p className={cardTitleClass}>
+                  Repeated Replacement Roles
+                </p>
 
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest leading-tight">
-                Time-to-Backfill
-                <br />
-                Critical Roles
-              </p>
+                <div className="flex items-center justify-center gap-4 my-3">
+                  <IconCircle Icon={RefreshCw} />
 
-              <p className="text-4xl font-black text-orange-500 mt-3">
-                {d.timeToBackfill}
-                <span className="text-xl"> Days</span>
-              </p>
+                  <p
+                    className="text-5xl font-black"
+                    style={{ color: ORANGE }}
+                  >
+                    {d.repeatedReplacementRoles}
+                  </p>
+                </div>
 
-              <p className="text-xs text-gray-400 mt-auto">
-                vs Last 12 Months: {d.timeToBackfillPrev} ↑
-              </p>
-            </div>
+                <p className="text-xs font-bold text-gray-700 text-center">
+                  {d.repeatedReplacementRolesCaption ||
+                    'Roles replaced >2 times in 12 months'}
+                </p>
+              </div>
 
-            <div className="bg-white rounded-2xl p-4 shadow-sm space-y-2">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest text-center mb-2">
-                Turnover Background
-                <br />
-                by Role (Top 5)
-              </p>
+              {/* Time to backfill */}
+              <div className="bg-white rounded-2xl p-4 shadow-sm min-h-[190px] flex flex-col justify-between">
+                <p className={cardTitleClass}>
+                  Time-to-Backfill
+                  <br />
+                  Critical Roles
+                </p>
 
-              {d.byRole.map((r, i) => (
-                <SimpleHBar
-                  key={`${r.name}-${i}`}
-                  label={r.name || ''}
-                  value={Number(r.value)}
-                  max={100}
-                  color="#E65100"
-                />
-              ))}
-            </div>
-          </div>
+                <div className="flex items-center justify-center gap-3 my-3">
+                  <IconCircle Icon={Clock} />
 
-          <div className="grid grid-cols-2 gap-3 rounded-2xl p-4 bg-orange-50">
-            <div className="bg-white rounded-2xl p-4 shadow-sm space-y-2">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest text-center mb-3">
-                Turnover by Manager (Top 5)
-              </p>
+                  <p
+                    className="text-4xl font-black leading-none"
+                    style={{ color: ORANGE }}
+                  >
+                    {d.timeToBackfill}
+                    <span className="text-lg"> Days</span>
+                  </p>
+                </div>
 
-              {d.byManager.map((r, i) => (
-                <SimpleHBar
-                  key={`${r.name}-${i}`}
-                  label={r.name || ''}
-                  value={Number(r.value)}
-                  max={100}
-                  color="#E65100"
-                />
-              ))}
-            </div>
+                <p className="text-xs font-bold text-gray-700 text-center">
+                  vs Last 12 Months: {d.timeToBackfillPrev} Days{' '}
+                  <span className="text-red-500">↑</span>
+                </p>
+              </div>
 
-            <div className="bg-white rounded-2xl p-4 shadow-sm">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest text-center mb-3">
-                Turnover Trend (Last 12 Months)
-              </p>
+              {/* By role */}
+              <div className="bg-white rounded-2xl p-4 shadow-sm space-y-2">
+                <p className={`${cardTitleClass} mb-2`}>
+                  Turnover Background
+                  <br />
+                  <span className="normal-case font-semibold text-gray-500">
+                    By Role (Top 5)
+                  </span>
+                </p>
 
-              <ResponsiveContainer width="100%" height={140}>
-                <LineChart data={d.trend}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="month" tick={{ fontSize: 10 }} />
-                  <YAxis tick={{ fontSize: 10 }} unit="%" domain={[5, 20]} />
-                  <Tooltip formatter={(v) => `${v}%`} />
-                  <Line
-                    type="monotone"
-                    dataKey="value"
-                    stroke="#E65100"
-                    strokeWidth={2}
-                    dot={{ r: 3, fill: '#E65100' }}
+                {d.byRole.map((r, i) => (
+                  <SimpleHBar
+                    key={`${r.name}-${i}`}
+                    label={r.name || ''}
+                    value={Number(r.value)}
+                    max={100}
+                    color={ORANGE}
                   />
-                </LineChart>
-              </ResponsiveContainer>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* By manager */}
+              <div className="bg-white rounded-2xl p-4 shadow-sm space-y-2">
+                <p className={`${cardTitleClass} mb-3`}>
+                  Turnover by Manager
+                  <br />
+                  <span className="normal-case font-semibold text-gray-500">
+                    By Role (Top 5)
+                  </span>
+                </p>
+
+                {d.byManager.map((r, i) => (
+                  <SimpleHBar
+                    key={`${r.name}-${i}`}
+                    label={r.name || ''}
+                    value={Number(r.value)}
+                    max={100}
+                    color={ORANGE}
+                  />
+                ))}
+              </div>
+
+              {/* Trend */}
+              <div className="bg-white rounded-2xl p-4 shadow-sm">
+                <p className={`${cardTitleClass} mb-3`} style={{ color: ORANGE }}>
+                  Turnover Trend
+                  <br />
+                  <span className="normal-case font-semibold text-gray-500">
+                    (Last 12 Months)
+                  </span>
+                </p>
+
+                <ResponsiveContainer width="100%" height={140}>
+                  <LineChart data={d.trend}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" vertical={false} />
+                    <XAxis
+                      dataKey="month"
+                      tick={{ fontSize: 10 }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 10 }}
+                      unit="%"
+                      domain={[5, 20]}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <Tooltip formatter={(v) => `${v}%`} />
+                    <Line
+                      type="monotone"
+                      dataKey="value"
+                      stroke={ORANGE}
+                      strokeWidth={2.5}
+                      dot={{ r: 4, fill: ORANGE, strokeWidth: 0 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </div>
         </div>
 
+        {/* Right: leadership insight */}
         <div className="space-y-4">
-          <div className="rounded-2xl p-4 text-center font-black text-sm uppercase tracking-widest text-white bg-orange-600">
-            Leadership Insight
+          <BannerHeader text="Leadership Insight" />
+
+          <div
+            className="rounded-2xl p-5"
+            style={{ backgroundColor: '#FDEDE3' }}
+          >
+            {insights.map((text, i) => (
+              <div
+                key={i}
+                className={`flex gap-4 items-start py-5 ${
+                  i < insights.length - 1
+                    ? 'border-b border-gray-300'
+                    : ''
+                }`}
+              >
+                <AlertTriangle
+                  className="w-12 h-12 text-red-600 flex-shrink-0"
+                  strokeWidth={2}
+                />
+
+                <div>
+                  <p className="text-sm font-black text-gray-600 uppercase tracking-wider mb-1">
+                    CHRO Analysis
+                  </p>
+                  <p className="text-sm text-gray-700">{text}</p>
+                </div>
+              </div>
+            ))}
           </div>
-
-          {insights.map((text, i) => (
-            <div
-              key={i}
-              className="bg-orange-50 rounded-2xl p-4 flex gap-3 items-start border border-orange-100"
-            >
-              <div className="w-10 h-10 rounded-full border-2 border-orange-400 flex items-center justify-center text-orange-500 flex-shrink-0 text-xl">
-                ⚠️
-              </div>
-
-              <div>
-                <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-1">
-                  CHRO Analysis
-                </p>
-                <p className="text-sm text-gray-700">{text}</p>
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </div>

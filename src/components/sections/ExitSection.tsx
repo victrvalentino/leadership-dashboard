@@ -1,53 +1,95 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import {
+  LogOut,
+  ClipboardCheck,
+  UserX,
+  CalendarDays,
+  Users,
+  Lightbulb,
+  Network,
+  Laptop,
+  CircleDollarSign,
+  type LucideIcon
+} from 'lucide-react'
 import { exitData } from '@/data/dashboardData'
 import { SimpleHBar, DonutChart } from '@/components/ui'
 
+const RED = '#E8192C'
+const PANEL = '#FBE9EC'
+
+function IconCircle({
+  Icon,
+  size = 'w-16 h-16',
+  iconSize = 'w-8 h-8'
+}: {
+  Icon: LucideIcon
+  size?: string
+  iconSize?: string
+}) {
+  return (
+    <div
+      className={`${size} rounded-full flex items-center justify-center flex-shrink-0`}
+      style={{ backgroundColor: RED }}
+    >
+      <Icon className={`${iconSize} text-white`} strokeWidth={1.75} />
+    </div>
+  )
+}
+
 function ExitKPI({
-  icon,
+  Icon,
   label,
   sub,
   value,
   unit = '',
   trend,
-  trendUp,
+  trendColor = 'text-red-500',
+  trendArrow = '↑',
+  caption
 }: {
-  icon: string
+  Icon: LucideIcon
   label: string
   sub?: string
   value: string | number
   unit?: string
   trend?: string
-  trendUp?: boolean
+  trendColor?: string
+  trendArrow?: string
+  caption?: string
 }) {
   return (
-    <div className="bg-white rounded-2xl p-4 flex flex-col items-center text-center gap-1.5 shadow-sm">
-      <div className="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center text-white text-xl">
-        {icon}
+    <div className="bg-white rounded-2xl p-4 min-h-[190px] flex flex-col justify-between text-center shadow-sm">
+      <div>
+        <p className="text-xs md:text-sm font-bold uppercase tracking-wide text-gray-800 leading-tight">
+          {label}
+        </p>
+        {sub && (
+          <p className="text-[11px] font-semibold text-gray-500">({sub})</p>
+        )}
       </div>
 
-      <p className="text-xs font-bold uppercase tracking-wider text-gray-500 leading-tight">
-        {label}
-      </p>
+      <div className="flex items-center justify-center gap-3 my-3">
+        <IconCircle Icon={Icon} />
 
-      {sub && (
-        <p className="text-[10px] text-gray-400">({sub})</p>
-      )}
+        <p
+          className="text-4xl font-black leading-none"
+          style={{ color: RED }}
+        >
+          {value}
+          {unit && <span className="text-base font-bold"> {unit}</span>}
+        </p>
+      </div>
 
-      <p className="text-3xl font-black text-red-600">
-        {value}
-        <span className="text-base font-semibold text-red-400">
-          {unit}
-        </span>
-      </p>
-
-      {trend && (
-        <p className="text-xs text-gray-400">
+      {trend ? (
+        <p className="text-xs font-bold text-gray-700">
           vs Last Months: {trend}{' '}
-          <span className={trendUp ? 'text-red-500' : 'text-green-500'}>
-            {trendUp ? '↑' : '↓'}
-          </span>
+          <span className={trendColor}>{trendArrow}</span>
+        </p>
+      ) : (
+        <p className="text-xs font-bold text-gray-700 leading-tight">
+          {caption}
         </p>
       )}
     </div>
@@ -94,6 +136,25 @@ type ExitContent = {
   topAffectedRolesList: RoleRow[]
   signalItems?: { icon: string; text: string }[]
 }
+
+const DEFAULT_SIGNAL_ITEMS: { Icon: LucideIcon; text: string }[] = [
+  {
+    Icon: Users,
+    text: 'Repeated exits in specific teams may indicate leadership issues'
+  },
+  {
+    Icon: Network,
+    text: 'High exits in certain roles may indicate structure or role misalignment'
+  },
+  {
+    Icon: Laptop,
+    text: 'Early tenure exits may indicate workload or expectation mismatch'
+  },
+  {
+    Icon: CircleDollarSign,
+    text: 'Compensation concerns may be driving talent away'
+  }
+]
 
 export default function ExitSection() {
   const [data, setData] = useState<ExitContent>({
@@ -152,100 +213,128 @@ export default function ExitSection() {
     ...d.topAffectedRolesList.map(r => Number(r.exits))
   )
 
+  const chartTitleClass =
+    'text-sm font-bold uppercase tracking-wide text-gray-800 text-center leading-tight'
+
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 space-y-6">
-      <div className="flex items-center gap-4 mb-2">
-        <div className="w-16 h-16 rounded-xl flex flex-col items-center justify-center text-white bg-red-600">
-          <span className="text-2xl">📤</span>
-          <span className="text-[8px] font-black tracking-widest">
-            EXIT
-          </span>
+      {/* Header */}
+      <div>
+        <div className="flex items-center gap-4">
+          <div
+            className="w-24 h-24 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0"
+            style={{ backgroundColor: RED }}
+          >
+            <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center">
+              <LogOut className="w-6 h-6 text-white" strokeWidth={1.75} />
+            </div>
+            <span className="text-[10px] font-bold tracking-widest">
+              EXIT
+            </span>
+          </div>
+
+          <div>
+            <h1
+              className="text-4xl md:text-[42px] leading-none font-black"
+              style={{ color: RED }}
+            >
+              {d.title || 'Exit'}
+            </h1>
+            <p className="text-base md:text-lg text-gray-900 font-bold mt-2">
+              {d.subtitle || 'Exit Intelligence & Key Reasons'}
+            </p>
+          </div>
         </div>
 
-        <div>
-          <h1 className="text-3xl font-bold text-red-700">
-            {d.title || 'Exit'}
-          </h1>
-
-          <p className="text-sm text-gray-500 font-medium">
-            {d.subtitle || 'Exit Intelligence & Key Reasons'}
-          </p>
-        </div>
+        <div
+          className="w-full h-px mt-4"
+          style={{ backgroundColor: RED }}
+        />
       </div>
 
-      <div className="w-full h-px bg-gray-200" />
-
+      {/* Exit intelligence panel */}
       <div
         className="rounded-2xl p-6 space-y-5"
-        style={{ backgroundColor: '#fde8e8' }}
+        style={{ backgroundColor: PANEL }}
       >
         <div className="text-center">
-          <h2 className="text-2xl font-black uppercase text-gray-900">
+          <h2 className="text-3xl font-black uppercase text-gray-900">
             Exit Intelligence
           </h2>
 
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mt-1">
-            Why People Leave
-          </p>
+          <div className="flex items-center gap-4 mt-2">
+            <div className="flex-1 h-px bg-gray-400/70" />
+            <p className="text-lg font-black uppercase tracking-widest text-gray-500">
+              Why People Leave
+            </p>
+            <div className="flex-1 h-px bg-gray-400/70" />
+          </div>
         </div>
 
         <div>
-          <span className="bg-red-600 text-white text-xs font-black px-3 py-1 rounded uppercase tracking-wider">
+          <span
+            className="text-white text-xs font-black px-4 py-1.5 rounded uppercase tracking-wider"
+            style={{ backgroundColor: RED }}
+          >
             Key Metrics
           </span>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           <ExitKPI
-            icon="📋"
+            Icon={ClipboardCheck}
             label="Exit Interview Completion"
             value={`${d.exitInterviewCompletion}%`}
             trend={`${d.exitInterviewCompletionPrev}%`}
-            trendUp
+            trendColor="text-green-600"
+            trendArrow="↑"
           />
 
           <ExitKPI
-            icon="😟"
+            Icon={UserX}
             label="Regretted Loss"
             sub="High Performers"
             value={`${d.regrettedLoss}%`}
             trend={`${d.regrettedLossPrev}%`}
-            trendUp
+            trendColor="text-red-500"
+            trendArrow="↑"
           />
 
           <ExitKPI
-            icon="📅"
+            Icon={CalendarDays}
             label="Average Tenure at Resignation"
             value={d.avgTenureAtResignation}
-            unit=" Years"
+            unit="Years"
             trend={`${d.avgTenureAtResignationPrev}`}
-            trendUp={false}
+            trendColor="text-red-500"
+            trendArrow="↓"
           />
 
           <ExitKPI
-            icon="📤"
+            Icon={LogOut}
             label="Total Exits"
             sub="Last 12 Months"
             value={d.totalExits}
             trend={`${d.totalExitsPrev}`}
-            trendUp
+            trendColor="text-red-500"
+            trendArrow="↑"
           />
 
           <ExitKPI
-            icon="👥"
+            Icon={Users}
             label="Top Affected Roles"
             sub="By Number of Exits"
             value={d.topAffectedRoles}
+            caption="Key roles driving majority of exits"
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Resignation reasons */}
           <div className="bg-white rounded-2xl p-4 shadow-sm space-y-2">
-            <p className="text-xs font-black uppercase tracking-widest text-center text-gray-700">
-              Top Resignation Reasons
-            </p>
+            <p className={chartTitleClass}>Top Resignation Reasons</p>
 
-            <p className="text-[10px] text-gray-400 text-center">
+            <p className="text-[11px] font-semibold text-gray-500 text-center pb-1">
               (By % of Exits)
             </p>
 
@@ -255,76 +344,85 @@ export default function ExitSection() {
                 label={r.reason}
                 value={Number(r.pct)}
                 max={maxReason + 5}
-                color="#DC2626"
+                color={RED}
               />
             ))}
           </div>
 
-          <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center gap-3">
-            <p className="text-xs font-black uppercase tracking-widest text-gray-700">
-              Tenure at Resignation
-            </p>
+          {/* Tenure donut */}
+          <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center">
+            <p className={chartTitleClass}>Tenure at Resignation</p>
 
-            <p className="text-[10px] text-gray-400">
+            <p className="text-[11px] font-semibold text-gray-500 text-center pb-2">
               (By % of Exits)
             </p>
 
-            <DonutChart
-              segments={d.tenureAtResignation.map(s => ({
-                value: Number(s.value),
-                color: s.color
-              }))}
-              size={130}
-              center={
-                <div className="text-center">
-                  <p className="text-xl font-black text-gray-700">
-                    {d.totalExits}
-                  </p>
-                  <p className="text-[10px] text-gray-500">
-                    Total Exits
-                  </p>
-                </div>
-              }
-            />
+            <div className="flex-1 flex items-center justify-center gap-4">
+              <DonutChart
+                segments={d.tenureAtResignation.map(s => ({
+                  value: Number(s.value),
+                  color: s.color
+                }))}
+                size={140}
+                center={
+                  <div className="text-center">
+                    <p className="text-2xl font-black text-gray-800">
+                      {d.totalExits}
+                    </p>
+                    <p className="text-[10px] font-semibold text-gray-500">
+                      Total Exits
+                    </p>
+                  </div>
+                }
+              />
 
-            <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-              {d.tenureAtResignation.map(s => (
-                <div key={s.name} className="flex items-center gap-1.5">
+              <div className="space-y-2">
+                {d.tenureAtResignation.map(s => (
                   <div
-                    className="w-2.5 h-2.5 rounded-full"
-                    style={{ backgroundColor: s.color }}
-                  />
-                  <span className="text-gray-600">{s.name}</span>
-                </div>
-              ))}
+                    key={s.name}
+                    className="flex items-center gap-2 text-xs"
+                  >
+                    <div
+                      className="w-3 h-3 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: s.color }}
+                    />
+                    <span className="font-semibold text-gray-600">
+                      {s.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
+          {/* Top affected roles */}
           <div className="bg-white rounded-2xl p-4 shadow-sm space-y-2">
-            <p className="text-xs font-black uppercase tracking-widest text-center text-gray-700">
-              Top Affected Roles
-            </p>
+            <p className={chartTitleClass}>Top Affected Roles</p>
 
-            <p className="text-[10px] text-gray-400 text-center">
+            <p className="text-[11px] font-semibold text-gray-500 text-center pb-1">
               (By % of Exits)
             </p>
 
             {d.topAffectedRolesList.map(r => (
-              <div key={r.role} className="flex items-center gap-2 text-xs">
-                <span className="w-28 text-gray-600 truncate">
+              <div
+                key={r.role}
+                className="flex items-center gap-2 text-xs"
+              >
+                <span className="w-28 font-semibold text-gray-700 truncate">
                   {r.role}
                 </span>
 
-                <div className="flex-1 h-3 bg-red-100 rounded overflow-hidden">
+                <div className="flex-1 h-3 rounded-full overflow-hidden bg-red-100">
                   <div
-                    className="h-full bg-red-600 rounded"
+                    className="h-full rounded-full"
                     style={{
-                      width: `${(Number(r.exits) / maxRole) * 100}%`
+                      width: `${(Number(r.exits) / maxRole) * 100}%`,
+                      backgroundColor: RED
                     }}
                   />
                 </div>
 
-                <span className="w-5 text-right font-bold text-gray-700">
+                <span className="w-6 text-right font-bold text-gray-800">
                   {r.exits}
                 </span>
               </div>
@@ -333,39 +431,60 @@ export default function ExitSection() {
         </div>
       </div>
 
-      <div className="rounded-2xl p-4 flex flex-wrap items-center gap-6 bg-red-50">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center text-white text-xl flex-shrink-0">
-            💡
-          </div>
+      {/* Leadership signal */}
+      <div
+        className="rounded-2xl px-6 py-5 flex flex-wrap items-center gap-5"
+        style={{ backgroundColor: PANEL }}
+      >
+        <div className="flex items-center gap-4 max-w-full md:max-w-[300px]">
+          <IconCircle
+            Icon={Lightbulb}
+            size="w-20 h-20"
+            iconSize="w-10 h-10"
+          />
 
           <div>
-            <p className="text-xs font-black uppercase tracking-widest text-red-700">
+            <p
+              className="text-lg font-black uppercase tracking-wide"
+              style={{ color: RED }}
+            >
               Leadership Signal
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-sm font-semibold text-gray-800">
               {d.leadershipSignal}
             </p>
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-4">
-          {(d.signalItems?.length
-            ? d.signalItems
-            : [
-                { icon: '👥', text: 'Repeated exits in specific teams may indicate leadership issues' },
-                { icon: '🏢', text: 'High exits in certain roles may indicate structure or role misalignment' },
-                { icon: '💻', text: 'Early tenure exits may indicate workload or expectation mismatch' },
-                { icon: '💰', text: 'Compensation concerns may be driving talent away' },
-              ]
-          ).map((s, i) => (
-            <div key={i} className="flex items-center gap-2 text-xs max-w-[160px]">
-              <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-white flex-shrink-0">
-                {s.icon}
-              </div>
-              <span className="text-gray-600">{s.text}</span>
-            </div>
-          ))}
+        <div className="hidden md:block w-px self-stretch bg-gray-400/60" />
+
+        <div className="flex-1 grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {d.signalItems?.length
+            ? d.signalItems.map((s, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <div
+                    className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xl"
+                    style={{ backgroundColor: RED }}
+                  >
+                    {s.icon}
+                  </div>
+                  <span className="text-xs font-semibold text-gray-700 leading-snug">
+                    {s.text}
+                  </span>
+                </div>
+              ))
+            : DEFAULT_SIGNAL_ITEMS.map((s, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <IconCircle
+                    Icon={s.Icon}
+                    size="w-12 h-12"
+                    iconSize="w-6 h-6"
+                  />
+                  <span className="text-xs font-semibold text-gray-700 leading-snug">
+                    {s.text}
+                  </span>
+                </div>
+              ))}
         </div>
       </div>
     </div>

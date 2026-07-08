@@ -20,9 +20,12 @@ export const sectionConfig: Record<string, SectionConfig> = {
       { key: 'subtitle', label: 'Subtitle', type: 'text' },
       { key: 'totalHeadcount', label: 'Total Headcount', type: 'number' },
       { key: 'turnover', label: 'Turnover', type: 'text' },
+      { key: 'turnoverStatus', label: 'Turnover Badge (healthy / watchlist / high / medium / low)', type: 'text' },
       { key: 'attendance', label: 'Attendance', type: 'text' },
+      { key: 'attendanceStatus', label: 'Attendance Badge (healthy / watchlist / high / medium / low)', type: 'text' },
       { key: 'monthlyManpowerCost', label: 'Monthly Manpower Cost', type: 'text' },
       { key: 'criticalRolesOpen', label: 'Critical Roles Open', type: 'number' },
+      { key: 'criticalRolesStatus', label: 'Critical Roles Badge (healthy / watchlist / high / medium / low)', type: 'text' },
       { key: 'leadershipInsight', label: 'Leadership Insight', type: 'textarea' }
     ]
   },

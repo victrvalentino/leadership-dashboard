@@ -1,8 +1,22 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import {
+  BarChart3,
+  TrendingUp,
+  Repeat,
+  GraduationCap,
+  Users,
+  BookOpen,
+  Megaphone,
+  type LucideIcon
+} from 'lucide-react'
 import { developmentData } from '@/data/dashboardData'
-import { LeadershipSignal, ProgressBar } from '@/components/ui'
+import { LeadershipSignal } from '@/components/ui'
+
+const PURPLE = '#6B21A8'
+const PURPLE_BRIGHT = '#7C3AED'
+const PURPLE_DEEP = '#4A21A8'
 
 type DevelopmentContent = {
   title?: string
@@ -20,61 +34,151 @@ type DevelopmentContent = {
   leadershipSignal: string
 }
 
+function TargetBar({
+  value,
+  target,
+  targetLabel
+}: {
+  value: number
+  target: number
+  targetLabel: string
+}) {
+  const scale = Math.max(value, target, 1) * 1.3
+  const fill = Math.min((value / scale) * 100, 100)
+  const marker = Math.min((target / scale) * 100, 100)
+
+  return (
+    <div className="flex-1 min-w-0">
+      <div className="relative pt-3">
+        {/* target triangle */}
+        <div
+          className="absolute top-0 -translate-x-1/2 w-0 h-0"
+          style={{
+            left: `${marker}%`,
+            borderLeft: '6px solid transparent',
+            borderRight: '6px solid transparent',
+            borderTop: `8px solid ${PURPLE_BRIGHT}`
+          }}
+        />
+
+        <div className="relative h-3 bg-gray-200 rounded-full">
+          <div
+            className="absolute inset-y-0 left-0 rounded-full"
+            style={{
+              width: `${fill}%`,
+              backgroundColor: PURPLE_BRIGHT
+            }}
+          />
+
+          {/* target tick */}
+          <div
+            className="absolute -top-0.5 -bottom-0.5 w-[3px] -translate-x-1/2 rounded"
+            style={{
+              left: `${marker}%`,
+              backgroundColor: '#374151'
+            }}
+          />
+        </div>
+      </div>
+
+      <p className="text-xs font-semibold text-gray-500 mt-2 text-right">
+        {targetLabel}
+      </p>
+    </div>
+  )
+}
+
 interface DevCardProps {
-  icon: string
+  Icon: LucideIcon
   title: string
   rateLabel: string
   rate: number
   target: number
-  targetLabel: string
-  detailIcon: string
+  DetailIcon: LucideIcon
   detailMain: string
   detailSub: string
 }
 
 function DevCard({
-  icon,
+  Icon,
   title,
   rateLabel,
   rate,
   target,
-  targetLabel,
-  detailIcon,
+  DetailIcon,
   detailMain,
   detailSub
 }: DevCardProps) {
   return (
-    <div className="bg-white rounded-[20px] p-4 shadow-sm border border-purple-50 h-full flex flex-col">
-      <div className="flex items-center gap-3 min-h-[52px]">
-        <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-xl flex-shrink-0">
-          {icon}
+    <div className="bg-white rounded-[20px] p-5 shadow-sm h-full flex flex-col">
+      <div className="flex items-center gap-4 min-h-[88px]">
+        <div
+          className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0"
+          style={{ backgroundColor: '#F3E8FA' }}
+        >
+          <Icon
+            className="w-10 h-10"
+            style={{ color: PURPLE_BRIGHT }}
+            strokeWidth={1.5}
+          />
         </div>
-        <h3 className="text-[11px] leading-tight font-black uppercase tracking-wide text-gray-900">
+
+        <h3 className="text-base leading-snug font-bold uppercase tracking-wide text-gray-600">
           {title}
         </h3>
       </div>
 
-      <div className="w-full h-px bg-gray-100 my-3" />
+      <div className="w-full h-px bg-gray-200 my-4" />
 
       <div className="flex-1 flex flex-col">
-        <p className="text-[11px] text-gray-500 mb-2">{rateLabel}</p>
-
-        <p className="text-[38px] leading-none font-black text-purple-700 mb-2">
-          {rate}%
+        <p className="text-sm font-semibold text-gray-500 text-center mb-4">
+          {rateLabel}
         </p>
 
-        <ProgressBar value={Number(rate)} target={Number(target)} color="#6A1B9A" />
+        <div className="flex items-center gap-4">
+          <p
+            className="text-5xl leading-none font-black flex-shrink-0"
+            style={{ color: PURPLE_DEEP }}
+          >
+            {rate}%
+          </p>
 
-        <p className="text-[11px] text-gray-400 mt-2">{targetLabel}</p>
+          <TargetBar
+            value={Number(rate)}
+            target={Number(target)}
+            targetLabel={`vs Target ${target}%`}
+          />
+        </div>
 
-        <div className="mt-4 bg-purple-50 rounded-2xl p-3 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-sm flex-shrink-0">
-            {detailIcon}
-          </div>
+        <div
+          className="mt-auto pt-5"
+        >
+          <div
+            className="rounded-2xl p-4 flex items-center gap-4"
+            style={{ backgroundColor: '#F8EFFC' }}
+          >
+            <div
+              className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 bg-white"
+              style={{ border: `2px solid ${PURPLE_BRIGHT}55` }}
+            >
+              <DetailIcon
+                className="w-7 h-7"
+                style={{ color: PURPLE_BRIGHT }}
+                strokeWidth={1.75}
+              />
+            </div>
 
-          <div className="leading-tight">
-            <p className="text-sm font-black text-purple-800">{detailMain}</p>
-            <p className="text-[11px] text-gray-500">{detailSub}</p>
+            <div className="leading-tight">
+              <p
+                className="text-lg font-black"
+                style={{ color: PURPLE_DEEP }}
+              >
+                {detailMain}
+              </p>
+              <p className="text-sm font-semibold text-gray-500">
+                {detailSub}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -113,73 +217,80 @@ export default function DevelopmentSection() {
 
   return (
     <div className="w-full max-w-[1120px] mx-auto px-4 py-2 space-y-5">
+      {/* Header */}
       <div>
         <div className="flex items-center gap-4">
           <div
-            className="w-[56px] h-[56px] rounded-2xl flex flex-col items-center justify-center text-white shadow-sm"
-            style={{ backgroundColor: '#6A1B9A' }}
+            className="w-24 h-24 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-white shadow-sm flex-shrink-0"
+            style={{ backgroundColor: PURPLE_DEEP }}
           >
-            <span className="text-xl">📈</span>
-            <span className="text-[6px] font-black tracking-wider mt-0.5">
+            <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center">
+              <BarChart3 className="w-6 h-6 text-white" strokeWidth={1.75} />
+            </div>
+            <span className="text-[9px] font-bold tracking-wider">
               DEVELOPMENT
             </span>
           </div>
 
           <div>
-            <h1 className="text-[36px] leading-none font-black text-purple-900">
+            <h1
+              className="text-4xl md:text-[42px] leading-none font-black"
+              style={{ color: PURPLE }}
+            >
               {d.title || 'Development'}
             </h1>
-            <p className="text-[14px] text-gray-500 font-medium mt-1">
+            <p className="text-base md:text-lg text-gray-900 font-bold mt-2">
               {d.subtitle || 'Are We Growing Talent or Consuming Talent?'}
             </p>
           </div>
         </div>
 
-        <div className="w-full h-px bg-gray-200 mt-4" />
+        <div
+          className="w-full h-px mt-4"
+          style={{ backgroundColor: PURPLE }}
+        />
       </div>
 
-      <div className="rounded-[24px] bg-[#f8effd] px-5 py-6">
+      {/* Key metrics */}
+      <div className="rounded-[24px] bg-[#F8EFFC] px-5 py-6">
         <div className="flex items-center gap-4 mb-6">
-          <div className="flex-1 h-px bg-purple-200" />
-          <p className="text-sm font-black tracking-[0.16em] text-purple-700 uppercase">
+          <div className="flex-1 h-px bg-gray-400/60" />
+          <p className="text-lg font-black tracking-wide text-gray-900 uppercase">
             Key Metrics
           </p>
-          <div className="flex-1 h-px bg-purple-200" />
+          <div className="flex-1 h-px bg-gray-400/60" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
           <DevCard
-            icon="📊"
+            Icon={TrendingUp}
             title="Promotion Movement"
             rateLabel="Promotion Rate (YTD)"
             rate={Number(d.promotionRate)}
             target={Number(d.promotionTarget)}
-            targetLabel={`vs Target ${d.promotionTarget}%`}
-            detailIcon="📈"
+            DetailIcon={BarChart3}
             detailMain={`${d.promotionCount} Promotions`}
             detailSub={`out of ${d.totalEmployees} employees`}
           />
 
           <DevCard
-            icon="🔁"
+            Icon={Repeat}
             title="Internal Mobility"
             rateLabel="Internal Mobility Rate (YTD)"
             rate={Number(d.internalMobilityRate)}
             target={Number(d.internalMobilityTarget)}
-            targetLabel={`vs Target ${d.internalMobilityTarget}%`}
-            detailIcon="👥"
+            DetailIcon={Users}
             detailMain={`${d.internalMobilityCount} Employees`}
             detailSub="moved internally"
           />
 
           <DevCard
-            icon="🎓"
+            Icon={GraduationCap}
             title="Development Participation"
             rateLabel="Learning Participation Rate (YTD)"
             rate={Number(d.learningParticipationRate)}
             target={Number(d.learningParticipationTarget)}
-            targetLabel={`vs Target ${d.learningParticipationTarget}%`}
-            detailIcon="📖"
+            DetailIcon={BookOpen}
             detailMain={`${d.avgCourses} Avg Courses`}
             detailSub="completed per employee"
           />
@@ -188,9 +299,9 @@ export default function DevelopmentSection() {
 
       <LeadershipSignal
         text={d.leadershipSignal}
-        color="#6A1B9A"
-        bgColor="#f5eeff"
-        icon="📢"
+        color={PURPLE_DEEP}
+        bgColor="#F8EFFC"
+        icon={<Megaphone className="w-6 h-6 text-white" strokeWidth={1.75} />}
       />
     </div>
   )
