@@ -36,8 +36,13 @@ export const sectionConfig: Record<string, SectionConfig> = {
       { key: 'criticalRolesFilled', label: 'Critical Roles Filled', type: 'number' },
       { key: 'criticalRolesTotal', label: 'Critical Roles Total', type: 'number' },
       { key: 'criticalRolesPct', label: 'Critical Roles %', type: 'number' },
+      { key: 'criticalRolesStatus', label: 'Critical Roles Badge (healthy / watchlist / high / medium / low)', type: 'text' },
       { key: 'newHireStability', label: 'New Hire Stability', type: 'number' },
+      { key: 'newHireStabilityCaption', label: 'New Hire Stability Caption', type: 'text' },
+      { key: 'newHireStabilityStatus', label: 'New Hire Stability Badge (healthy / watchlist / high / medium / low)', type: 'text' },
       { key: 'onboardingCompletion', label: 'Onboarding Completion', type: 'number' },
+      { key: 'onboardingCompletionCaption', label: 'Onboarding Completion Caption', type: 'text' },
+      { key: 'onboardingCompletionStatus', label: 'Onboarding Completion Badge (healthy / watchlist / high / medium / low)', type: 'text' },
       { key: 'leadershipSignal', label: 'Leadership Signal', type: 'textarea' }
     ]
   },
@@ -54,7 +59,9 @@ export const sectionConfig: Record<string, SectionConfig> = {
       { key: 'other', label: 'Other %', type: 'number' },
       { key: 'averageTenure', label: 'Average Tenure', type: 'number' },
       { key: 'attendanceRate', label: 'Attendance Rate', type: 'number' },
+      { key: 'attendanceStatus', label: 'Attendance Badge (healthy / watchlist / high / medium / low)', type: 'text' },
       { key: 'absenteeismRate', label: 'Absenteeism Rate', type: 'number' },
+      { key: 'absenteeismStatus', label: 'Absenteeism Badge (healthy / watchlist / high / medium / low)', type: 'text' },
       { key: 'leadershipSignal', label: 'Leadership Signal', type: 'textarea' }
     ],
     arrays: [
@@ -92,6 +99,7 @@ export const sectionConfig: Record<string, SectionConfig> = {
       { key: 'criticalPositionTurnover', label: 'Critical Position Turnover', type: 'number' },
       { key: 'criticalPositionTurnoverPrev', label: 'Critical Position Turnover Prev', type: 'number' },
       { key: 'repeatedReplacementRoles', label: 'Repeated Replacement Roles', type: 'number' },
+      { key: 'repeatedReplacementRolesCaption', label: 'Repeated Replacement Roles Caption', type: 'text' },
       { key: 'timeToBackfill', label: 'Time To Backfill', type: 'number' },
       { key: 'timeToBackfillPrev', label: 'Time To Backfill Prev', type: 'number' },
       { key: 'chroAnalysis1', label: 'CHRO Analysis 1', type: 'textarea' },
@@ -121,9 +129,9 @@ export const sectionConfig: Record<string, SectionConfig> = {
       { key: 'leadershipSignal', label: 'Leadership Signal', type: 'textarea' }
     ],
     arrays: [
-      { key: 'exitReasons', title: 'Exit Reasons', columns: ['name', 'value'] },
-      { key: 'exitTenure', title: 'Exit Tenure', columns: ['name', 'value'] },
-      { key: 'exitRoles', title: 'Exit Roles', columns: ['name', 'value'] },
+      { key: 'resignationReasons', title: 'Top Resignation Reasons', columns: ['reason', 'pct'] },
+      { key: 'tenureAtResignation', title: 'Tenure at Resignation', columns: ['name', 'value', 'color'] },
+      { key: 'topAffectedRolesList', title: 'Top Affected Roles', columns: ['role', 'exits'] },
       { key: 'signalItems', title: 'Signal Items', columns: ['icon', 'text'] }
     ]
   },

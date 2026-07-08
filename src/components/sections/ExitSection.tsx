@@ -92,6 +92,7 @@ type ExitContent = {
   resignationReasons: ReasonRow[]
   tenureAtResignation: TenureRow[]
   topAffectedRolesList: RoleRow[]
+  signalItems?: { icon: string; text: string }[]
 }
 
 export default function ExitSection() {
@@ -349,12 +350,15 @@ export default function ExitSection() {
         </div>
 
         <div className="flex flex-wrap gap-4">
-          {[
-            { icon: '👥', text: 'Repeated exits in specific teams may indicate leadership issues' },
-            { icon: '🏢', text: 'High exits in certain roles may indicate structure or role misalignment' },
-            { icon: '💻', text: 'Early tenure exits may indicate workload or expectation mismatch' },
-            { icon: '💰', text: 'Compensation concerns may be driving talent away' },
-          ].map((s, i) => (
+          {(d.signalItems?.length
+            ? d.signalItems
+            : [
+                { icon: '👥', text: 'Repeated exits in specific teams may indicate leadership issues' },
+                { icon: '🏢', text: 'High exits in certain roles may indicate structure or role misalignment' },
+                { icon: '💻', text: 'Early tenure exits may indicate workload or expectation mismatch' },
+                { icon: '💰', text: 'Compensation concerns may be driving talent away' },
+              ]
+          ).map((s, i) => (
             <div key={i} className="flex items-center gap-2 text-xs max-w-[160px]">
               <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-white flex-shrink-0">
                 {s.icon}

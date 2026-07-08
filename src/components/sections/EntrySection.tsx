@@ -17,9 +17,24 @@ type EntryContent = {
   criticalRolesFilled: number
   criticalRolesTotal: number
   criticalRolesPct: number
+  criticalRolesStatus?: string
   newHireStability: number
+  newHireStabilityCaption?: string
+  newHireStabilityStatus?: string
   onboardingCompletion: number
+  onboardingCompletionCaption?: string
+  onboardingCompletionStatus?: string
   leadershipSignal: string
+}
+
+const STATUSES = ['healthy', 'watchlist', 'high', 'medium', 'low'] as const
+type Status = (typeof STATUSES)[number]
+
+function toStatus(value: unknown, fallback: Status): Status {
+  const s = String(value || '').toLowerCase().trim()
+  return (STATUSES as readonly string[]).includes(s)
+    ? (s as Status)
+    : fallback
 }
 
 export default function EntrySection() {
@@ -141,7 +156,9 @@ export default function EntrySection() {
             </p>
 
             <div className="mt-auto pt-5">
-              <StatusBadge status="watchlist" />
+              <StatusBadge
+                status={toStatus(d.criticalRolesStatus, 'watchlist')}
+              />
             </div>
           </div>
 
@@ -155,8 +172,15 @@ export default function EntrySection() {
               {d.newHireStability}%
             </p>
 
+            <p className="mt-3 text-xs text-gray-500 px-2">
+              {d.newHireStabilityCaption ||
+                'New hires retained beyond 3 months'}
+            </p>
+
             <div className="mt-auto pt-5">
-              <StatusBadge status="healthy" />
+              <StatusBadge
+                status={toStatus(d.newHireStabilityStatus, 'healthy')}
+              />
             </div>
           </div>
 
@@ -170,8 +194,15 @@ export default function EntrySection() {
               {d.onboardingCompletion}%
             </p>
 
+            <p className="mt-3 text-xs text-gray-500 px-2">
+              {d.onboardingCompletionCaption ||
+                'Onboarding completed on time'}
+            </p>
+
             <div className="mt-auto pt-5">
-              <StatusBadge status="watchlist" />
+              <StatusBadge
+                status={toStatus(d.onboardingCompletionStatus, 'watchlist')}
+              />
             </div>
           </div>
         </div>

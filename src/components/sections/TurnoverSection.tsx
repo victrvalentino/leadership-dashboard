@@ -60,6 +60,7 @@ type TurnoverContent = {
   criticalPositionTurnover: number
   criticalPositionTurnoverPrev: number
   repeatedReplacementRoles: number
+  repeatedReplacementRolesCaption?: string
   timeToBackfill: number
   timeToBackfillPrev: number
   chroAnalysis1?: string
@@ -184,7 +185,8 @@ export default function TurnoverSection() {
               </p>
 
               <p className="text-xs text-gray-400 mt-auto">
-                Roles replaced &gt;2 times in 12 months
+                {d.repeatedReplacementRolesCaption ||
+                  'Roles replaced >2 times in 12 months'}
               </p>
             </div>
 
