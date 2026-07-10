@@ -89,11 +89,11 @@ function KpiCard({
 }) {
   return (
     <div
-      className="rounded-2xl p-5 min-h-[290px] flex flex-col items-center justify-between text-center shadow-sm"
+      className="rounded-2xl p-5 min-h-[290px] flex flex-col items-center text-center shadow-sm"
       style={{ backgroundColor: bg }}
     >
       <div
-        className="w-24 h-24 rounded-full flex items-center justify-center bg-transparent"
+        className="w-24 h-24 rounded-full flex items-center justify-center bg-transparent flex-shrink-0"
         style={{ border: `3px solid ${iconColor}` }}
       >
         <Icon
@@ -103,17 +103,25 @@ function KpiCard({
         />
       </div>
 
-      <p className="text-xs font-bold uppercase tracking-widest text-gray-600 leading-snug">
-        {label}
-      </p>
+      {/* Fixed-height zones below the icon keep all five cards aligned
+          even when titles wrap to a different number of lines. */}
+      <div className="h-[44px] mt-3 flex items-center justify-center">
+        <p className="text-xs font-bold uppercase tracking-widest text-gray-600 leading-snug">
+          {label}
+        </p>
+      </div>
 
       <div className="w-3/4 h-px bg-gray-400/60" />
 
-      <p className="text-4xl font-black text-gray-600">{value}</p>
+      <div className="h-[64px] flex items-center justify-center">
+        <p className="text-4xl font-black text-gray-600">{value}</p>
+      </div>
 
       <div className="w-1/3 h-px bg-gray-400/60" />
 
-      <div>{footer}</div>
+      <div className="h-[40px] flex items-center justify-center">
+        {footer}
+      </div>
     </div>
   )
 }
