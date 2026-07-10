@@ -8,6 +8,38 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [info, setInfo] = useState('')
+  const [sendingReset, setSendingReset] = useState(false)
+
+  const handleForgotPassword = async () => {
+    setError('')
+    setInfo('')
+
+    if (!email) {
+      setError(
+        'Please enter your email address above first, then click Forgot Password.'
+      )
+      return
+    }
+
+    setSendingReset(true)
+
+    const { error: resetError } =
+      await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/admin/reset-password`,
+      })
+
+    setSendingReset(false)
+
+    if (resetError) {
+      setError(resetError.message)
+      return
+    }
+
+    setInfo(
+      `Password recovery email sent to ${email}. Check your inbox (and spam folder) and follow the link to set a new password.`
+    )
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -107,12 +139,29 @@ export default function LoginPage() {
             </p>
           )}
 
+          {info && (
+            <p className="text-green-600 text-sm text-center">
+              {info}
+            </p>
+          )}
+
           <button
             type="submit"
             disabled={loading}
             className="w-full bg-indigo-700 hover:bg-indigo-800 disabled:bg-indigo-400 text-white py-3 rounded-xl font-medium transition-colors"
           >
             {loading ? 'Signing in...' : 'Sign In'}
+          </button>
+
+          <button
+            type="button"
+            onClick={handleForgotPassword}
+            disabled={sendingReset}
+            className="w-full text-sm text-indigo-700 hover:text-indigo-900 hover:underline font-medium disabled:text-gray-400"
+          >
+            {sendingReset
+              ? 'Sending recovery email...'
+              : 'Forgot Password?'}
           </button>
         </form>
       </div>

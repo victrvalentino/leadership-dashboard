@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { Home } from 'lucide-react'
 import Sidebar, { type Page } from '@/components/layout/Sidebar'
 import Header from '@/components/layout/Header'
 import HomeSection from '@/components/sections/HomeSection'
@@ -76,7 +77,7 @@ export default function DashboardPage() {
           className="fixed bottom-6 right-6 w-12 h-12 bg-indigo-800 text-white rounded-xl shadow-lg flex items-center justify-center hover:bg-indigo-900 transition-colors z-50"
           aria-label="Go to home"
         >
-          🏠
+          <Home className="w-6 h-6" strokeWidth={2} />
         </button>
       )}
     </div>

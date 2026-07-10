@@ -13,6 +13,12 @@ export function middleware(req: NextRequest) {
     return NextResponse.next()
   }
 
+  // Password recovery page must be reachable without login,
+  // since users arrive here from the recovery email.
+  if (pathname === '/admin/reset-password') {
+    return NextResponse.next()
+  }
+
   // Everything else (dashboard + admin) requires login
   if (!session) {
     return NextResponse.redirect(
