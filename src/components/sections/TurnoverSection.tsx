@@ -92,12 +92,16 @@ function MetricBox({
   Icon: LucideIcon
 }) {
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-sm min-h-[160px] flex flex-col justify-between">
-      <p className="text-xs md:text-sm font-bold uppercase tracking-wide text-gray-800 text-center leading-tight">
-        {label}
-      </p>
+    <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center">
+      {/* Fixed-height zones keep all cards in the row aligned even
+          when titles wrap to a different number of lines. */}
+      <div className="h-[44px] flex items-center justify-center">
+        <p className="text-xs md:text-sm font-bold uppercase tracking-wide text-gray-800 text-center leading-tight">
+          {label}
+        </p>
+      </div>
 
-      <div className="flex items-center justify-center gap-4 my-3">
+      <div className="h-[80px] flex items-center justify-center gap-4">
         <IconCircle Icon={Icon} />
 
         <p
@@ -108,11 +112,13 @@ function MetricBox({
         </p>
       </div>
 
-      {prev && (
-        <p className="text-xs font-bold text-gray-700 text-center">
-          {prevLabel}: {prev} <span className="text-red-500">↑</span>
-        </p>
-      )}
+      <div className="h-[36px] flex items-center justify-center">
+        {prev && (
+          <p className="text-xs font-bold text-gray-700 text-center">
+            {prevLabel}: {prev} <span className="text-red-500">↑</span>
+          </p>
+        )}
+      </div>
     </div>
   )
 }
@@ -263,37 +269,43 @@ export default function TurnoverSection() {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {/* Repeated replacement roles */}
-              <div className="bg-white rounded-2xl p-4 shadow-sm min-h-[190px] flex flex-col justify-between">
-                <p className={cardTitleClass}>
-                  Repeated Replacement Roles
-                </p>
+              <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center">
+                <div className="h-[44px] flex items-center justify-center">
+                  <p className={cardTitleClass}>
+                    Repeated Replacement Roles
+                  </p>
+                </div>
 
-                <div className="flex items-center justify-center gap-4 my-3">
+                <div className="h-[80px] flex items-center justify-center gap-4">
                   <IconCircle Icon={RefreshCw} />
 
                   <p
-                    className="text-5xl font-black"
+                    className="text-4xl font-black"
                     style={{ color: ORANGE }}
                   >
                     {d.repeatedReplacementRoles}
                   </p>
                 </div>
 
-                <p className="text-xs font-bold text-gray-700 text-center">
-                  {d.repeatedReplacementRolesCaption ||
-                    'Roles replaced >2 times in 12 months'}
-                </p>
+                <div className="h-[36px] flex items-center justify-center">
+                  <p className="text-xs font-bold text-gray-700 text-center leading-tight">
+                    {d.repeatedReplacementRolesCaption ||
+                      'Roles replaced >2 times in 12 months'}
+                  </p>
+                </div>
               </div>
 
               {/* Time to backfill */}
-              <div className="bg-white rounded-2xl p-4 shadow-sm min-h-[190px] flex flex-col justify-between">
-                <p className={cardTitleClass}>
-                  Time-to-Backfill
-                  <br />
-                  Critical Roles
-                </p>
+              <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center">
+                <div className="h-[44px] flex items-center justify-center">
+                  <p className={cardTitleClass}>
+                    Time-to-Backfill
+                    <br />
+                    Critical Roles
+                  </p>
+                </div>
 
-                <div className="flex items-center justify-center gap-3 my-3">
+                <div className="h-[80px] flex items-center justify-center gap-3">
                   <IconCircle Icon={Clock} />
 
                   <p
@@ -305,10 +317,12 @@ export default function TurnoverSection() {
                   </p>
                 </div>
 
-                <p className="text-xs font-bold text-gray-700 text-center">
-                  vs Last 12 Months: {d.timeToBackfillPrev} Days{' '}
-                  <span className="text-red-500">↑</span>
-                </p>
+                <div className="h-[36px] flex items-center justify-center">
+                  <p className="text-xs font-bold text-gray-700 text-center">
+                    vs Last 12 Months: {d.timeToBackfillPrev} Days{' '}
+                    <span className="text-red-500">↑</span>
+                  </p>
+                </div>
               </div>
 
               {/* By role */}

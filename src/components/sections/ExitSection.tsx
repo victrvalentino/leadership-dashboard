@@ -60,8 +60,10 @@ function ExitKPI({
   caption?: string
 }) {
   return (
-    <div className="bg-white rounded-2xl p-4 min-h-[190px] flex flex-col justify-between text-center shadow-sm">
-      <div>
+    <div className="bg-white rounded-2xl p-4 flex flex-col items-center text-center shadow-sm">
+      {/* Fixed-height zones keep all five cards aligned even when
+          titles/subtitles wrap to a different number of lines. */}
+      <div className="h-[52px] flex flex-col items-center justify-center">
         <p className="text-xs md:text-sm font-bold uppercase tracking-wide text-gray-800 leading-tight">
           {label}
         </p>
@@ -70,7 +72,7 @@ function ExitKPI({
         )}
       </div>
 
-      <div className="flex items-center justify-center gap-3 my-3">
+      <div className="h-[80px] flex items-center justify-center gap-3 whitespace-nowrap">
         <IconCircle Icon={Icon} />
 
         <p
@@ -82,16 +84,18 @@ function ExitKPI({
         </p>
       </div>
 
-      {trend ? (
-        <p className="text-xs font-bold text-gray-700">
-          vs Last Months: {trend}{' '}
-          <span className={trendColor}>{trendArrow}</span>
-        </p>
-      ) : (
-        <p className="text-xs font-bold text-gray-700 leading-tight">
-          {caption}
-        </p>
-      )}
+      <div className="h-[40px] flex items-center justify-center">
+        {trend ? (
+          <p className="text-xs font-bold text-gray-700">
+            vs Last Months: {trend}{' '}
+            <span className={trendColor}>{trendArrow}</span>
+          </p>
+        ) : (
+          <p className="text-xs font-bold text-gray-700 leading-tight">
+            {caption}
+          </p>
+        )}
+      </div>
     </div>
   )
 }
