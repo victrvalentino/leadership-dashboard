@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { Lightbulb } from 'lucide-react'
 import { riskHeatmapData } from '@/data/dashboardData'
-import { RiskDot } from '@/components/ui'
 
 type RiskLevel = 'low' | 'medium' | 'high'
 
@@ -18,8 +18,18 @@ type RiskContent = {
   rows?: RiskRow[]
 }
 
+const ORANGE = '#F58220'
+const ORANGE_TEXT = '#C05E10'
+const PALE = '#FDEEDD'
+
+const RISK_COLORS: Record<RiskLevel, string> = {
+  low: '#3BAA4C',
+  medium: '#E09112',
+  high: '#E11D2E'
+}
+
 function normalizeStatus(status: string): RiskLevel {
-  const s = status.toLowerCase()
+  const s = String(status || '').toLowerCase()
 
   if (s.includes('low')) return 'low'
   if (s.includes('medium')) return 'medium'
@@ -39,6 +49,21 @@ function getFallbackIcon(area: string) {
   if (a.includes('cost')) return '💰'
 
   return '📌'
+}
+
+function RiskDot({
+  level,
+  size = 'w-5 h-5'
+}: {
+  level: RiskLevel
+  size?: string
+}) {
+  return (
+    <span
+      className={`${size} rounded-full flex-shrink-0`}
+      style={{ backgroundColor: RISK_COLORS[level] }}
+    />
+  )
 }
 
 export default function RiskHeatmapTab() {
@@ -77,25 +102,35 @@ export default function RiskHeatmapTab() {
   }, [])
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="text-center space-y-1">
-        <h2 className="text-2xl font-black uppercase text-gray-900">
+    <div className="max-w-5xl mx-auto space-y-6">
+      {/* Title */}
+      <div className="text-center space-y-3">
+        <h2 className="text-3xl md:text-4xl font-black uppercase text-gray-900 tracking-tight">
           Leadership Risk Heatmap
         </h2>
 
-        <div className="flex items-center justify-center gap-4">
-          <div className="flex-1 max-w-xs h-px bg-gray-300" />
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400">
+        <div className="flex items-center justify-center gap-3">
+          <div className="flex-1 max-w-xs flex items-center">
+            <div className="w-1.5 h-1.5 rounded-full bg-gray-800" />
+            <div className="flex-1 h-px bg-gray-800" />
+          </div>
+
+          <p className="text-sm md:text-base font-black uppercase tracking-widest text-gray-500 whitespace-nowrap">
             A Quick Overview of Workforce Risk Areas
           </p>
-          <div className="flex-1 max-w-xs h-px bg-gray-300" />
+
+          <div className="flex-1 max-w-xs flex items-center">
+            <div className="flex-1 h-px bg-gray-800" />
+            <div className="w-1.5 h-1.5 rounded-full bg-gray-800" />
+          </div>
         </div>
       </div>
 
-      <div className="rounded-2xl overflow-hidden shadow-sm border border-gray-200">
+      {/* Table */}
+      <div className="rounded-2xl overflow-hidden shadow-md bg-white">
         <div
-          className="grid grid-cols-3 px-6 py-3 text-white text-xs font-black uppercase tracking-widest"
-          style={{ backgroundColor: '#E65100' }}
+          className="grid grid-cols-[1.2fr_1fr_2fr] px-4 py-4 text-white text-lg md:text-xl font-black uppercase tracking-wide text-center"
+          style={{ backgroundColor: ORANGE }}
         >
           <span>Area</span>
           <span>Status</span>
@@ -107,33 +142,46 @@ export default function RiskHeatmapTab() {
 
           return (
             <div
-              key={row.area}
-              className={`grid grid-cols-3 px-6 py-4 items-center border-b border-gray-100 ${
-                i % 2 === 0 ? 'bg-white' : 'bg-orange-50'
+              key={`${row.area}-${i}`}
+              className={`grid grid-cols-[1.2fr_1fr_2fr] items-stretch ${
+                i > 0 ? 'border-t border-gray-200' : ''
               }`}
             >
-              <div className="flex items-center gap-3">
-                <span className="text-xl">
+              {/* Area */}
+              <div className="flex items-center gap-3 px-4 py-4">
+                <div
+                  className="w-12 h-12 rounded-full flex items-center justify-center text-xl flex-shrink-0"
+                  style={{ backgroundColor: PALE }}
+                >
                   {row.icon || getFallbackIcon(row.area)}
-                </span>
+                </div>
 
-                <span className="text-sm font-black uppercase tracking-wider text-orange-700">
+                <span
+                  className="text-base md:text-lg font-black uppercase tracking-wide"
+                  style={{ color: ORANGE_TEXT }}
+                >
                   {row.area}
                 </span>
               </div>
 
-              <div className="flex items-center gap-2">
+              {/* Status */}
+              <div className="flex items-center gap-3 px-4 py-4 border-l border-gray-200">
                 <RiskDot level={normalized} />
 
-                <span className="text-sm font-bold uppercase text-gray-700">
+                <span
+                  className="text-base md:text-lg font-black uppercase"
+                  style={{ color: RISK_COLORS[normalized] }}
+                >
                   {row.status}
                 </span>
               </div>
 
-              <div className="flex items-center gap-2">
-                <span className="text-orange-500 text-lg">🔔</span>
-
-                <span className="text-sm font-semibold text-orange-700">
+              {/* Signal */}
+              <div className="flex items-center px-4 py-4 border-l border-gray-200">
+                <span
+                  className="text-base md:text-lg font-bold"
+                  style={{ color: ORANGE_TEXT }}
+                >
                   {row.signal}
                 </span>
               </div>
@@ -142,41 +190,55 @@ export default function RiskHeatmapTab() {
         })}
       </div>
 
+      {/* Insight + legend */}
       <div
-        className="rounded-2xl p-4 flex flex-col md:flex-row items-start md:items-center gap-6"
-        style={{ backgroundColor: '#fff7f0' }}
+        className="rounded-2xl px-6 py-5 flex flex-col md:flex-row items-start md:items-center gap-6"
+        style={{ backgroundColor: PALE }}
       >
-        <div className="flex items-start gap-3 flex-1">
-          <div className="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center text-white text-xl flex-shrink-0">
-            💡
+        <div className="flex items-center gap-4 flex-1">
+          <div
+            className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0"
+            style={{ backgroundColor: ORANGE }}
+          >
+            <Lightbulb className="w-10 h-10 text-white" strokeWidth={1.75} />
           </div>
 
           <div>
-            <p className="text-xs font-black uppercase tracking-widest text-orange-600 mb-1">
+            <p
+              className="text-lg font-black uppercase tracking-wide mb-1"
+              style={{ color: ORANGE }}
+            >
               Leadership Insight
             </p>
 
-            <p className="text-sm text-gray-700">
+            <p className="text-sm font-semibold text-gray-700">
               {data.insight}
             </p>
           </div>
         </div>
 
-        <div className="flex gap-6 flex-shrink-0">
-          {[
-            { dot: 'low', label: 'LOW RISK', sub: 'On Track' },
-            { dot: 'medium', label: 'MEDIUM RISK', sub: 'Monitor Closely' },
-            { dot: 'high', label: 'HIGH RISK', sub: 'Immediate Action' },
-          ].map((item) => (
-            <div key={item.label} className="flex items-center gap-2">
-              <RiskDot level={item.dot as RiskLevel} />
+        <div className="hidden md:block w-px self-stretch bg-gray-400/60" />
 
-              <div>
-                <p className="text-xs font-black text-gray-700">
+        <div className="flex gap-6 flex-shrink-0 flex-wrap">
+          {(
+            [
+              { dot: 'low', label: 'LOW RISK', sub: 'On Track' },
+              { dot: 'medium', label: 'MEDIUM RISK', sub: 'Monitor Closely' },
+              { dot: 'high', label: 'HIGH RISK', sub: 'Immediate Action' },
+            ] as { dot: RiskLevel; label: string; sub: string }[]
+          ).map((item) => (
+            <div key={item.label} className="flex items-start gap-2.5">
+              <RiskDot level={item.dot} size="w-6 h-6" />
+
+              <div className="leading-tight">
+                <p
+                  className="text-sm font-black"
+                  style={{ color: ORANGE_TEXT }}
+                >
                   {item.label}
                 </p>
 
-                <p className="text-[10px] text-gray-400">
+                <p className="text-xs font-semibold text-gray-500">
                   {item.sub}
                 </p>
               </div>

@@ -309,8 +309,12 @@ export function DonutChart({
 
   let cumAngle = -Math.PI / 2
 
+  // An SVG arc spanning a full 360° has identical start/end points and
+  // renders as nothing, so cap any slice just below a full circle.
+  const FULL = 2 * Math.PI - 0.0001
+
   const slices = normalized.map((seg) => {
-    const angle = (seg.value / total) * 2 * Math.PI
+    const angle = Math.min((seg.value / total) * 2 * Math.PI, FULL)
 
     const x1 = cx + r * Math.cos(cumAngle)
     const y1 = cy + r * Math.sin(cumAngle)

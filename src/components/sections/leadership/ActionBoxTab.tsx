@@ -1,7 +1,19 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import {
+  Target,
+  ShieldCheck,
+  Network,
+  MessagesSquare,
+  TrendingUp,
+  RefreshCw,
+  type LucideIcon
+} from 'lucide-react'
 import { actionBoxData } from '@/data/dashboardData'
+
+const ORANGE = '#F58220'
+const PALE = '#FDEEDD'
 
 type ActionItem = {
   number: number | string
@@ -17,16 +29,16 @@ type ActionContent = {
   items?: ActionItem[]
 }
 
-function getActionIcon(number: number | string) {
+function getActionIcon(number: number | string): LucideIcon {
   const n = Number(number)
 
-  if (n === 1) return '🛡️'
-  if (n === 2) return '👥'
-  if (n === 3) return '🤝'
-  if (n === 4) return '📈'
-  if (n === 5) return '🔄'
+  if (n === 1) return ShieldCheck
+  if (n === 2) return Network
+  if (n === 3) return MessagesSquare
+  if (n === 4) return TrendingUp
+  if (n === 5) return RefreshCw
 
-  return '🎯'
+  return Target
 }
 
 function getBadgeBg(number: number | string) {
@@ -79,76 +91,103 @@ export default function ActionBoxTab() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      <div className="text-center space-y-1">
-        <h2 className="text-2xl font-black uppercase text-gray-900">
+      {/* Title */}
+      <div className="text-center space-y-3">
+        <h2 className="text-3xl md:text-4xl font-black uppercase text-gray-900 tracking-tight">
           Leadership Action Box
         </h2>
 
-        <div className="flex items-center justify-center gap-4">
-          <div className="flex-1 max-w-xs h-px bg-gray-300" />
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400">
+        <div className="flex items-center justify-center gap-3">
+          <div className="flex-1 max-w-xs flex items-center">
+            <div className="w-1.5 h-1.5 rounded-full bg-gray-800" />
+            <div className="flex-1 h-px bg-gray-800" />
+          </div>
+
+          <p className="text-sm md:text-base font-black uppercase tracking-widest text-gray-500 whitespace-nowrap">
             What Requires Immediate Action
           </p>
-          <div className="flex-1 max-w-xs h-px bg-gray-300" />
+
+          <div className="flex-1 max-w-xs flex items-center">
+            <div className="flex-1 h-px bg-gray-800" />
+            <div className="w-1.5 h-1.5 rounded-full bg-gray-800" />
+          </div>
         </div>
       </div>
 
-      <div className="rounded-2xl overflow-hidden shadow-sm border border-orange-100 bg-white">
-        {/* Header */}
-        <div
-          className="flex items-center gap-4 px-6 py-5 text-white"
-          style={{ backgroundColor: '#E65100' }}
-        >
-          <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center text-2xl">
-            🎯
-          </div>
-
-          <div>
-            <p className="font-black uppercase tracking-widest text-lg">
-              {data.headerTitle}
-            </p>
-
-            <p className="text-sm text-orange-100">
-              {data.subtitle}
-            </p>
-          </div>
-        </div>
-
-        {/* Items */}
-        <div className="divide-y divide-gray-100">
-          {(data.items || []).map((item) => (
-            <div
-              key={item.number}
-              className="flex items-center gap-5 px-6 py-5"
-            >
-              {/* Icon Badge */}
-              <div
-                className="w-12 h-12 rounded-full flex items-center justify-center text-2xl flex-shrink-0"
-                style={{
-                  backgroundColor: getBadgeBg(item.number),
-                }}
-              >
-                {getActionIcon(item.number)}
-              </div>
-
-              {/* Text */}
-              <div
-                className="border-l-2 pl-4 flex-1"
-                style={{ borderColor: item.color }}
-              >
-                <p
-                  className="text-sm md:text-lg font-black uppercase leading-tight"
-                  style={{ color: item.color }}
-                >
-                  {Number(item.number)}. {item.title}
-                </p>
-
-                <p className="text-sm md:text-base text-gray-600 mt-1">
-                  {item.description}
-                </p>
-              </div>
+      {/* Outer panel */}
+      <div
+        className="rounded-2xl p-4"
+        style={{ backgroundColor: PALE }}
+      >
+        <div className="rounded-2xl overflow-hidden shadow-sm bg-white">
+          {/* Header banner */}
+          <div
+            className="flex items-center gap-5 px-6 py-5 text-white rounded-t-2xl"
+            style={{ backgroundColor: ORANGE }}
+          >
+            <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center flex-shrink-0">
+              <Target
+                className="w-10 h-10"
+                style={{ color: ORANGE }}
+                strokeWidth={1.75}
+              />
             </div>
-          ))}
+
+            <div>
+              <p className="font-black uppercase tracking-wide text-xl md:text-2xl">
+                {data.headerTitle}
+              </p>
+
+              <p className="text-sm md:text-base font-bold text-white/95 mt-1">
+                {data.subtitle}
+              </p>
+            </div>
+          </div>
+
+          {/* Items */}
+          <div className="divide-y divide-gray-200">
+            {(data.items || []).map((item) => {
+              const Icon = getActionIcon(item.number)
+
+              return (
+                <div
+                  key={item.number}
+                  className="flex items-center gap-5 px-6 py-5"
+                >
+                  {/* Icon badge */}
+                  <div
+                    className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{
+                      backgroundColor:
+                        item.bgColor || getBadgeBg(item.number),
+                    }}
+                  >
+                    <Icon
+                      className="w-8 h-8"
+                      style={{ color: item.color }}
+                      strokeWidth={1.75}
+                    />
+                  </div>
+
+                  <div className="w-px self-stretch bg-gray-300" />
+
+                  {/* Text */}
+                  <div className="flex-1">
+                    <p
+                      className="text-base md:text-xl font-black uppercase leading-tight"
+                      style={{ color: item.color }}
+                    >
+                      {Number(item.number)}. {item.title}
+                    </p>
+
+                    <p className="text-sm md:text-base font-semibold text-gray-500 mt-1">
+                      {item.description}
+                    </p>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </div>
       </div>
     </div>

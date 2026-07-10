@@ -1,7 +1,42 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
+import {
+  Monitor,
+  Users,
+  MessagesSquare,
+  AlertTriangle,
+  Handshake,
+  UserRound,
+  CheckCircle2,
+  Target,
+  ArrowRight,
+  TrendingUp,
+  ShieldCheck,
+  BarChart3,
+  type LucideIcon
+} from 'lucide-react'
 import { governanceData } from '@/data/dashboardData'
+
+const ORANGE = '#F58220'
+const PALE = '#FDEEDD'
+const NAVY = '#1B2A6B'
+
+const STEP_COLORS = ['#1565C0', '#2E7D32', '#E8811C', '#C62828']
+const STEP_ICONS: LucideIcon[] = [
+  Monitor,
+  Users,
+  MessagesSquare,
+  AlertTriangle
+]
+
+const BENEFIT_COLORS = ['#1565C0', '#2E7D32', '#E8811C', '#C62828']
+const BENEFIT_ICONS: LucideIcon[] = [
+  TrendingUp,
+  ShieldCheck,
+  Users,
+  BarChart3
+]
 
 type Benefit = {
   icon: string
@@ -44,18 +79,41 @@ function normalizeResponsibility(
   )
 }
 
-function getBenefitIcon(icon?: string) {
-  if (!icon) return '🎯'
+function SectionBanner({ text }: { text: string }) {
+  return (
+    <div
+      className="px-6 py-4 text-white text-center text-xl md:text-2xl font-black uppercase tracking-wide"
+      style={{ backgroundColor: ORANGE }}
+    >
+      {text}
+    </div>
+  )
+}
 
-  const i = icon.toLowerCase()
-
-  if (i.includes('chart')) return '📊'
-  if (i.includes('search')) return '🔍'
-  if (i.includes('people')) return '👥'
-  if (i.includes('growth')) return '📈'
-  if (i.includes('decision')) return '📈'
-
-  return icon
+function CheckList({
+  items,
+  color
+}: {
+  items: string[]
+  color: string
+}) {
+  return (
+    <ul className="space-y-2">
+      {items.map((r, i) => (
+        <li
+          key={i}
+          className="text-sm font-semibold text-gray-700 flex gap-2 items-start"
+        >
+          <CheckCircle2
+            className="w-5 h-5 flex-shrink-0 mt-0.5"
+            style={{ color }}
+            strokeWidth={2}
+          />
+          <span>{r}</span>
+        </li>
+      ))}
+    </ul>
+  )
 }
 
 export default function GovernanceTab() {
@@ -110,169 +168,223 @@ export default function GovernanceTab() {
     loadData()
   }, [])
 
-  const stepColors = ['#1565C0', '#2E7D32', '#E65100', '#C62828']
+  const cadence = data.cadence || []
+  const benefits = data.benefits || []
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
-      <div className="text-center space-y-1">
-        <h2 className="text-2xl font-black uppercase text-gray-900">
+    <div className="max-w-6xl mx-auto space-y-6">
+      {/* Title */}
+      <div className="text-center space-y-3">
+        <h2 className="text-3xl md:text-4xl font-black uppercase text-gray-900 tracking-tight">
           Governance Model
         </h2>
 
-        <div className="flex items-center justify-center gap-4">
-          <div className="flex-1 max-w-xs h-px bg-gray-300" />
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400">
+        <div className="flex items-center justify-center gap-3">
+          <div className="flex-1 max-w-xs flex items-center">
+            <div className="w-1.5 h-1.5 rounded-full bg-gray-800" />
+            <div className="flex-1 h-px bg-gray-800" />
+          </div>
+
+          <p className="text-sm md:text-base font-black uppercase tracking-widest text-gray-500 whitespace-nowrap">
             Monthly Leadership Workforce Review
           </p>
-          <div className="flex-1 max-w-xs h-px bg-gray-300" />
+
+          <div className="flex-1 max-w-xs flex items-center">
+            <div className="flex-1 h-px bg-gray-800" />
+            <div className="w-1.5 h-1.5 rounded-full bg-gray-800" />
+          </div>
         </div>
       </div>
 
-      <div className="rounded-2xl overflow-hidden shadow-sm border border-orange-100">
-        <div
-          className="px-6 py-3 text-white text-center font-black uppercase tracking-widest"
-          style={{ backgroundColor: '#E65100' }}
-        >
-          {data.cadenceTitle}
-        </div>
+      {/* Cadence */}
+      <div className="rounded-2xl overflow-hidden shadow-md">
+        <SectionBanner text={data.cadenceTitle || 'Cadence'} />
 
-        <div className="bg-white p-5 grid grid-cols-1 md:grid-cols-4 gap-4 relative">
-          {(data.cadence || []).map((step, i) => (
-            <div key={String(step.step)} className="flex flex-col gap-3">
-              <div className="flex items-center gap-2">
-                <div
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-black"
-                  style={{
-                    backgroundColor:
-                      stepColors[i] || '#999',
-                  }}
-                >
-                  {step.step}
-                </div>
+        <div className="bg-white p-5 flex flex-col md:flex-row items-stretch gap-2">
+          {cadence.map((step, i) => {
+            const color = STEP_COLORS[i % STEP_COLORS.length]
+            const Icon = STEP_ICONS[i % STEP_ICONS.length]
 
-                <p
-                  className="text-xs font-black uppercase tracking-wider"
-                  style={{
-                    color: stepColors[i] || '#333',
-                  }}
-                >
-                  {step.title}
-                </p>
-              </div>
+            return (
+              <Fragment key={`${step.step}-${i}`}>
+                {i > 0 && (
+                  <div className="flex items-center justify-center flex-shrink-0 py-2 md:py-0">
+                    <ArrowRight className="w-6 h-6 text-gray-400 rotate-90 md:rotate-0" />
+                  </div>
+                )}
 
-              <div className="bg-gray-50 rounded-xl p-3 border border-gray-100 flex-1">
-                <ul className="space-y-1.5">
-                  {normalizeBullets(step.bullets).map(
-                    (bullet, j) => (
+                <div className="flex-1 bg-[#F4F4F4] rounded-2xl p-4 relative">
+                  <div
+                    className="absolute top-3 left-3 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-black"
+                    style={{ backgroundColor: color }}
+                  >
+                    {step.step}
+                  </div>
+
+                  <div className="flex items-center gap-3 pl-8">
+                    <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0">
+                      <Icon
+                        className="w-8 h-8"
+                        style={{ color }}
+                        strokeWidth={1.75}
+                      />
+                    </div>
+
+                    <p
+                      className="text-sm font-black uppercase tracking-wide leading-tight"
+                      style={{ color }}
+                    >
+                      {step.title}
+                    </p>
+                  </div>
+
+                  <ul className="space-y-1.5 mt-4">
+                    {normalizeBullets(step.bullets).map((bullet, j) => (
                       <li
                         key={j}
-                        className="text-xs text-gray-600 flex gap-1.5"
+                        className="text-sm font-medium text-gray-700 flex gap-2"
                       >
-                        <span className="text-gray-400 mt-0.5">
+                        <span className="text-gray-900 font-black leading-snug">
                           •
                         </span>
                         <span>{bullet}</span>
                       </li>
-                    )
-                  )}
-                </ul>
-              </div>
-            </div>
-          ))}
+                    ))}
+                  </ul>
+                </div>
+              </Fragment>
+            )
+          })}
         </div>
       </div>
 
-      <div className="rounded-2xl overflow-hidden shadow-sm border border-orange-100">
-        <div
-          className="px-6 py-3 text-white text-center font-black uppercase tracking-widest"
-          style={{ backgroundColor: '#E65100' }}
-        >
-          {data.ownershipTitle}
-        </div>
+      {/* Ownership */}
+      <div className="rounded-2xl overflow-hidden shadow-md">
+        <SectionBanner text={data.ownershipTitle || 'Ownership'} />
 
-        <div className="bg-white p-5 grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-          <div className="flex items-start gap-3">
-            <div className="w-14 h-14 rounded-full bg-blue-800 flex items-center justify-center text-white font-black text-lg">
-              PX
+        <div className="bg-white p-6 grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-8 items-center">
+          {/* PX */}
+          <div className="flex items-start gap-5">
+            <div className="w-24 h-24 rounded-full flex items-center justify-center flex-shrink-0 bg-[#1565C0]">
+              <span className="text-white font-black text-3xl">PX</span>
             </div>
 
             <div>
-              <p className="text-xs font-black uppercase tracking-wider text-blue-800 mb-2">
+              <p className="text-base md:text-lg font-black uppercase tracking-wide text-[#1565C0] mb-3">
                 PX = Insight Generation
               </p>
 
-              <ul className="space-y-1">
-                {normalizeResponsibility(
-                  data.pxResponsibilities
-                ).map((r, i) => (
-                  <li key={i} className="text-xs text-gray-600 flex gap-1.5">
-                    <span className="text-blue-600">✓</span>
-                    <span>{r}</span>
-                  </li>
-                ))}
-              </ul>
+              <CheckList
+                items={normalizeResponsibility(data.pxResponsibilities)}
+                color="#1565C0"
+              />
             </div>
           </div>
 
-          <div className="flex flex-col items-center gap-2 text-center">
-            <div className="w-16 h-16 rounded-full border-2 border-gray-400 flex items-center justify-center text-3xl">
-              🤝
+          {/* Partnership */}
+          <div className="flex items-center gap-3 justify-center">
+            <div className="hidden lg:block w-10 h-px bg-gray-400" />
+
+            <div className="flex flex-col items-center text-center gap-2">
+              <div
+                className="w-28 h-28 rounded-full border-[3px] flex items-center justify-center"
+                style={{ borderColor: NAVY }}
+              >
+                <Handshake
+                  className="w-12 h-12"
+                  style={{ color: NAVY }}
+                  strokeWidth={1.5}
+                />
+              </div>
+
+              <p
+                className="text-sm font-black uppercase tracking-wide leading-tight"
+                style={{ color: NAVY }}
+              >
+                Partnership
+                <br />
+                For Outcomes
+              </p>
             </div>
 
-            <p className="text-xs font-black uppercase tracking-widest text-gray-500">
-              Partnership
-              <br />
-              For Outcomes
-            </p>
+            <div className="hidden lg:block w-10 h-px bg-gray-400" />
           </div>
 
-          <div className="flex items-start gap-3">
-            <div className="w-14 h-14 rounded-full bg-green-600 flex items-center justify-center text-white text-3xl">
-              👤
-            </div>
-
-            <div>
-              <p className="text-xs font-black uppercase tracking-wider text-green-700 mb-2">
+          {/* Leader */}
+          <div className="flex items-start gap-5">
+            <div className="flex-1">
+              <p className="text-base md:text-lg font-black uppercase tracking-wide text-[#2E9E44] mb-3">
                 Leader = Decision Ownership
               </p>
 
-              <ul className="space-y-1">
-                {normalizeResponsibility(
+              <CheckList
+                items={normalizeResponsibility(
                   data.leaderResponsibilities
-                ).map((r, i) => (
-                  <li key={i} className="text-xs text-gray-600 flex gap-1.5">
-                    <span className="text-green-600">✓</span>
-                    <span>{r}</span>
-                  </li>
-                ))}
-              </ul>
+                )}
+                color="#2E9E44"
+              />
+            </div>
+
+            <div className="w-24 h-24 rounded-full flex items-center justify-center flex-shrink-0 bg-[#2E9E44]">
+              <UserRound
+                className="w-12 h-12 text-white"
+                strokeWidth={1.75}
+              />
             </div>
           </div>
         </div>
       </div>
 
-      <div className="rounded-2xl p-4 flex flex-wrap items-center gap-6 bg-orange-50">
-        <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white text-lg">
-            🎯
-          </div>
+      {/* Benefits */}
+      <div
+        className="rounded-2xl px-6 py-5 flex flex-wrap items-center gap-5"
+        style={{ backgroundColor: PALE }}
+      >
+        <div className="flex items-center gap-3">
+          <Target
+            className="w-14 h-14"
+            style={{ color: ORANGE }}
+            strokeWidth={1.75}
+          />
 
-          <span className="text-sm font-black uppercase tracking-wider text-orange-700">
-            {data.benefitsTitle}
+          <span
+            className="text-2xl md:text-3xl font-black uppercase tracking-wide"
+            style={{ color: ORANGE }}
+          >
+            {data.benefitsTitle || 'Benefits'}
           </span>
         </div>
 
-        {(data.benefits || []).map((b, i) => (
-          <div key={i} className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 text-lg">
-              {getBenefitIcon(b.icon)}
-            </div>
+        {benefits.map((b, i) => {
+          const color = BENEFIT_COLORS[i % BENEFIT_COLORS.length]
+          const Icon = BENEFIT_ICONS[i % BENEFIT_ICONS.length]
+          const hasCustomIcon =
+            b.icon && !/chart|search|people|growth|decision/i.test(b.icon)
 
-            <p className="text-xs text-gray-700 max-w-[120px]">
-              {b.text}
-            </p>
-          </div>
-        ))}
+          return (
+            <Fragment key={i}>
+              <div className="hidden md:block w-px self-stretch bg-gray-400/60" />
+
+              <div className="flex items-center gap-3">
+                {hasCustomIcon ? (
+                  <span className="text-3xl" style={{ color }}>
+                    {b.icon}
+                  </span>
+                ) : (
+                  <Icon
+                    className="w-10 h-10 flex-shrink-0"
+                    style={{ color }}
+                    strokeWidth={1.75}
+                  />
+                )}
+
+                <p className="text-sm font-semibold text-gray-700 max-w-[170px] leading-snug">
+                  {b.text}
+                </p>
+              </div>
+            </Fragment>
+          )
+        })}
       </div>
     </div>
   )

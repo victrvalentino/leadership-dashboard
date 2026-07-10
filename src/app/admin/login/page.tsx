@@ -66,7 +66,7 @@ export default function LoginPage() {
         profile.full_name
       )}; path=/; SameSite=Lax`
 
-    window.location.href = '/admin/dashboard'
+    window.location.href = '/'
   }
 
   return (

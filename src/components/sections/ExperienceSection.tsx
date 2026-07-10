@@ -7,11 +7,11 @@ import {
   BarChart3,
   CalendarDays,
   CalendarCheck,
-  UserX
+  UserX,
+  Megaphone
 } from 'lucide-react'
 import { experienceData } from '@/data/dashboardData'
 import {
-  SectionPageHeader,
   KeyMetricsHeader,
   LeadershipSignal,
   DonutChart,
@@ -221,15 +221,40 @@ export default function ExperienceSection() {
     'text-xs font-black text-blue-600 uppercase tracking-wide mb-3 text-center leading-tight'
 
   return (
-    <div className="w-full max-w-[1120px] mx-auto px-4 py-2">
-      <SectionPageHeader
-        icon="👥"
-        title={d.title || 'Experience'}
-        subtitle={d.subtitle || 'What Is The Current Team Condition'}
-        accentColor="text-blue-700"
-        badgeBg="bg-blue-600"
-        badgeText="EXPERIENCE"
-      />
+    <div className="w-full max-w-[1120px] mx-auto px-4 py-2 space-y-5">
+      {/* Header */}
+      <div>
+        <div className="flex items-center gap-4">
+          <div
+            className="w-24 h-24 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0"
+            style={{ backgroundColor: '#1D4ED8' }}
+          >
+            <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center">
+              <Users className="w-6 h-6 text-white" strokeWidth={1.75} />
+            </div>
+            <span className="text-[9px] font-bold tracking-widest">
+              EXPERIENCE
+            </span>
+          </div>
+
+          <div>
+            <h1
+              className="text-4xl md:text-[42px] leading-none font-black"
+              style={{ color: '#1D4ED8' }}
+            >
+              {d.title || 'Experience'}
+            </h1>
+            <p className="text-base md:text-lg text-gray-900 font-bold mt-2">
+              {d.subtitle || 'What Is The Current Team Condition'}
+            </p>
+          </div>
+        </div>
+
+        <div
+          className="w-full h-px mt-4"
+          style={{ backgroundColor: '#1D4ED8' }}
+        />
+      </div>
 
       <div className="bg-blue-50 rounded-3xl p-5 border border-blue-100">
         <KeyMetricsHeader color="#2563EB" />
@@ -400,9 +425,9 @@ export default function ExperienceSection() {
 
       <LeadershipSignal
         text={d.leadershipSignal}
-        color="#2563EB"
+        color="#1D4ED8"
         bgColor="#EEF4FF"
-        icon="📢"
+        icon={<Megaphone className="w-6 h-6 text-white" strokeWidth={1.75} />}
       />
     </div>
   )
