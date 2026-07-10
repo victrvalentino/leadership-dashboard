@@ -76,7 +76,7 @@ function CostKPI({
       </div>
 
       <div className="h-[40px] flex items-center justify-center">
-        <p className="text-xs font-bold text-gray-700 leading-tight">
+        <p className="text-[11px] font-bold text-gray-700 whitespace-nowrap">
           {prevLabel}: {prev}{' '}
           {chg && (
             <>
