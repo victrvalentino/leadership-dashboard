@@ -5,6 +5,7 @@ import Sidebar, { type Page } from '@/components/layout/Sidebar'
 import Header from '@/components/layout/Header'
 import HomeSection from '@/components/sections/HomeSection'
 import ExecutiveSection from '@/components/sections/ExecutiveSection'
+import RecruitmentSection from '@/components/sections/RecruitmentSection'
 import EntrySection from '@/components/sections/EntrySection'
 import ExperienceSection from '@/components/sections/ExperienceSection'
 import DevelopmentSection from '@/components/sections/DevelopmentSection'
@@ -28,6 +29,8 @@ export default function DashboardPage() {
         return <HomeSection onNavigate={navigate} />
       case 'executive':
         return <ExecutiveSection />
+      case 'recruitment':
+        return <RecruitmentSection />
       case 'entry':
         return <EntrySection />
       case 'experience':

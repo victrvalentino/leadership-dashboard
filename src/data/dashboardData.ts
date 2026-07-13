@@ -203,3 +203,42 @@ export const governanceData = {
   leaderResponsibilities: ['Own decisions'],
   benefits: [{ icon: '📊', text: 'Visibility' }],
 }
+// ── Recruitment Dashboard ────────────────────────────────────────────────────
+export const recruitmentData = {
+  title: 'Recruitment Dashboard',
+  subtitle: 'Real-Time Hiring Insights & Action Priorities',
+  updatedAs: 'Updated as of 13 July 2026',
+  deptStats: [
+    { department: 'Marketing', requested: '12', open: '10', inProgress: '8', onHold: '2', hired: '2', cancelled: '8' },
+    { department: 'Operations', requested: '0', open: '0', inProgress: '0', onHold: '0', hired: '0', cancelled: '0' },
+    { department: 'Technology', requested: '0', open: '0', inProgress: '0', onHold: '0', hired: '0', cancelled: '0' },
+    { department: 'CEO Office', requested: '0', open: '0', inProgress: '0', onHold: '0', hired: '0', cancelled: '0' },
+    { department: 'Finance & Legal', requested: '0', open: '0', inProgress: '0', onHold: '0', hired: '0', cancelled: '0' },
+    { department: 'People Experience', requested: '0', open: '0', inProgress: '0', onHold: '0', hired: '0', cancelled: '0' },
+  ],
+  positions: [
+    { department: 'Marketing', position: 'Video Editor', level: 'L1', hc: '1', status: 'Hired', leadTime: '21 Days', remarks: '[Remarks 1]|[Remarks 2]|[Remarks 3]' },
+    { department: 'Marketing', position: 'Graphic Designer', level: 'L2', hc: '2', status: 'Hired', leadTime: '10 Days', remarks: '[Remarks 1]|[Remarks 2]|[Remarks 3]' },
+    { department: 'Marketing', position: 'SEO', level: 'L2', hc: '1', status: 'Hold', leadTime: '7 Days', remarks: '[Remarks 1]|[Remarks 2]|[Remarks 3]' },
+    { department: 'Marketing', position: 'Videographer', level: 'L1', hc: '1', status: 'On Progress', leadTime: '36 Days', remarks: '[Remarks 1]|[Remarks 2]|[Remarks 3]' },
+    { department: 'Marketing', position: 'Digital Marketing', level: 'L1', hc: '3', status: 'On Progress', leadTime: '45 Days', remarks: '[Remarks 1]|[Remarks 2]|[Remarks 3]' },
+    { department: 'Marketing', position: 'Content Writer', level: 'L2', hc: '1', status: 'On Progress', leadTime: '24 Days', remarks: '[Remarks 1]|[Remarks 2]|[Remarks 3]' },
+    { department: 'Marketing', position: 'Copywriter', level: 'L1', hc: '3', status: 'On Progress', leadTime: '21 Days', remarks: '[Remarks 1]|[Remarks 2]|[Remarks 3]' },
+    { department: 'Marketing', position: 'Social Media Specialist', level: 'L2', hc: '1', status: 'Cancelled', leadTime: '20 Days', remarks: '[Remarks 1]|[Remarks 2]|[Remarks 3]' },
+  ],
+  thisWeek: [
+    { department: 'Marketing', text: '[Remarks 1]' },
+    { department: 'Marketing', text: '[Remarks 2]' },
+    { department: 'Marketing', text: '[Remarks 3]' },
+  ],
+  keyInsight: [
+    { department: 'Marketing', text: '[Remarks 1]' },
+    { department: 'Marketing', text: '[Remarks 2]' },
+    { department: 'Marketing', text: '[Remarks 3]' },
+  ],
+  nextAction: [
+    { department: 'Marketing', text: '[Remarks 1]' },
+    { department: 'Marketing', text: '[Remarks 2]' },
+    { department: 'Marketing', text: '[Remarks 3]' },
+  ],
+}

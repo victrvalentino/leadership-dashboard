@@ -1,5 +1,7 @@
 'use client'
 import {
+  UserSearch,
+  Search,
   LogIn,
   Users,
   TrendingUp,
@@ -16,6 +18,7 @@ import {
 type Page =
   | 'home'
   | 'executive'
+  | 'recruitment'
   | 'entry'
   | 'experience'
   | 'development'
@@ -144,6 +147,40 @@ export default function HomeSection({ onNavigate }: { onNavigate: (page: Page) =
       {/* Lifecycle Intelligence */}
       <div className="space-y-8">
         <SectionDivider text="LIFECYCLE INTELLIGENCE" />
+
+        {/* Recruitment Dashboard Banner */}
+        <button
+          onClick={() => onNavigate('recruitment')}
+          className="w-full rounded-2xl px-8 py-7 flex items-center justify-between gap-4 hover:shadow-lg transition-all cursor-pointer"
+          style={{ backgroundColor: '#FDE8E9' }}
+        >
+          <div className="flex items-center gap-5">
+            <div
+              className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0"
+              style={{ backgroundColor: '#F0787E' }}
+            >
+              <UserSearch className="w-8 h-8 text-white" strokeWidth={1.75} />
+            </div>
+
+            <div className="text-left">
+              <h2
+                className="text-2xl md:text-3xl font-black tracking-wide"
+                style={{ color: '#E8636F' }}
+              >
+                RECRUITMENT DASHBOARD
+              </h2>
+              <p className="text-sm md:text-base font-bold text-gray-800">
+                (Real-Time Hiring Insights & Action Priorities)
+              </p>
+            </div>
+          </div>
+
+          <Search
+            className="w-14 h-14 flex-shrink-0 hidden sm:block"
+            style={{ color: '#F0787E' }}
+            strokeWidth={2}
+          />
+        </button>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
           {LIFECYCLE_CARDS.map(({ id, label, Icon, color, subtitle }) => (

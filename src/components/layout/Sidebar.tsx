@@ -4,6 +4,7 @@ import { clsx } from 'clsx'
 import { supabase } from '@/lib/supabase'
 import {
   Home,
+  UserSearch,
   BarChart3,
   LogIn,
   Users,
@@ -20,6 +21,7 @@ import {
 export type Page =
   | 'home'
   | 'executive'
+  | 'recruitment'
   | 'entry'
   | 'experience'
   | 'development'
@@ -39,6 +41,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { id: 'home', label: 'Home', icon: Home, color: '#374151' },
   { id: 'executive', label: 'Executive Snapshot', icon: BarChart3, color: '#1565C0', group: 'overview' },
+  { id: 'recruitment', label: 'Recruitment', icon: UserSearch, color: '#E8636F', group: 'lifecycle' },
   { id: 'entry', label: 'Entry', icon: LogIn, color: '#2E7D32', group: 'lifecycle' },
   { id: 'experience', label: 'Experience', icon: Users, color: '#1565C0', group: 'lifecycle' },
   { id: 'development', label: 'Development', icon: TrendingUp, color: '#6A1B9A', group: 'lifecycle' },

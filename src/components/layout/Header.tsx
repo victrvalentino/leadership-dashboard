@@ -6,6 +6,7 @@ import type { Page } from './Sidebar'
 const PAGE_LABELS: Record<Page, string> = {
   home: 'Home',
   executive: 'Executive Snapshot',
+  recruitment: 'Recruitment Dashboard',
   entry: 'Entry — Hiring & Onboarding',
   experience: 'Experience',
   development: 'Development',
@@ -40,10 +41,24 @@ export default function Header({
 }) {
   const [userName, setUserName] = useState<string | null>(null)
   const [role, setRole] = useState<string | null>(null)
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null)
 
   useEffect(() => {
     setUserName(getCookie('user-name'))
     setRole(getCookie('user-role'))
+
+    fetch('/api/dashboard/last-updated', { cache: 'no-store' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json) => {
+        if (json?.updatedAt) {
+          const d = new Date(json.updatedAt)
+          const dd = String(d.getDate()).padStart(2, '0')
+          const mm = String(d.getMonth() + 1).padStart(2, '0')
+          const yyyy = d.getFullYear()
+          setUpdatedAt(`${dd}/${mm}/${yyyy}`)
+        }
+      })
+      .catch(() => {})
   }, [])
 
   return (
@@ -61,6 +76,12 @@ export default function Header({
         <p className="text-sm font-black text-gray-800 uppercase tracking-wide">{PAGE_LABELS[current]}</p>
       </div>
       <div className="ml-auto flex items-center gap-3">
+        {updatedAt && (
+          <span className="hidden md:inline text-xs font-semibold text-gray-500 whitespace-nowrap">
+            Updated as of {updatedAt}
+          </span>
+        )}
+
         <span className="hidden md:inline text-xs text-gray-400 bg-gray-100 px-3 py-1 rounded-full font-medium">
           People Experience Directorate
         </span>

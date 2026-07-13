@@ -30,6 +30,20 @@ export const sectionConfig: Record<string, SectionConfig> = {
     ]
   },
 
+  recruitment: {
+    fields: [
+      { key: 'title', label: 'Title', type: 'text' },
+      { key: 'subtitle', label: 'Subtitle', type: 'text' },
+      { key: 'updatedAs', label: 'Updated As Of (e.g. Updated as of 13 July 2026)', type: 'text' },
+    ],
+    arrays: [
+      { key: 'deptStats', title: 'Department Stats (one row per department tab)', columns: ['department', 'requested', 'open', 'inProgress', 'onHold', 'hired', 'cancelled'] },
+      { key: 'positions', title: 'Positions (status: Hired / Hold / On Progress / Cancelled; separate remarks with |)', columns: ['department', 'position', 'level', 'hc', 'status', 'leadTime', 'remarks'] },
+      { key: 'thisWeek', title: 'Insight: This Week Update', columns: ['department', 'text'] },
+      { key: 'keyInsight', title: 'Insight: Key Insight', columns: ['department', 'text'] },
+      { key: 'nextAction', title: 'Insight: Next Action', columns: ['department', 'text'] },
+    ]
+  },
   entry: {
     fields: [
       { key: 'title', label: 'Title', type: 'text' },
