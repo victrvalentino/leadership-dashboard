@@ -17,7 +17,7 @@ const SECTION_LABELS: Record<string, string> = {
   cost: 'Cost',
   riskHeatmap: 'Risk Heatmap',
   actionBox: 'Action Box',
-  governance: 'Governance',
+  governance: 'Governance Model',
   recruitment: 'General (Title & Date)',
   recruitment_marketing: 'Marketing Directorate',
   recruitment_operations: 'Operations Directorate',
@@ -26,6 +26,8 @@ const SECTION_LABELS: Record<string, string> = {
   recruitment_finance_legal: 'Finance & Legal Directorate',
   recruitment_people_experience: 'People Experience Directorate'
 }
+
+const LEADERSHIP_KEYS = ['riskHeatmap', 'actionBox', 'governance']
 
 const RECRUITMENT_KEYS = [
   'recruitment',
@@ -48,13 +50,17 @@ function getCookie(name: string) {
 }
 
 
-function RecruitmentGroup({
+function SectionGroup({
+  title,
+  keys,
   open,
   onToggle,
   sectionKeys,
   selectedSection,
   onSelect,
 }: {
+  title: string
+  keys: string[]
   open: boolean
   onToggle: () => void
   sectionKeys: string[]
@@ -66,12 +72,12 @@ function RecruitmentGroup({
       <button
         onClick={onToggle}
         className={`w-full text-left px-4 py-3 rounded-xl transition flex items-center justify-between ${
-          RECRUITMENT_KEYS.includes(selectedSection) && !open
+          keys.includes(selectedSection) && !open
             ? 'bg-blue-600 text-white'
             : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
         }`}
       >
-        <span className="font-semibold">Recruitment</span>
+        <span className="font-semibold">{title}</span>
         {open ? (
           <ChevronDown className="w-4 h-4" />
         ) : (
@@ -81,7 +87,7 @@ function RecruitmentGroup({
 
       {open && (
         <div className="space-y-1 pl-4">
-          {RECRUITMENT_KEYS.filter((k) => sectionKeys.includes(k)).map(
+          {keys.filter((k) => sectionKeys.includes(k)).map(
             (section) => (
               <button
                 key={section}
@@ -107,6 +113,7 @@ export default function AdminDashboardPage() {
 
   const [selectedSection, setSelectedSection] = useState(sectionKeys[0])
   const [recruitmentOpen, setRecruitmentOpen] = useState(false)
+  const [leadershipOpen, setLeadershipOpen] = useState(false)
   const [formData, setFormData] = useState<Record<string, any>>({})
   const [arrayData, setArrayDataState] = useState<Record<string, Row[]>>({})
   const [loading, setLoading] = useState(false)
@@ -283,7 +290,11 @@ export default function AdminDashboardPage() {
 
         <div className="space-y-2">
           {sectionKeys
-            .filter((section) => !RECRUITMENT_KEYS.includes(section))
+            .filter(
+              (section) =>
+                !RECRUITMENT_KEYS.includes(section) &&
+                !LEADERSHIP_KEYS.includes(section)
+            )
             .map((section) => (
               <div key={section} className="space-y-2">
                 <button
@@ -298,9 +309,23 @@ export default function AdminDashboardPage() {
                 </button>
 
                 {section === 'executive' && (
-                  <RecruitmentGroup
+                  <SectionGroup
+                    title="Recruitment"
+                    keys={RECRUITMENT_KEYS}
                     open={recruitmentOpen}
                     onToggle={() => setRecruitmentOpen((v) => !v)}
+                    sectionKeys={sectionKeys}
+                    selectedSection={selectedSection}
+                    onSelect={handleSectionChange}
+                  />
+                )}
+
+                {section === 'cost' && (
+                  <SectionGroup
+                    title="Leadership Action"
+                    keys={LEADERSHIP_KEYS}
+                    open={leadershipOpen}
+                    onToggle={() => setLeadershipOpen((v) => !v)}
                     sectionKeys={sectionKeys}
                     selectedSection={selectedSection}
                     onSelect={handleSectionChange}
