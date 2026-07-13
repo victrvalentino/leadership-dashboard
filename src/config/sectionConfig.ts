@@ -35,13 +35,102 @@ export const sectionConfig: Record<string, SectionConfig> = {
       { key: 'title', label: 'Title', type: 'text' },
       { key: 'subtitle', label: 'Subtitle', type: 'text' },
       { key: 'updatedAs', label: 'Updated As Of (e.g. Updated as of 13 July 2026)', type: 'text' },
+    ]
+  },
+  recruitment_marketing: {
+    fields: [
+      { key: 'requested', label: 'Total Requested Headcount', type: 'number' },
+      { key: 'open', label: 'Open Positions', type: 'number' },
+      { key: 'inProgress', label: 'In Progress', type: 'number' },
+      { key: 'onHold', label: 'On Hold', type: 'number' },
+      { key: 'hired', label: 'Successfully Hired', type: 'number' },
+      { key: 'cancelled', label: 'Cancelled', type: 'number' },
     ],
     arrays: [
-      { key: 'deptStats', title: 'Department Stats (one row per department tab)', columns: ['department', 'requested', 'open', 'inProgress', 'onHold', 'hired', 'cancelled'] },
-      { key: 'positions', title: 'Positions (status: Hired / Hold / On Progress / Cancelled; separate remarks with |)', columns: ['department', 'position', 'level', 'hc', 'status', 'leadTime', 'remarks'] },
-      { key: 'thisWeek', title: 'Insight: This Week Update', columns: ['department', 'text'] },
-      { key: 'keyInsight', title: 'Insight: Key Insight', columns: ['department', 'text'] },
-      { key: 'nextAction', title: 'Insight: Next Action', columns: ['department', 'text'] },
+      { key: 'positions', title: 'Positions (status: Hired / Hold / On Progress / Cancelled; separate remarks with |)', columns: ['position', 'level', 'hc', 'status', 'leadTime', 'remarks'] },
+      { key: 'thisWeek', title: 'Insight: This Week Update', columns: ['text'] },
+      { key: 'keyInsight', title: 'Insight: Key Insight', columns: ['text'] },
+      { key: 'nextAction', title: 'Insight: Next Action', columns: ['text'] },
+    ]
+  },
+  recruitment_operations: {
+    fields: [
+      { key: 'requested', label: 'Total Requested Headcount', type: 'number' },
+      { key: 'open', label: 'Open Positions', type: 'number' },
+      { key: 'inProgress', label: 'In Progress', type: 'number' },
+      { key: 'onHold', label: 'On Hold', type: 'number' },
+      { key: 'hired', label: 'Successfully Hired', type: 'number' },
+      { key: 'cancelled', label: 'Cancelled', type: 'number' },
+    ],
+    arrays: [
+      { key: 'positions', title: 'Positions (status: Hired / Hold / On Progress / Cancelled; separate remarks with |)', columns: ['position', 'level', 'hc', 'status', 'leadTime', 'remarks'] },
+      { key: 'thisWeek', title: 'Insight: This Week Update', columns: ['text'] },
+      { key: 'keyInsight', title: 'Insight: Key Insight', columns: ['text'] },
+      { key: 'nextAction', title: 'Insight: Next Action', columns: ['text'] },
+    ]
+  },
+  recruitment_technology: {
+    fields: [
+      { key: 'requested', label: 'Total Requested Headcount', type: 'number' },
+      { key: 'open', label: 'Open Positions', type: 'number' },
+      { key: 'inProgress', label: 'In Progress', type: 'number' },
+      { key: 'onHold', label: 'On Hold', type: 'number' },
+      { key: 'hired', label: 'Successfully Hired', type: 'number' },
+      { key: 'cancelled', label: 'Cancelled', type: 'number' },
+    ],
+    arrays: [
+      { key: 'positions', title: 'Positions (status: Hired / Hold / On Progress / Cancelled; separate remarks with |)', columns: ['position', 'level', 'hc', 'status', 'leadTime', 'remarks'] },
+      { key: 'thisWeek', title: 'Insight: This Week Update', columns: ['text'] },
+      { key: 'keyInsight', title: 'Insight: Key Insight', columns: ['text'] },
+      { key: 'nextAction', title: 'Insight: Next Action', columns: ['text'] },
+    ]
+  },
+  recruitment_ceo_office: {
+    fields: [
+      { key: 'requested', label: 'Total Requested Headcount', type: 'number' },
+      { key: 'open', label: 'Open Positions', type: 'number' },
+      { key: 'inProgress', label: 'In Progress', type: 'number' },
+      { key: 'onHold', label: 'On Hold', type: 'number' },
+      { key: 'hired', label: 'Successfully Hired', type: 'number' },
+      { key: 'cancelled', label: 'Cancelled', type: 'number' },
+    ],
+    arrays: [
+      { key: 'positions', title: 'Positions (status: Hired / Hold / On Progress / Cancelled; separate remarks with |)', columns: ['position', 'level', 'hc', 'status', 'leadTime', 'remarks'] },
+      { key: 'thisWeek', title: 'Insight: This Week Update', columns: ['text'] },
+      { key: 'keyInsight', title: 'Insight: Key Insight', columns: ['text'] },
+      { key: 'nextAction', title: 'Insight: Next Action', columns: ['text'] },
+    ]
+  },
+  recruitment_finance_legal: {
+    fields: [
+      { key: 'requested', label: 'Total Requested Headcount', type: 'number' },
+      { key: 'open', label: 'Open Positions', type: 'number' },
+      { key: 'inProgress', label: 'In Progress', type: 'number' },
+      { key: 'onHold', label: 'On Hold', type: 'number' },
+      { key: 'hired', label: 'Successfully Hired', type: 'number' },
+      { key: 'cancelled', label: 'Cancelled', type: 'number' },
+    ],
+    arrays: [
+      { key: 'positions', title: 'Positions (status: Hired / Hold / On Progress / Cancelled; separate remarks with |)', columns: ['position', 'level', 'hc', 'status', 'leadTime', 'remarks'] },
+      { key: 'thisWeek', title: 'Insight: This Week Update', columns: ['text'] },
+      { key: 'keyInsight', title: 'Insight: Key Insight', columns: ['text'] },
+      { key: 'nextAction', title: 'Insight: Next Action', columns: ['text'] },
+    ]
+  },
+  recruitment_people_experience: {
+    fields: [
+      { key: 'requested', label: 'Total Requested Headcount', type: 'number' },
+      { key: 'open', label: 'Open Positions', type: 'number' },
+      { key: 'inProgress', label: 'In Progress', type: 'number' },
+      { key: 'onHold', label: 'On Hold', type: 'number' },
+      { key: 'hired', label: 'Successfully Hired', type: 'number' },
+      { key: 'cancelled', label: 'Cancelled', type: 'number' },
+    ],
+    arrays: [
+      { key: 'positions', title: 'Positions (status: Hired / Hold / On Progress / Cancelled; separate remarks with |)', columns: ['position', 'level', 'hc', 'status', 'leadTime', 'remarks'] },
+      { key: 'thisWeek', title: 'Insight: This Week Update', columns: ['text'] },
+      { key: 'keyInsight', title: 'Insight: Key Insight', columns: ['text'] },
+      { key: 'nextAction', title: 'Insight: Next Action', columns: ['text'] },
     ]
   },
   entry: {

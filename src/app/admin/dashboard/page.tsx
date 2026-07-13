@@ -16,7 +16,14 @@ const SECTION_LABELS: Record<string, string> = {
   cost: 'Cost',
   riskHeatmap: 'Risk Heatmap',
   actionBox: 'Action Box',
-  governance: 'Governance'
+  governance: 'Governance',
+  recruitment: 'Recruitment — General',
+  recruitment_marketing: 'Marketing Directorate — Recruitment',
+  recruitment_operations: 'Operations Directorate — Recruitment',
+  recruitment_technology: 'Technology Directorate — Recruitment',
+  recruitment_ceo_office: 'CEO Office Directorate — Recruitment',
+  recruitment_finance_legal: 'Finance & Legal Directorate — Recruitment',
+  recruitment_people_experience: 'People Experience Directorate — Recruitment'
 }
 
 function getCookie(name: string) {

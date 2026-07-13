@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import { RECRUITMENT_DEPARTMENTS } from '@/config/recruitmentDepartments'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -9,27 +10,34 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
+// Aggregates the general recruitment section plus every
+// directorate's own section into a single response.
 export async function GET() {
   try {
-    const { data: section, error: sectionError } = await supabase
-      .from('dashboard_sections')
-      .select('*')
-      .eq('section_key', 'recruitment')
-      .single()
+    const keys = [
+      'recruitment',
+      ...RECRUITMENT_DEPARTMENTS.map((d) => d.key),
+    ]
 
-    if (sectionError || !section) {
+    const { data: sections, error: sectionsError } = await supabase
+      .from('dashboard_sections')
+      .select('id, section_key')
+      .in('section_key', keys)
+
+    if (sectionsError) {
       return NextResponse.json(
-        { error: 'Recruitment section not found' },
-        { status: 404 }
+        { error: String(sectionsError.message) },
+        { status: 500 }
       )
     }
 
+    const ids = (sections || []).map((s) => s.id)
+
     const { data: published, error: publishedError } = await supabase
       .from('published_content')
-      .select('*')
-      .eq('section_id', section.id)
+      .select('section_id, content_json, version')
+      .in('section_id', ids)
       .order('version', { ascending: false })
-      .limit(1)
 
     if (publishedError) {
       return NextResponse.json(
@@ -38,9 +46,30 @@ export async function GET() {
       )
     }
 
+    // Keep only the latest version per section
+    const latestBySectionId: Record<string, unknown> = {}
+    for (const row of published || []) {
+      if (!(row.section_id in latestBySectionId)) {
+        latestBySectionId[row.section_id] = row.content_json
+      }
+    }
+
+    const byKey: Record<string, unknown> = {}
+    for (const s of sections || []) {
+      if (s.id in latestBySectionId) {
+        byKey[s.section_key] = latestBySectionId[s.id]
+      }
+    }
+
     return NextResponse.json({
       success: true,
-      data: published?.[0]?.content_json || null
+      general: byKey['recruitment'] || null,
+      departments: Object.fromEntries(
+        RECRUITMENT_DEPARTMENTS.map((d) => [
+          d.key,
+          byKey[d.key] || null,
+        ])
+      ),
     })
   } catch (error) {
     return NextResponse.json(

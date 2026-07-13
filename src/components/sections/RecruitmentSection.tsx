@@ -11,24 +11,17 @@ import {
   UserX,
   type LucideIcon
 } from 'lucide-react'
-import { recruitmentData } from '@/data/dashboardData'
+import {
+  recruitmentGeneralData,
+  recruitmentDeptDefaults
+} from '@/data/dashboardData'
+import { RECRUITMENT_DEPARTMENTS } from '@/config/recruitmentDepartments'
 
 const PINK = '#F0787E'
 const PINK_TEXT = '#E8636F'
 const ORANGE_TEXT = '#D9640E'
 
-type DeptStat = {
-  department: string
-  requested: string
-  open: string
-  inProgress: string
-  onHold: string
-  hired: string
-  cancelled: string
-}
-
 type PositionRow = {
-  department: string
   position: string
   level: string
   hc: string
@@ -38,19 +31,26 @@ type PositionRow = {
 }
 
 type InsightRow = {
-  department: string
   text: string
 }
 
-type RecruitmentContent = {
-  title?: string
-  subtitle?: string
-  updatedAs?: string
-  deptStats?: DeptStat[]
+type DeptContent = {
+  requested?: string | number
+  open?: string | number
+  inProgress?: string | number
+  onHold?: string | number
+  hired?: string | number
+  cancelled?: string | number
   positions?: PositionRow[]
   thisWeek?: InsightRow[]
   keyInsight?: InsightRow[]
   nextAction?: InsightRow[]
+}
+
+type GeneralContent = {
+  title?: string
+  subtitle?: string
+  updatedAs?: string
 }
 
 const STATUS_STYLES: { match: RegExp; bg: string }[] = [
@@ -65,11 +65,6 @@ function statusColor(status: string): string {
     if (s.match.test(status)) return s.bg
   }
   return '#6B7280'
-}
-
-function matchesDept(rowDept: string | undefined, active: string) {
-  if (!rowDept) return true
-  return rowDept.trim().toLowerCase() === active.trim().toLowerCase()
 }
 
 function KpiPill({
@@ -140,8 +135,15 @@ function InsightGroup({
 }
 
 export default function RecruitmentSection() {
-  const [data, setData] = useState<RecruitmentContent>(recruitmentData)
-  const [activeDept, setActiveDept] = useState<string>('')
+  const [general, setGeneral] = useState<GeneralContent>(
+    recruitmentGeneralData
+  )
+  const [deptData, setDeptData] = useState<Record<string, DeptContent>>(
+    recruitmentDeptDefaults
+  )
+  const [activeKey, setActiveKey] = useState<string>(
+    RECRUITMENT_DEPARTMENTS[0].key
+  )
 
   useEffect(() => {
     async function loadData() {
@@ -154,16 +156,21 @@ export default function RecruitmentSection() {
 
         const json = await res.json()
 
-        if (json?.data) {
-          setData(prev => ({
-            ...prev,
-            ...json.data,
-            deptStats: json.data.deptStats?.length ? json.data.deptStats : prev.deptStats,
-            positions: json.data.positions?.length ? json.data.positions : prev.positions,
-            thisWeek: json.data.thisWeek?.length ? json.data.thisWeek : prev.thisWeek,
-            keyInsight: json.data.keyInsight?.length ? json.data.keyInsight : prev.keyInsight,
-            nextAction: json.data.nextAction?.length ? json.data.nextAction : prev.nextAction,
-          }))
+        if (json?.general) {
+          setGeneral(prev => ({ ...prev, ...json.general }))
+        }
+
+        if (json?.departments) {
+          setDeptData(prev => {
+            const merged: Record<string, DeptContent> = { ...prev }
+            for (const dept of RECRUITMENT_DEPARTMENTS) {
+              const incoming = json.departments[dept.key]
+              if (incoming) {
+                merged[dept.key] = { ...prev[dept.key], ...incoming }
+              }
+            }
+            return merged
+          })
         }
       } catch (error) {
         console.error(error)
@@ -173,30 +180,18 @@ export default function RecruitmentSection() {
     loadData()
   }, [])
 
-  const d = data
+  const d = general
 
-  const departments = useMemo(() => {
-    const seen: string[] = []
-    for (const row of d.deptStats || []) {
-      const name = (row.department || '').trim()
-      if (name && !seen.includes(name)) seen.push(name)
-    }
-    return seen
-  }, [d.deptStats])
-
-  const active = activeDept || departments[0] || ''
-
-  const stats =
-    (d.deptStats || []).find(s => matchesDept(s.department, active) && s.department) ||
-    ({} as DeptStat)
-
-  const positions = (d.positions || []).filter(p =>
-    matchesDept(p.department, active)
+  const activeDeptContent: DeptContent = useMemo(
+    () => deptData[activeKey] || {},
+    [deptData, activeKey]
   )
 
-  const thisWeek = (d.thisWeek || []).filter(r => matchesDept(r.department, active))
-  const keyInsight = (d.keyInsight || []).filter(r => matchesDept(r.department, active))
-  const nextAction = (d.nextAction || []).filter(r => matchesDept(r.department, active))
+  const stats = activeDeptContent
+  const positions = activeDeptContent.positions || []
+  const thisWeek = activeDeptContent.thisWeek || []
+  const keyInsight = activeDeptContent.keyInsight || []
+  const nextAction = activeDeptContent.nextAction || []
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-8 space-y-4">
@@ -237,13 +232,13 @@ export default function RecruitmentSection() {
 
       {/* Department tabs */}
       <div className="flex flex-wrap gap-1 border-b border-gray-200">
-        {departments.map(dept => {
-          const isActive = dept === active
+        {RECRUITMENT_DEPARTMENTS.map(dept => {
+          const isActive = dept.key === activeKey
 
           return (
             <button
-              key={dept}
-              onClick={() => setActiveDept(dept)}
+              key={dept.key}
+              onClick={() => setActiveKey(dept.key)}
               className="px-4 py-2 rounded-t-lg text-sm font-bold transition-colors"
               style={
                 isActive
@@ -251,7 +246,7 @@ export default function RecruitmentSection() {
                   : { color: PINK_TEXT }
               }
             >
-              {dept}
+              {dept.label}
             </button>
           )
         })}
