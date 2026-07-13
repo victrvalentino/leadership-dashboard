@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import DynamicSectionForm from '@/components/admin/DynamicSectionForm'
+import { ChevronDown, ChevronRight } from 'lucide-react'
 import { sectionConfig } from '@/config/sectionConfig'
 
 type Row = Record<string, string | number>
@@ -17,14 +18,24 @@ const SECTION_LABELS: Record<string, string> = {
   riskHeatmap: 'Risk Heatmap',
   actionBox: 'Action Box',
   governance: 'Governance',
-  recruitment: 'Recruitment — General',
-  recruitment_marketing: 'Marketing Directorate — Recruitment',
-  recruitment_operations: 'Operations Directorate — Recruitment',
-  recruitment_technology: 'Technology Directorate — Recruitment',
-  recruitment_ceo_office: 'CEO Office Directorate — Recruitment',
-  recruitment_finance_legal: 'Finance & Legal Directorate — Recruitment',
-  recruitment_people_experience: 'People Experience Directorate — Recruitment'
+  recruitment: 'General (Title & Date)',
+  recruitment_marketing: 'Marketing Directorate',
+  recruitment_operations: 'Operations Directorate',
+  recruitment_technology: 'Technology Directorate',
+  recruitment_ceo_office: 'CEO Office Directorate',
+  recruitment_finance_legal: 'Finance & Legal Directorate',
+  recruitment_people_experience: 'People Experience Directorate'
 }
+
+const RECRUITMENT_KEYS = [
+  'recruitment',
+  'recruitment_marketing',
+  'recruitment_operations',
+  'recruitment_technology',
+  'recruitment_ceo_office',
+  'recruitment_finance_legal',
+  'recruitment_people_experience',
+]
 
 function getCookie(name: string) {
   if (typeof document === 'undefined') return null
@@ -40,6 +51,7 @@ export default function AdminDashboardPage() {
   const sectionKeys = Object.keys(sectionConfig)
 
   const [selectedSection, setSelectedSection] = useState(sectionKeys[0])
+  const [recruitmentOpen, setRecruitmentOpen] = useState(false)
   const [formData, setFormData] = useState<Record<string, any>>({})
   const [arrayData, setArrayDataState] = useState<Record<string, Row[]>>({})
   const [loading, setLoading] = useState(false)
@@ -215,19 +227,58 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="space-y-2">
-          {sectionKeys.map((section) => (
-            <button
-              key={section}
-              onClick={() => handleSectionChange(section)}
-              className={`w-full text-left px-4 py-3 rounded-xl transition ${
-                selectedSection === section
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
-              }`}
-            >
-              {SECTION_LABELS[section] || section}
-            </button>
-          ))}
+          {sectionKeys
+            .filter((section) => !RECRUITMENT_KEYS.includes(section))
+            .map((section) => (
+              <button
+                key={section}
+                onClick={() => handleSectionChange(section)}
+                className={`w-full text-left px-4 py-3 rounded-xl transition ${
+                  selectedSection === section
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
+                }`}
+              >
+                {SECTION_LABELS[section] || section}
+              </button>
+            ))}
+
+          {/* Recruitment dropdown group */}
+          <button
+            onClick={() => setRecruitmentOpen((v) => !v)}
+            className={`w-full text-left px-4 py-3 rounded-xl transition flex items-center justify-between ${
+              RECRUITMENT_KEYS.includes(selectedSection) && !recruitmentOpen
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
+            }`}
+          >
+            <span className="font-semibold">Recruitment</span>
+            {recruitmentOpen ? (
+              <ChevronDown className="w-4 h-4" />
+            ) : (
+              <ChevronRight className="w-4 h-4" />
+            )}
+          </button>
+
+          {recruitmentOpen && (
+            <div className="space-y-1 pl-4">
+              {RECRUITMENT_KEYS.filter((k) =>
+                sectionKeys.includes(k)
+              ).map((section) => (
+                <button
+                  key={section}
+                  onClick={() => handleSectionChange(section)}
+                  className={`w-full text-left px-4 py-2.5 rounded-xl transition text-sm ${
+                    selectedSection === section
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-50 hover:bg-gray-100 text-gray-600'
+                  }`}
+                >
+                  {SECTION_LABELS[section] || section}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </aside>
 
