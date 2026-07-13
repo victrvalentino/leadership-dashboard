@@ -1,4 +1,5 @@
 'use client'
+import { useEffect, useState } from 'react'
 import {
   UserSearch,
   Search,
@@ -99,8 +100,32 @@ function SectionDivider({ text }: { text: string }) {
 }
 
 export default function HomeSection({ onNavigate }: { onNavigate: (page: Page) => void }) {
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch('/api/dashboard/last-updated', { cache: 'no-store' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json) => {
+        if (json?.updatedAt) {
+          const d = new Date(json.updatedAt)
+          const dd = String(d.getDate()).padStart(2, '0')
+          const mm = String(d.getMonth() + 1).padStart(2, '0')
+          const yyyy = d.getFullYear()
+          setUpdatedAt(`${dd}/${mm}/${yyyy}`)
+        }
+      })
+      .catch(() => {})
+  }, [])
+
   return (
     <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
+      {/* Updated as of */}
+      {updatedAt && (
+        <p className="text-right text-sm font-black text-gray-900 -mb-6">
+          Updated as of {updatedAt}
+        </p>
+      )}
+
       {/* Title */}
       <div className="text-center space-y-4">
         <h1 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight uppercase">
