@@ -47,6 +47,61 @@ function getCookie(name: string) {
   return match ? decodeURIComponent(match[2]) : null
 }
 
+
+function RecruitmentGroup({
+  open,
+  onToggle,
+  sectionKeys,
+  selectedSection,
+  onSelect,
+}: {
+  open: boolean
+  onToggle: () => void
+  sectionKeys: string[]
+  selectedSection: string
+  onSelect: (section: string) => void
+}) {
+  return (
+    <div className="space-y-2">
+      <button
+        onClick={onToggle}
+        className={`w-full text-left px-4 py-3 rounded-xl transition flex items-center justify-between ${
+          RECRUITMENT_KEYS.includes(selectedSection) && !open
+            ? 'bg-blue-600 text-white'
+            : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
+        }`}
+      >
+        <span className="font-semibold">Recruitment</span>
+        {open ? (
+          <ChevronDown className="w-4 h-4" />
+        ) : (
+          <ChevronRight className="w-4 h-4" />
+        )}
+      </button>
+
+      {open && (
+        <div className="space-y-1 pl-4">
+          {RECRUITMENT_KEYS.filter((k) => sectionKeys.includes(k)).map(
+            (section) => (
+              <button
+                key={section}
+                onClick={() => onSelect(section)}
+                className={`w-full text-left px-4 py-2.5 rounded-xl transition text-sm ${
+                  selectedSection === section
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-50 hover:bg-gray-100 text-gray-600'
+                }`}
+              >
+                {SECTION_LABELS[section] || section}
+              </button>
+            )
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function AdminDashboardPage() {
   const sectionKeys = Object.keys(sectionConfig)
 
@@ -230,55 +285,29 @@ export default function AdminDashboardPage() {
           {sectionKeys
             .filter((section) => !RECRUITMENT_KEYS.includes(section))
             .map((section) => (
-              <button
-                key={section}
-                onClick={() => handleSectionChange(section)}
-                className={`w-full text-left px-4 py-3 rounded-xl transition ${
-                  selectedSection === section
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
-                }`}
-              >
-                {SECTION_LABELS[section] || section}
-              </button>
-            ))}
-
-          {/* Recruitment dropdown group */}
-          <button
-            onClick={() => setRecruitmentOpen((v) => !v)}
-            className={`w-full text-left px-4 py-3 rounded-xl transition flex items-center justify-between ${
-              RECRUITMENT_KEYS.includes(selectedSection) && !recruitmentOpen
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
-            }`}
-          >
-            <span className="font-semibold">Recruitment</span>
-            {recruitmentOpen ? (
-              <ChevronDown className="w-4 h-4" />
-            ) : (
-              <ChevronRight className="w-4 h-4" />
-            )}
-          </button>
-
-          {recruitmentOpen && (
-            <div className="space-y-1 pl-4">
-              {RECRUITMENT_KEYS.filter((k) =>
-                sectionKeys.includes(k)
-              ).map((section) => (
+              <div key={section} className="space-y-2">
                 <button
-                  key={section}
                   onClick={() => handleSectionChange(section)}
-                  className={`w-full text-left px-4 py-2.5 rounded-xl transition text-sm ${
+                  className={`w-full text-left px-4 py-3 rounded-xl transition ${
                     selectedSection === section
                       ? 'bg-blue-600 text-white'
-                      : 'bg-gray-50 hover:bg-gray-100 text-gray-600'
+                      : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
                   }`}
                 >
                   {SECTION_LABELS[section] || section}
                 </button>
-              ))}
-            </div>
-          )}
+
+                {section === 'executive' && (
+                  <RecruitmentGroup
+                    open={recruitmentOpen}
+                    onToggle={() => setRecruitmentOpen((v) => !v)}
+                    sectionKeys={sectionKeys}
+                    selectedSection={selectedSection}
+                    onSelect={handleSectionChange}
+                  />
+                )}
+              </div>
+            ))}
         </div>
       </aside>
 
