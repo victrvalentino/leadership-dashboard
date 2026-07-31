@@ -133,6 +133,38 @@ export const sectionConfig: Record<string, SectionConfig> = {
       { key: 'nextAction', title: 'Insight: Next Action', columns: ['text'] },
     ]
   },
+  recruitment_operations_support: {
+    fields: [
+      { key: 'requested', label: 'Total Requested Headcount', type: 'number' },
+      { key: 'open', label: 'Open Positions', type: 'number' },
+      { key: 'inProgress', label: 'In Progress', type: 'number' },
+      { key: 'onHold', label: 'On Hold', type: 'number' },
+      { key: 'hired', label: 'Successfully Hired', type: 'number' },
+      { key: 'cancelled', label: 'Cancelled', type: 'number' },
+    ],
+    arrays: [
+      { key: 'positions', title: 'Positions (status: Hired / Hold / On Progress / Cancelled; separate remarks with |)', columns: ['position', 'level', 'hc', 'status', 'leadTime', 'remarks'] },
+      { key: 'thisWeek', title: 'Insight: This Week Update', columns: ['text'] },
+      { key: 'keyInsight', title: 'Insight: Key Insight', columns: ['text'] },
+      { key: 'nextAction', title: 'Insight: Next Action', columns: ['text'] },
+    ]
+  },
+  recruitment_account_management: {
+    fields: [
+      { key: 'requested', label: 'Total Requested Headcount', type: 'number' },
+      { key: 'open', label: 'Open Positions', type: 'number' },
+      { key: 'inProgress', label: 'In Progress', type: 'number' },
+      { key: 'onHold', label: 'On Hold', type: 'number' },
+      { key: 'hired', label: 'Successfully Hired', type: 'number' },
+      { key: 'cancelled', label: 'Cancelled', type: 'number' },
+    ],
+    arrays: [
+      { key: 'positions', title: 'Positions (status: Hired / Hold / On Progress / Cancelled; separate remarks with |)', columns: ['position', 'level', 'hc', 'status', 'leadTime', 'remarks'] },
+      { key: 'thisWeek', title: 'Insight: This Week Update', columns: ['text'] },
+      { key: 'keyInsight', title: 'Insight: Key Insight', columns: ['text'] },
+      { key: 'nextAction', title: 'Insight: Next Action', columns: ['text'] },
+    ]
+  },
   entry: {
     fields: [
       { key: 'title', label: 'Title', type: 'text' },

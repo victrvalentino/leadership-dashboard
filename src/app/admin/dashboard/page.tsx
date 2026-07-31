@@ -20,11 +20,13 @@ const SECTION_LABELS: Record<string, string> = {
   governance: 'Governance Model',
   recruitment: 'General (Title & Date)',
   recruitment_marketing: 'Marketing Directorate',
-  recruitment_operations: 'Operations Directorate',
+  recruitment_operations: 'Business Operations Directorate',
   recruitment_technology: 'Technology Directorate',
   recruitment_ceo_office: 'CEO Office Directorate',
   recruitment_finance_legal: 'Finance & Legal Directorate',
-  recruitment_people_experience: 'People Experience Directorate'
+  recruitment_people_experience: 'People Experience Directorate',
+  recruitment_operations_support: 'Operations Support Directorate',
+  recruitment_account_management: 'Account Management Directorate'
 }
 
 const LEADERSHIP_KEYS = ['riskHeatmap', 'actionBox', 'governance']
@@ -37,6 +39,8 @@ const RECRUITMENT_KEYS = [
   'recruitment_ceo_office',
   'recruitment_finance_legal',
   'recruitment_people_experience',
+  'recruitment_operations_support',
+  'recruitment_account_management',
 ]
 
 function getCookie(name: string) {

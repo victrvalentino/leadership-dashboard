@@ -250,4 +250,6 @@ export const recruitmentDeptDefaults: Record<string, typeof emptyRecruitmentDept
   recruitment_ceo_office: { ...emptyRecruitmentDept },
   recruitment_finance_legal: { ...emptyRecruitmentDept },
   recruitment_people_experience: { ...emptyRecruitmentDept },
+  recruitment_operations_support: { ...emptyRecruitmentDept },
+  recruitment_account_management: { ...emptyRecruitmentDept },
 }
