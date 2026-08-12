@@ -125,7 +125,7 @@ export default function ActionBoxTab() {
             className="flex items-center gap-5 px-6 py-5 text-white rounded-t-2xl"
             style={{ backgroundColor: ORANGE }}
           >
-            <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center flex-shrink-0 shadow-sm">
+            <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center flex-shrink-0 icon-gradient shadow-badge">
               <Target
                 className="w-10 h-10"
                 style={{ color: ORANGE }}
@@ -156,7 +156,7 @@ export default function ActionBoxTab() {
                 >
                   {/* Icon badge */}
                   <div
-                    className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm"
+                    className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft"
                     style={{
                       backgroundColor:
                         item.bgColor || getBadgeBg(item.number),

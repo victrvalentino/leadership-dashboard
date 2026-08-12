@@ -30,7 +30,7 @@ function IconCircle({
 }) {
   return (
     <div
-      className={`${size} rounded-full flex items-center justify-center flex-shrink-0`}
+      className={`${size} rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft`}
       style={{ backgroundColor: RED }}
     >
       <Icon className={`${iconSize} text-white`} strokeWidth={1.75} />
@@ -226,7 +226,7 @@ export default function ExitSection() {
       <div>
         <div className="flex items-center gap-4">
           <div
-            className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 shadow-badge"
+            className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 icon-gradient shadow-badge"
             style={{ backgroundColor: RED }}
           >
             <div className="w-12 h-12 rounded-full border-[1.5px] border-white/60 flex items-center justify-center">
@@ -467,7 +467,7 @@ export default function ExitSection() {
             ? d.signalItems.map((s, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xl"
+                    className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xl icon-gradient shadow-soft"
                     style={{ backgroundColor: RED }}
                   >
                     {s.icon}

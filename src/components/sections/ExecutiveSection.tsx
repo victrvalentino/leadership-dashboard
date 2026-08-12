@@ -89,23 +89,22 @@ function KpiCard({
 }) {
   return (
     <div
-      className="rounded-2xl p-5 min-h-[320px] flex flex-col items-center text-center shadow-sm"
+      className="rounded-2xl p-4 min-h-[250px] flex flex-col items-center text-center shadow-soft border border-black/5"
       style={{ backgroundColor: bg }}
     >
       <div
-        className="w-24 h-24 rounded-full flex items-center justify-center bg-transparent flex-shrink-0"
-        style={{ border: `3px solid ${iconColor}` }}
+        className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft"
+        style={{ backgroundColor: iconColor }}
       >
         <Icon
-          className="w-11 h-11"
-          style={{ color: iconColor }}
+          className="w-7 h-7 text-white"
           strokeWidth={1.75}
         />
       </div>
 
       {/* Fixed-height zones below the icon keep all five cards aligned
           even when titles wrap to a different number of lines. */}
-      <div className="h-[44px] mt-3 flex items-center justify-center">
+      <div className="h-[36px] mt-2.5 flex items-center justify-center">
         <p className="text-xs font-bold uppercase tracking-widest text-gray-600 leading-snug">
           {label}
         </p>
@@ -113,13 +112,13 @@ function KpiCard({
 
       <div className="w-3/4 h-px bg-gray-400/60" />
 
-      <div className="h-[64px] flex items-center justify-center">
-        <p className="text-4xl font-black text-gray-600">{value}</p>
+      <div className="h-[48px] flex items-center justify-center">
+        <p className="text-3xl font-black text-gray-600">{value}</p>
       </div>
 
       <div className="w-1/3 h-px bg-gray-400/60" />
 
-      <div className="h-[40px] flex items-center justify-center">
+      <div className="h-[34px] flex items-center justify-center">
         {footer}
       </div>
     </div>
@@ -185,18 +184,18 @@ export default function ExecutiveSection() {
 
       {/* Directorate banner */}
       <div
-        className="rounded-2xl px-8 py-7 flex items-center gap-5 shadow-md"
+        className="rounded-2xl px-6 py-5 flex items-center gap-5 shadow-md"
         style={{ background: '#1B1464' }}
       >
-        <div className="w-20 h-20 rounded-full border-2 border-white/70 flex items-center justify-center flex-shrink-0">
-          <Building2 className="w-9 h-9 text-white" strokeWidth={1.5} />
+        <div className="w-14 h-14 rounded-full bg-white/15 border border-white/30 flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft">
+          <Building2 className="w-7 h-7 text-white" strokeWidth={1.5} />
         </div>
 
         <div>
-          <p className="text-white text-lg md:text-xl font-bold uppercase tracking-wider">
+          <p className="text-white text-xs md:text-sm font-bold uppercase tracking-wider opacity-80">
             Directorate
           </p>
-          <p className="text-white text-3xl md:text-4xl font-black tracking-wide uppercase">
+          <p className="text-white text-xl md:text-2xl font-black tracking-wide uppercase">
             People Experience
           </p>
         </div>
@@ -210,7 +209,7 @@ export default function ExecutiveSection() {
           bg="#E2F3F0"
           label="Total Headcount"
           value={d.totalHeadcount}
-          footer={<Users className="w-8 h-8 text-blue-600" strokeWidth={2} />}
+          footer={<Users className="w-6 h-6 text-blue-600" strokeWidth={2} />}
         />
 
         <KpiCard
@@ -263,10 +262,10 @@ export default function ExecutiveSection() {
         style={{ backgroundColor: '#DFF5F2' }}
       >
         <div
-          className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0"
+          className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft"
           style={{ backgroundColor: '#12275A' }}
         >
-          <Lightbulb className="w-8 h-8 text-white" strokeWidth={1.75} />
+          <Lightbulb className="w-7 h-7 text-white" strokeWidth={1.75} />
         </div>
 
         <div className="w-px self-stretch bg-gray-300" />
@@ -287,8 +286,8 @@ export default function ExecutiveSection() {
           className="hidden sm:flex items-center gap-3 flex-shrink-0"
           style={{ color: '#12275A' }}
         >
-          <TrendingUp className="w-12 h-12" strokeWidth={2} />
-          <AlertTriangle className="w-11 h-11" strokeWidth={2} />
+          <TrendingUp className="w-9 h-9" strokeWidth={2} />
+          <AlertTriangle className="w-8 h-8" strokeWidth={2} />
         </div>
       </div>
     </div>

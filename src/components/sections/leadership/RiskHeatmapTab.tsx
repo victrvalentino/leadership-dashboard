@@ -150,7 +150,7 @@ export default function RiskHeatmapTab() {
               {/* Area */}
               <div className="flex items-center gap-3 px-4 py-4">
                 <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center text-xl flex-shrink-0 shadow-sm"
+                  className="w-12 h-12 rounded-full flex items-center justify-center text-xl flex-shrink-0 icon-gradient shadow-soft"
                   style={{ backgroundColor: PALE }}
                 >
                   {row.icon || getFallbackIcon(row.area)}
@@ -197,7 +197,7 @@ export default function RiskHeatmapTab() {
       >
         <div className="flex items-center gap-4 flex-1">
           <div
-            className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0 shadow-badge"
+            className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-badge"
             style={{ backgroundColor: ORANGE }}
           >
             <Lightbulb className="w-10 h-10 text-white" strokeWidth={1.75} />

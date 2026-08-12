@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
+import { logAudit } from '@/lib/auditLog'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -139,6 +140,13 @@ export async function POST(req: NextRequest) {
           { status: 500 }
         )
       }
+
+      await logAudit({
+        targetSection: section_key,
+        before: existing.content_json,
+        after: content,
+        action: publish ? 'publish' : 'draft_save',
+      })
     } else {
       const { error } = await supabase
         .from(table)
@@ -157,6 +165,13 @@ export async function POST(req: NextRequest) {
           { status: 500 }
         )
       }
+
+      await logAudit({
+        targetSection: section_key,
+        before: null,
+        after: content,
+        action: publish ? 'publish' : 'draft_save',
+      })
     }
 
     return NextResponse.json({

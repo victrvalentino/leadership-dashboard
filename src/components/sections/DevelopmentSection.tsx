@@ -113,7 +113,7 @@ function DevCard({
     <div className="bg-white rounded-[20px] p-5 shadow-sm h-full flex flex-col">
       <div className="flex items-center gap-4 min-h-[88px]">
         <div
-          className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0"
+          className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-badge"
           style={{ backgroundColor: '#F3E8FA' }}
         >
           <Icon
@@ -158,7 +158,7 @@ function DevCard({
             style={{ backgroundColor: '#F8EFFC' }}
           >
             <div
-              className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 bg-white"
+              className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 bg-white icon-gradient shadow-soft"
               style={{ border: `2px solid ${PURPLE_BRIGHT}55` }}
             >
               <DetailIcon
@@ -221,7 +221,7 @@ export default function DevelopmentSection() {
       <div>
         <div className="flex items-center gap-4">
           <div
-            className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 shadow-badge"
+            className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 icon-gradient shadow-badge"
             style={{ backgroundColor: PURPLE_DEEP }}
           >
             <div className="w-12 h-12 rounded-full border-[1.5px] border-white/60 flex items-center justify-center">

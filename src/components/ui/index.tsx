@@ -63,7 +63,7 @@ export function SectionPageHeader({
     <div className="mb-8">
       <div className="flex items-center gap-5">
         <div className={clsx(
-          'w-[88px] h-[88px] rounded-[26px] flex flex-col items-center justify-center gap-1 text-white flex-shrink-0 shadow-badge',
+          'w-[88px] h-[88px] rounded-[26px] flex flex-col items-center justify-center gap-1 text-white flex-shrink-0 icon-gradient shadow-badge',
           badgeBg
         )}>
           <div className="w-11 h-11 rounded-full border-[1.5px] border-white/60 flex items-center justify-center">
@@ -124,7 +124,7 @@ export function LeadershipSignal({
       style={{ backgroundColor: bgColor }}
     >
       <div
-        className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xl shadow-badge"
+        className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xl icon-gradient shadow-soft"
         style={{ backgroundColor: color }}
       >
         {icon ?? '📢'}
@@ -197,7 +197,7 @@ export function IconBadge({
   return (
     <div className="flex justify-center mb-2">
       <div
-        className="w-14 h-14 rounded-full border-2 bg-white flex items-center justify-center shadow-sm"
+        className="w-14 h-14 rounded-full border-2 bg-white flex items-center justify-center icon-gradient shadow-soft"
         style={{ borderColor: `${color}33`, color }}
       >
         {children}
@@ -211,7 +211,7 @@ export function HomeButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="fixed bottom-6 right-6 w-12 h-12 bg-indigo-800 text-white rounded-xl shadow-badge flex items-center justify-center hover:bg-indigo-900 hover:shadow-elevated transition-all z-50"
+      className="fixed bottom-6 right-6 w-12 h-12 bg-indigo-800 text-white rounded-xl icon-gradient shadow-badge flex items-center justify-center hover:bg-indigo-900 transition-all z-50"
       aria-label="Go to home"
     >
       <Home className="w-5 h-5" />

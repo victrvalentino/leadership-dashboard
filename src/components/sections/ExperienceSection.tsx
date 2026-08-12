@@ -101,7 +101,7 @@ function normalizeTenureMix(
 function CardIcon({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex justify-center mb-2">
-      <div className="w-14 h-14 rounded-full border-2 border-blue-200 bg-white flex items-center justify-center text-blue-600">
+      <div className="w-14 h-14 rounded-full border-2 border-blue-200 bg-white flex items-center justify-center text-blue-600 icon-gradient shadow-soft">
         {children}
       </div>
     </div>
@@ -226,7 +226,7 @@ export default function ExperienceSection() {
       <div>
         <div className="flex items-center gap-4">
           <div
-            className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 shadow-badge"
+            className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 icon-gradient shadow-badge"
             style={{ backgroundColor: '#1D4ED8' }}
           >
             <div className="w-12 h-12 rounded-full border-[1.5px] border-white/60 flex items-center justify-center">

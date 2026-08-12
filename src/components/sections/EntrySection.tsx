@@ -115,7 +115,7 @@ export default function EntrySection() {
       <div>
         <div className="flex items-center gap-4">
           <div
-            className="w-20 h-20 rounded-xl flex flex-col items-center justify-center gap-1 flex-shrink-0"
+            className="w-20 h-20 rounded-xl flex flex-col items-center justify-center gap-1 flex-shrink-0 icon-gradient shadow-badge"
             style={{ backgroundColor: GREEN }}
           >
             <LogIn className="w-8 h-8 text-white" strokeWidth={1.75} />

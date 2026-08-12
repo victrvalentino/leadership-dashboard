@@ -15,7 +15,7 @@ function PageHeader() {
     <div>
       <div className="flex items-center gap-4 mb-4">
         <div
-          className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 shadow-badge"
+          className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 icon-gradient shadow-badge"
           style={{ backgroundColor: ORANGE }}
         >
           <div className="w-12 h-12 rounded-full border-[1.5px] border-white/60 flex items-center justify-center">

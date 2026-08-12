@@ -81,7 +81,7 @@ function KpiPill({
   return (
     <div className="bg-white border border-gray-200 rounded-xl px-3 py-2.5 flex items-center gap-3 shadow-sm">
       <div
-        className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
+        className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft"
         style={{ backgroundColor: color }}
       >
         <Icon className="w-5.5 h-5.5 text-white" style={{ width: 22, height: 22 }} strokeWidth={1.75} />
@@ -199,7 +199,7 @@ export default function RecruitmentSection() {
       <div>
         <div className="flex items-start gap-4">
           <div
-            className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 shadow-badge"
+            className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 icon-gradient shadow-badge"
             style={{ backgroundColor: PINK }}
           >
             <div className="w-12 h-12 rounded-full border-[1.5px] border-white/60 flex items-center justify-center">

@@ -215,14 +215,14 @@ export default function GovernanceTab() {
 
                 <div className="flex-1 bg-[#F4F4F4] rounded-2xl p-4 relative">
                   <div
-                    className="absolute top-3 left-3 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-extrabold"
+                    className="absolute top-3 left-3 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-extrabold icon-gradient shadow-soft"
                     style={{ backgroundColor: color }}
                   >
                     {step.step}
                   </div>
 
                   <div className="flex items-center gap-3 pl-8">
-                    <div className="w-16 h-16 rounded-full bg-white shadow-soft flex items-center justify-center flex-shrink-0">
+                    <div className="w-16 h-16 rounded-full bg-white icon-gradient shadow-soft flex items-center justify-center flex-shrink-0">
                       <Icon
                         className="w-8 h-8"
                         style={{ color }}
@@ -265,7 +265,7 @@ export default function GovernanceTab() {
         <div className="bg-white p-6 grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-8 items-center">
           {/* PX */}
           <div className="flex items-start gap-5">
-            <div className="w-24 h-24 rounded-full flex items-center justify-center flex-shrink-0 bg-[#1565C0] shadow-badge">
+            <div className="w-24 h-24 rounded-full flex items-center justify-center flex-shrink-0 bg-[#1565C0] icon-gradient shadow-badge">
               <span className="text-white font-extrabold text-3xl">PX</span>
             </div>
 
@@ -325,7 +325,7 @@ export default function GovernanceTab() {
               />
             </div>
 
-            <div className="w-24 h-24 rounded-full flex items-center justify-center flex-shrink-0 bg-[#2E9E44] shadow-badge">
+            <div className="w-24 h-24 rounded-full flex items-center justify-center flex-shrink-0 bg-[#2E9E44] icon-gradient shadow-badge">
               <UserRound
                 className="w-12 h-12 text-white"
                 strokeWidth={1.75}

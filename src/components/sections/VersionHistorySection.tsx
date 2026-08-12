@@ -245,7 +245,7 @@ export default function VersionHistorySection() {
       {/* Header */}
       <div>
         <div className="flex items-center gap-5">
-          <div className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 shadow-badge bg-gradient-to-br from-slate-600 to-slate-800">
+          <div className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 icon-gradient shadow-badge" style={{ backgroundColor: '#475569' }}>
             <div className="w-12 h-12 rounded-full border-[1.5px] border-white/60 flex items-center justify-center">
               <History className="w-6 h-6 text-white" strokeWidth={1.75} />
             </div>

@@ -61,7 +61,7 @@ function CostKPI({
 
       <div className="h-[80px] flex items-center justify-center gap-3 whitespace-nowrap">
         <div
-          className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0"
+          className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft"
           style={{ backgroundColor: TEAL }}
         >
           <Icon className="w-8 h-8 text-white" strokeWidth={1.75} />
@@ -272,7 +272,7 @@ export default function CostSection() {
       <div>
         <div className="flex items-center gap-4">
           <div
-            className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 shadow-badge"
+            className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 icon-gradient shadow-badge"
             style={{ backgroundColor: TEAL }}
           >
             <div className="w-12 h-12 rounded-full border-[1.5px] border-white/60 flex items-center justify-center">
@@ -452,7 +452,7 @@ export default function CostSection() {
       >
         <div className="flex items-center gap-4 max-w-full md:max-w-[320px]">
           <div
-            className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0"
+            className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-badge"
             style={{ backgroundColor: TEAL }}
           >
             <Lightbulb className="w-10 h-10 text-white" strokeWidth={1.75} />

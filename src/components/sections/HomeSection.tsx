@@ -128,7 +128,7 @@ export default function HomeSection({ onNavigate }: { onNavigate: (page: Page) =
 
       {/* Title */}
       <div className="text-center space-y-4">
-        <h1 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight uppercase">
+        <h1 className="text-3xl md:text-5xl font-black text-gray-900 tracking-tight uppercase">
           One Leadership Dashboard
         </h1>
 
@@ -138,20 +138,20 @@ export default function HomeSection({ onNavigate }: { onNavigate: (page: Page) =
       {/* Executive Snapshot Banner */}
       <button
         onClick={() => onNavigate('executive')}
-        className="w-full rounded-2xl px-8 py-7 flex items-center justify-between gap-4 hover:shadow-lg transition-all cursor-pointer"
+        className="w-full rounded-2xl px-6 py-5 flex items-center justify-between gap-4 hover:shadow-lg transition-all cursor-pointer"
         style={{ backgroundColor: '#D8EAF3' }}
       >
         <div className="flex items-center gap-5">
           <div
-            className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0"
+            className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft"
             style={{ backgroundColor: '#1B3C8C' }}
           >
-            <BarChart3 className="w-8 h-8 text-white" strokeWidth={1.75} />
+            <BarChart3 className="w-7 h-7 text-white" strokeWidth={1.75} />
           </div>
 
           <div className="text-left">
             <h2
-              className="text-2xl md:text-3xl font-black tracking-wide"
+              className="text-xl md:text-2xl font-black tracking-wide"
               style={{ color: '#1B4B91' }}
             >
               EXECUTIVE SNAPSHOT
@@ -163,33 +163,31 @@ export default function HomeSection({ onNavigate }: { onNavigate: (page: Page) =
         </div>
 
         <LineChart
-          className="w-14 h-14 flex-shrink-0 hidden sm:block"
+          className="w-11 h-11 flex-shrink-0 hidden sm:block"
           style={{ color: '#1B3C8C' }}
           strokeWidth={2}
         />
       </button>
 
       {/* Lifecycle Intelligence */}
-      <div className="space-y-8">
+      <div className="space-y-6">
         <SectionDivider text="LIFECYCLE INTELLIGENCE" />
-
-        {/* Recruitment Dashboard Banner */}
         <button
           onClick={() => onNavigate('recruitment')}
-          className="w-full rounded-2xl px-8 py-7 flex items-center justify-between gap-4 hover:shadow-lg transition-all cursor-pointer"
+          className="w-full rounded-2xl px-6 py-5 flex items-center justify-between gap-4 hover:shadow-lg transition-all cursor-pointer"
           style={{ backgroundColor: '#FDE8E9' }}
         >
           <div className="flex items-center gap-5">
             <div
-              className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0"
+              className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft"
               style={{ backgroundColor: '#F0787E' }}
             >
-              <UserSearch className="w-8 h-8 text-white" strokeWidth={1.75} />
+              <UserSearch className="w-7 h-7 text-white" strokeWidth={1.75} />
             </div>
 
             <div className="text-left">
               <h2
-                className="text-2xl md:text-3xl font-black tracking-wide"
+                className="text-xl md:text-2xl font-black tracking-wide"
                 style={{ color: '#E8636F' }}
               >
                 RECRUITMENT DASHBOARD
@@ -201,25 +199,25 @@ export default function HomeSection({ onNavigate }: { onNavigate: (page: Page) =
           </div>
 
           <Search
-            className="w-14 h-14 flex-shrink-0 hidden sm:block"
+            className="w-11 h-11 flex-shrink-0 hidden sm:block"
             style={{ color: '#F0787E' }}
             strokeWidth={2}
           />
         </button>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
           {LIFECYCLE_CARDS.map(({ id, label, Icon, color, subtitle }) => (
             <button
               key={id}
               onClick={() => onNavigate(id)}
-              className="rounded-2xl px-3 py-6 flex flex-col items-center shadow-md hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer text-center"
+              className="rounded-2xl px-3 py-5 flex flex-col items-center shadow-md hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer text-center"
               style={{ backgroundColor: '#FDFCF2' }}
             >
               <div
-                className="w-20 h-20 rounded-full flex items-center justify-center"
+                className="w-16 h-16 rounded-full flex items-center justify-center icon-gradient shadow-soft"
                 style={{ backgroundColor: color }}
               >
-                <Icon className="w-9 h-9 text-white" strokeWidth={1.75} />
+                <Icon className="w-7 h-7 text-white" strokeWidth={1.75} />
               </div>
 
               <span
@@ -245,20 +243,20 @@ export default function HomeSection({ onNavigate }: { onNavigate: (page: Page) =
       {/* Leadership Action Focus */}
       <button
         onClick={() => onNavigate('leadership')}
-        className="w-full rounded-2xl px-8 py-7 flex items-center justify-between gap-4 hover:shadow-lg transition-all cursor-pointer"
+        className="w-full rounded-2xl px-6 py-5 flex items-center justify-between gap-4 hover:shadow-lg transition-all cursor-pointer"
         style={{ backgroundColor: '#FCF7DE' }}
       >
         <div className="flex items-center gap-5">
           <div
-            className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0"
+            className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft"
             style={{ backgroundColor: '#E9A319' }}
           >
-            <ClipboardCheck className="w-8 h-8 text-white" strokeWidth={1.75} />
+            <ClipboardCheck className="w-7 h-7 text-white" strokeWidth={1.75} />
           </div>
 
           <div className="text-left">
             <h2
-              className="text-2xl md:text-3xl font-black tracking-wide"
+              className="text-xl md:text-2xl font-black tracking-wide"
               style={{ color: '#F5902B' }}
             >
               LEADERSHIP ACTION FOCUS
@@ -270,7 +268,7 @@ export default function HomeSection({ onNavigate }: { onNavigate: (page: Page) =
         </div>
 
         <Target
-          className="w-14 h-14 flex-shrink-0 hidden sm:block"
+          className="w-11 h-11 flex-shrink-0 hidden sm:block"
           style={{ color: '#E9A319' }}
           strokeWidth={2}
         />
