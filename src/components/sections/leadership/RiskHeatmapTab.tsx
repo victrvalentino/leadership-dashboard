@@ -105,7 +105,7 @@ export default function RiskHeatmapTab() {
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Title */}
       <div className="text-center space-y-3">
-        <h2 className="text-3xl md:text-4xl font-black uppercase text-gray-900 tracking-tight">
+        <h2 className="text-3xl md:text-4xl font-extrabold uppercase text-gray-900 tracking-tight">
           Leadership Risk Heatmap
         </h2>
 
@@ -115,7 +115,7 @@ export default function RiskHeatmapTab() {
             <div className="flex-1 h-px bg-gray-800" />
           </div>
 
-          <p className="text-sm md:text-base font-black uppercase tracking-widest text-gray-500 whitespace-nowrap">
+          <p className="text-sm md:text-base font-extrabold uppercase tracking-widest text-gray-500 whitespace-nowrap">
             A Quick Overview of Workforce Risk Areas
           </p>
 
@@ -127,9 +127,9 @@ export default function RiskHeatmapTab() {
       </div>
 
       {/* Table */}
-      <div className="rounded-2xl overflow-hidden shadow-md bg-white">
+      <div className="rounded-2xl overflow-hidden shadow-soft bg-white border border-gray-100">
         <div
-          className="grid grid-cols-[1.2fr_1fr_2fr] px-4 py-4 text-white text-lg md:text-xl font-black uppercase tracking-wide text-center"
+          className="grid grid-cols-[1.2fr_1fr_2fr] px-4 py-4 text-white text-lg md:text-xl font-extrabold uppercase tracking-wide text-center"
           style={{ backgroundColor: ORANGE }}
         >
           <span>Area</span>
@@ -150,14 +150,14 @@ export default function RiskHeatmapTab() {
               {/* Area */}
               <div className="flex items-center gap-3 px-4 py-4">
                 <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center text-xl flex-shrink-0"
+                  className="w-12 h-12 rounded-full flex items-center justify-center text-xl flex-shrink-0 shadow-sm"
                   style={{ backgroundColor: PALE }}
                 >
                   {row.icon || getFallbackIcon(row.area)}
                 </div>
 
                 <span
-                  className="text-base md:text-lg font-black uppercase tracking-wide"
+                  className="text-base md:text-lg font-extrabold uppercase tracking-wide"
                   style={{ color: ORANGE_TEXT }}
                 >
                   {row.area}
@@ -169,7 +169,7 @@ export default function RiskHeatmapTab() {
                 <RiskDot level={normalized} />
 
                 <span
-                  className="text-base md:text-lg font-black uppercase"
+                  className="text-base md:text-lg font-extrabold uppercase"
                   style={{ color: RISK_COLORS[normalized] }}
                 >
                   {row.status}
@@ -197,7 +197,7 @@ export default function RiskHeatmapTab() {
       >
         <div className="flex items-center gap-4 flex-1">
           <div
-            className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0"
+            className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0 shadow-badge"
             style={{ backgroundColor: ORANGE }}
           >
             <Lightbulb className="w-10 h-10 text-white" strokeWidth={1.75} />
@@ -205,7 +205,7 @@ export default function RiskHeatmapTab() {
 
           <div>
             <p
-              className="text-lg font-black uppercase tracking-wide mb-1"
+              className="text-lg font-extrabold uppercase tracking-wide mb-1"
               style={{ color: ORANGE }}
             >
               Leadership Insight
@@ -232,7 +232,7 @@ export default function RiskHeatmapTab() {
 
               <div className="leading-tight">
                 <p
-                  className="text-sm font-black"
+                  className="text-sm font-extrabold"
                   style={{ color: ORANGE_TEXT }}
                 >
                   {item.label}

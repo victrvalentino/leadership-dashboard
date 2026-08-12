@@ -1,5 +1,77 @@
 # Redesign Changelog
 
+## Update 3 — Version History now shows every section, changed or not
+
+Previously the history page was a flat activity feed — only sections with a save/publish
+that day showed up. Changed to a full per-section status board instead.
+
+**Discovered while building this:** `dashboard_sections` actually has 19 rows, not 10 —
+Recruitment alone has 8 department sub-sections behind it (`recruitment_account_management`,
+`recruitment_ceo_office`, etc.), and the 3 Leadership sub-tabs (Risk Heatmap, Action Box,
+Governance) each have their own row too. Pulled the section list live from that table
+instead of hardcoding it, so this won't silently miss sections if more get added later.
+
+- `src/app/api/dashboard/history/route.ts` — now returns **every** section for the chosen
+  date. Each one includes `changedToday` (bool), the day's audit entries if any, and —
+  for unchanged sections — `lastChange` (when it was last touched and by whom), so
+  "unchanged" still carries useful context instead of just being blank.
+- `src/components/sections/VersionHistorySection.tsx` — rebuilt around three groups
+  matching the sidebar's own grouping (Lifecycle Sections, Leadership Action, Recruitment
+  Departments). Recruitment's 9 rows are collapsed by default with a "X changed" badge on
+  the group header, so the page doesn't turn into a 19-row wall on days with no recruitment
+  activity. Each section shows a green "Changed" or a muted "Unchanged" pill; unchanged
+  sections show "Last changed [date] by [editor]" when history exists.
+- Section colors are a curated map matching the real per-section brand colors used
+  elsewhere in the app (Experience blue, Turnover orange, etc.) rather than
+  `dashboard_sections.theme_color`, which turned out to be the same default indigo
+  (`#6366F1`) on every row — it's never actually been customized per section.
+
+---
+
+## Update 2 — font fix, Leadership sub-tabs, login redesign
+
+**Font bug fix (root cause of "still not Nunito"):** the `@import` for Google Fonts
+in `globals.css` was placed *after* `@tailwind base/components/utilities`. Per the CSS
+spec, `@import` must be the first rule in a stylesheet or browsers are required to
+ignore it — so Nunito silently never loaded and everything fell back to the system
+font. Fixed properly by switching to `next/font/google` in `layout.tsx` (self-hosted
+at build time, no external runtime request, no ordering footguns, no ad-blocker risk).
+`tailwind.config.js` and `globals.css` now reference the generated `--font-nunito`
+CSS variable instead of the font name string.
+
+> Note: this sandbox's network is allowlisted and can't reach `fonts.googleapis.com`,
+> so I validated this change with `tsc --noEmit` (clean, no errors) instead of a full
+> `next build`. `next/font/google` is a standard, widely-used Next.js pattern — it will
+> fetch normally on Vercel and on your machine, both of which have normal internet access.
+
+**Leadership Action sub-tabs redesigned** (`RiskHeatmapTab.tsx`, `ActionBoxTab.tsx`,
+`GovernanceTab.tsx`, `LeadershipSection.tsx`) — these were missed in the first pass
+since they live in their own `leadership/` subfolder. Changes: `font-black` →
+`font-extrabold` throughout (same heavy-weight-everywhere issue as the main sections),
+upgraded card shadows to `shadow-soft`/`shadow-badge` with matching borders, added
+depth to icon circle badges, and a subtle shadow on the active tab pill. Left the
+per-row `icon` fields as-is (Risk Heatmap rows and Governance benefits let the admin
+type any icon value via the CMS form — likely emoji today — so this stayed a content/data
+decision rather than a code change; only the surrounding chrome was polished).
+
+**Login page redesigned** (`src/app/admin/login/page.tsx`) — rebuilt as a split panel:
+left side is a navy-to-blue gradient brand panel (title, three feature bullets, a short
+tagline), right side is the actual sign-in form with icon-prefixed inputs and a real
+show/hide password toggle (new, small addition). **All existing auth logic is untouched
+byte-for-byte** — `handleLogin`, `handleForgotPassword`, the cookie-setting, the
+`is_active`/role checks — only the JSX markup changed. Also fixed a naming inconsistency:
+the old login page said "ESB Leadership Intelligence Platform" while the header and page
+metadata elsewhere say "One Leadership Dashboard" — now consistent everywhere.
+
+Not restyled: `src/app/admin/reset-password/page.tsx` still uses the old centered-card
+look. Left out of scope since it wasn't part of what was asked, but it'll now look
+visually inconsistent sitting next to the new login page — worth a matching pass later.
+
+---
+
+## Update 1 — original redesign pass
+
+
 ## 1. Typography
 - Swapped Inter → **Nunito** (`tailwind.config.js`, `globals.css`), weights 400–900.
 

@@ -65,9 +65,9 @@ export default function LeadershipSection() {
           <button
             key={t.id}
             onClick={() => setSub(t.id)}
-            className={`px-4 py-2 text-sm font-bold rounded-t-lg transition-colors ${
+            className={`px-4 py-2 text-sm font-bold rounded-t-lg transition-all ${
               sub === t.id
-                ? 'bg-orange-500 text-white'
+                ? 'bg-orange-500 text-white shadow-sm'
                 : 'text-gray-500 hover:text-orange-600 hover:bg-orange-50'
             }`}
           >

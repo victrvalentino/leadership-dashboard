@@ -82,7 +82,7 @@ function normalizeResponsibility(
 function SectionBanner({ text }: { text: string }) {
   return (
     <div
-      className="px-6 py-4 text-white text-center text-xl md:text-2xl font-black uppercase tracking-wide"
+      className="px-6 py-4 text-white text-center text-xl md:text-2xl font-extrabold uppercase tracking-wide"
       style={{ backgroundColor: ORANGE }}
     >
       {text}
@@ -175,7 +175,7 @@ export default function GovernanceTab() {
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Title */}
       <div className="text-center space-y-3">
-        <h2 className="text-3xl md:text-4xl font-black uppercase text-gray-900 tracking-tight">
+        <h2 className="text-3xl md:text-4xl font-extrabold uppercase text-gray-900 tracking-tight">
           Governance Model
         </h2>
 
@@ -185,7 +185,7 @@ export default function GovernanceTab() {
             <div className="flex-1 h-px bg-gray-800" />
           </div>
 
-          <p className="text-sm md:text-base font-black uppercase tracking-widest text-gray-500 whitespace-nowrap">
+          <p className="text-sm md:text-base font-extrabold uppercase tracking-widest text-gray-500 whitespace-nowrap">
             Monthly Leadership Workforce Review
           </p>
 
@@ -197,7 +197,7 @@ export default function GovernanceTab() {
       </div>
 
       {/* Cadence */}
-      <div className="rounded-2xl overflow-hidden shadow-md">
+      <div className="rounded-2xl overflow-hidden shadow-soft">
         <SectionBanner text={data.cadenceTitle || 'Cadence'} />
 
         <div className="bg-white p-5 flex flex-col md:flex-row items-stretch gap-2">
@@ -215,14 +215,14 @@ export default function GovernanceTab() {
 
                 <div className="flex-1 bg-[#F4F4F4] rounded-2xl p-4 relative">
                   <div
-                    className="absolute top-3 left-3 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-black"
+                    className="absolute top-3 left-3 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-extrabold"
                     style={{ backgroundColor: color }}
                   >
                     {step.step}
                   </div>
 
                   <div className="flex items-center gap-3 pl-8">
-                    <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0">
+                    <div className="w-16 h-16 rounded-full bg-white shadow-soft flex items-center justify-center flex-shrink-0">
                       <Icon
                         className="w-8 h-8"
                         style={{ color }}
@@ -231,7 +231,7 @@ export default function GovernanceTab() {
                     </div>
 
                     <p
-                      className="text-sm font-black uppercase tracking-wide leading-tight"
+                      className="text-sm font-extrabold uppercase tracking-wide leading-tight"
                       style={{ color }}
                     >
                       {step.title}
@@ -244,7 +244,7 @@ export default function GovernanceTab() {
                         key={j}
                         className="text-sm font-medium text-gray-700 flex gap-2"
                       >
-                        <span className="text-gray-900 font-black leading-snug">
+                        <span className="text-gray-900 font-extrabold leading-snug">
                           •
                         </span>
                         <span>{bullet}</span>
@@ -259,18 +259,18 @@ export default function GovernanceTab() {
       </div>
 
       {/* Ownership */}
-      <div className="rounded-2xl overflow-hidden shadow-md">
+      <div className="rounded-2xl overflow-hidden shadow-soft">
         <SectionBanner text={data.ownershipTitle || 'Ownership'} />
 
         <div className="bg-white p-6 grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-8 items-center">
           {/* PX */}
           <div className="flex items-start gap-5">
-            <div className="w-24 h-24 rounded-full flex items-center justify-center flex-shrink-0 bg-[#1565C0]">
-              <span className="text-white font-black text-3xl">PX</span>
+            <div className="w-24 h-24 rounded-full flex items-center justify-center flex-shrink-0 bg-[#1565C0] shadow-badge">
+              <span className="text-white font-extrabold text-3xl">PX</span>
             </div>
 
             <div>
-              <p className="text-base md:text-lg font-black uppercase tracking-wide text-[#1565C0] mb-3">
+              <p className="text-base md:text-lg font-extrabold uppercase tracking-wide text-[#1565C0] mb-3">
                 PX = Insight Generation
               </p>
 
@@ -298,7 +298,7 @@ export default function GovernanceTab() {
               </div>
 
               <p
-                className="text-sm font-black uppercase tracking-wide leading-tight"
+                className="text-sm font-extrabold uppercase tracking-wide leading-tight"
                 style={{ color: NAVY }}
               >
                 Partnership
@@ -313,7 +313,7 @@ export default function GovernanceTab() {
           {/* Leader */}
           <div className="flex items-start gap-5">
             <div className="flex-1">
-              <p className="text-base md:text-lg font-black uppercase tracking-wide text-[#2E9E44] mb-3">
+              <p className="text-base md:text-lg font-extrabold uppercase tracking-wide text-[#2E9E44] mb-3">
                 Leader = Decision Ownership
               </p>
 
@@ -325,7 +325,7 @@ export default function GovernanceTab() {
               />
             </div>
 
-            <div className="w-24 h-24 rounded-full flex items-center justify-center flex-shrink-0 bg-[#2E9E44]">
+            <div className="w-24 h-24 rounded-full flex items-center justify-center flex-shrink-0 bg-[#2E9E44] shadow-badge">
               <UserRound
                 className="w-12 h-12 text-white"
                 strokeWidth={1.75}
@@ -348,7 +348,7 @@ export default function GovernanceTab() {
           />
 
           <span
-            className="text-2xl md:text-3xl font-black uppercase tracking-wide"
+            className="text-2xl md:text-3xl font-extrabold uppercase tracking-wide"
             style={{ color: ORANGE }}
           >
             {data.benefitsTitle || 'Benefits'}

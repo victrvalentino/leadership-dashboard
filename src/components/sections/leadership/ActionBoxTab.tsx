@@ -93,7 +93,7 @@ export default function ActionBoxTab() {
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Title */}
       <div className="text-center space-y-3">
-        <h2 className="text-3xl md:text-4xl font-black uppercase text-gray-900 tracking-tight">
+        <h2 className="text-3xl md:text-4xl font-extrabold uppercase text-gray-900 tracking-tight">
           Leadership Action Box
         </h2>
 
@@ -103,7 +103,7 @@ export default function ActionBoxTab() {
             <div className="flex-1 h-px bg-gray-800" />
           </div>
 
-          <p className="text-sm md:text-base font-black uppercase tracking-widest text-gray-500 whitespace-nowrap">
+          <p className="text-sm md:text-base font-extrabold uppercase tracking-widest text-gray-500 whitespace-nowrap">
             What Requires Immediate Action
           </p>
 
@@ -119,13 +119,13 @@ export default function ActionBoxTab() {
         className="rounded-2xl p-4"
         style={{ backgroundColor: PALE }}
       >
-        <div className="rounded-2xl overflow-hidden shadow-sm bg-white">
+        <div className="rounded-2xl overflow-hidden shadow-soft bg-white border border-gray-100">
           {/* Header banner */}
           <div
             className="flex items-center gap-5 px-6 py-5 text-white rounded-t-2xl"
             style={{ backgroundColor: ORANGE }}
           >
-            <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center flex-shrink-0">
+            <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center flex-shrink-0 shadow-sm">
               <Target
                 className="w-10 h-10"
                 style={{ color: ORANGE }}
@@ -134,7 +134,7 @@ export default function ActionBoxTab() {
             </div>
 
             <div>
-              <p className="font-black uppercase tracking-wide text-xl md:text-2xl">
+              <p className="font-extrabold uppercase tracking-wide text-xl md:text-2xl">
                 {data.headerTitle}
               </p>
 
@@ -156,7 +156,7 @@ export default function ActionBoxTab() {
                 >
                   {/* Icon badge */}
                   <div
-                    className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0"
+                    className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm"
                     style={{
                       backgroundColor:
                         item.bgColor || getBadgeBg(item.number),
@@ -174,7 +174,7 @@ export default function ActionBoxTab() {
                   {/* Text */}
                   <div className="flex-1">
                     <p
-                      className="text-base md:text-xl font-black uppercase leading-tight"
+                      className="text-base md:text-xl font-extrabold uppercase leading-tight"
                       style={{ color: item.color }}
                     >
                       {Number(item.number)}. {item.title}
