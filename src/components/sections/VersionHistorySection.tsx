@@ -72,6 +72,7 @@ function fieldValue(v: unknown) {
 }
 
 function SectionRow({ section }: { section: SectionStatus }) {
+  const [open, setOpen] = useState(section.changedToday)
   const [expandedEntry, setExpandedEntry] = useState<string | null>(null)
 
   return (
@@ -83,21 +84,34 @@ function SectionRow({ section }: { section: SectionStatus }) {
         />
 
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-bold text-gray-800 text-[15px]">{section.title}</span>
-            {section.changedToday ? (
-              <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
-                <CheckCircle2 className="w-3 h-3" /> Changed
-              </span>
-            ) : (
-              <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-gray-100 text-gray-400">
-                <MinusCircle className="w-3 h-3" /> Unchanged
-              </span>
-            )}
-          </div>
+          <button
+            onClick={() => setOpen((v) => !v)}
+            className="w-full flex items-center justify-between gap-2 text-left cursor-pointer"
+            aria-expanded={open}
+          >
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-bold text-gray-800 text-[15px]">{section.title}</span>
+              {section.changedToday ? (
+                <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+                  <CheckCircle2 className="w-3 h-3" /> Changed
+                </span>
+              ) : (
+                <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-gray-100 text-gray-400">
+                  <MinusCircle className="w-3 h-3" /> Unchanged
+                </span>
+              )}
+            </div>
 
-          {section.changedToday ? (
-            <div className="mt-2 space-y-2">
+            <span
+              className="w-5 h-5 rounded-md flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors flex-shrink-0"
+              aria-label={open ? 'Minimize' : 'Expand'}
+            >
+              <ChevronDown className={'w-3.5 h-3.5 transition-transform duration-200 ' + (open ? 'rotate-180' : '')} />
+            </span>
+          </button>
+
+          {open && (section.changedToday ? (
+            <div className="mt-2 space-y-2 section-enter">
               {section.entriesToday.map((entry) => {
                 const isOpen = expandedEntry === entry.id
                 const isPublish = entry.action === 'publish'
@@ -157,12 +171,12 @@ function SectionRow({ section }: { section: SectionStatus }) {
               })}
             </div>
           ) : (
-            <p className="text-xs text-gray-400 font-medium mt-1">
+            <p className="text-xs text-gray-400 font-medium mt-1 section-enter">
               {section.lastChange
                 ? `Last changed ${formatShortDate(section.lastChange.createdAt)} by ${section.lastChange.editorName}`
                 : 'No history recorded yet'}
             </p>
-          )}
+          ))}
         </div>
       </div>
     </li>
@@ -172,21 +186,22 @@ function SectionRow({ section }: { section: SectionStatus }) {
 function GroupBlock({
   title,
   sections,
-  collapsible = false,
+  defaultOpen = true,
 }: {
   title: string
   sections: SectionStatus[]
-  collapsible?: boolean
+  defaultOpen?: boolean
 }) {
-  const [open, setOpen] = useState(!collapsible)
+  const [open, setOpen] = useState(defaultOpen)
   if (sections.length === 0) return null
   const changedCount = sections.filter((s) => s.changedToday).length
 
   return (
     <div className="bg-white rounded-3xl shadow-soft border border-gray-100 overflow-hidden">
       <button
-        onClick={() => collapsible && setOpen((v) => !v)}
-        className={'w-full flex items-center justify-between px-5 py-3.5 bg-gray-50/70 border-b border-gray-100 ' + (collapsible ? 'cursor-pointer hover:bg-gray-50' : 'cursor-default')}
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between px-5 py-3.5 bg-gray-50/70 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors"
+        aria-expanded={open}
       >
         <span className="text-xs font-extrabold uppercase tracking-wider text-gray-500">
           {title} <span className="text-gray-300 font-semibold">· {sections.length}</span>
@@ -197,13 +212,16 @@ function GroupBlock({
               {changedCount} changed
             </span>
           )}
-          {collapsible && (
-            <ChevronDown className={'w-4 h-4 text-gray-400 transition-transform ' + (open ? 'rotate-180' : '')} />
-          )}
+          <span
+            className="w-6 h-6 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+            aria-label={open ? 'Minimize' : 'Expand'}
+          >
+            <ChevronDown className={'w-4 h-4 transition-transform duration-200 ' + (open ? 'rotate-180' : '')} />
+          </span>
         </div>
       </button>
 
-      {open && <ul className="divide-y divide-gray-100">{sections.map((s) => <SectionRow key={s.sectionKey} section={s} />)}</ul>}
+      {open && <ul className="divide-y divide-gray-100 section-enter">{sections.map((s) => <SectionRow key={s.sectionKey} section={s} />)}</ul>}
     </div>
   )
 }
@@ -347,9 +365,9 @@ export default function VersionHistorySection() {
         </div>
       ) : (
         <div className="space-y-4">
-          <GroupBlock title="Lifecycle Sections" sections={core} />
-          <GroupBlock title="Leadership Action" sections={leadership} />
-          <GroupBlock title="Recruitment Departments" sections={recruitment} collapsible />
+          <GroupBlock title="Lifecycle Sections" sections={core} defaultOpen />
+          <GroupBlock title="Leadership Action" sections={leadership} defaultOpen />
+          <GroupBlock title="Recruitment Departments" sections={recruitment} defaultOpen={false} />
         </div>
       )}
     </div>

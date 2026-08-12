@@ -1,5 +1,41 @@
 # Redesign Changelog
 
+## Update 9 — collapse/expand extended one level deeper, to each section row
+
+Update 8 made the three category headers (Lifecycle Sections, Leadership Action,
+Recruitment Departments) collapsible. This extends the same behavior one level down:
+every individual section row inside a category — Executive Snapshot, Entry, Turnover,
+each Recruitment department, etc. — now has its own chevron toggle in the top-right
+corner too, independent of its category and every other row.
+
+`SectionRow` in `VersionHistorySection.tsx` now holds its own `open` state. The title
+and Changed/Unchanged pill stay visible either way (that's the at-a-glance summary);
+what collapses is the detail underneath — the Draft Saved/Published entries with editor
+and timestamp for changed sections, or the "Last changed on..." line for unchanged ones.
+
+Default state per row: sections **with a change today start expanded** (the reason
+you're on this page), sections with **no change start collapsed** (nothing urgent to
+see, one click away if you want it). The existing per-entry "View field changes" toggle
+nested inside changed sections is untouched and still works independently — clicking
+a row's chevron doesn't affect whatever field-change detail you had open inside it.
+
+## Update 8 — every category on Version History can now minimize/expand
+
+Previously only "Recruitment Departments" could be collapsed — "Lifecycle Sections" and
+"Leadership Action" were always fully expanded with no toggle at all. All three category
+headers now have a chevron icon in the top-right corner (`VersionHistorySection.tsx`,
+`GroupBlock` component): click anywhere on the header to minimize or expand that
+category's list of sections. Rotates 180° when open, matches the hover style already
+used elsewhere in the app.
+
+Default states on page load: **Lifecycle Sections** and **Leadership Action** start
+expanded (the content people look at first), **Recruitment Departments** starts
+collapsed (unchanged from before — 9 rows is a lot to greet you with by default).
+Whatever you expand also gets the same subtle fade-in used for section-switch
+navigation elsewhere in the app.
+
+---
+
 ## Update 7 — three icon badges that were missed entirely, plus a real CSS bug
 
 You flagged three spots still showing flat/broken icons. Traced each one instead of
