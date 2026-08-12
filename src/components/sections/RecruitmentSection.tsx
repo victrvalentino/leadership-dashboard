@@ -194,15 +194,15 @@ export default function RecruitmentSection() {
   const nextAction = activeDeptContent.nextAction || []
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-8 space-y-4">
+    <div className="max-w-6xl mx-auto px-6 py-10 space-y-6">
       {/* Header */}
       <div>
         <div className="flex items-start gap-4">
           <div
-            className="w-24 h-24 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0"
+            className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 shadow-badge"
             style={{ backgroundColor: PINK }}
           >
-            <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full border-[1.5px] border-white/60 flex items-center justify-center">
               <UserSearch className="w-6 h-6 text-white" strokeWidth={1.75} />
             </div>
             <span className="text-[8px] font-bold tracking-widest">
@@ -212,7 +212,7 @@ export default function RecruitmentSection() {
 
           <div className="flex-1">
             <h1
-              className="text-4xl md:text-[42px] leading-none font-black"
+              className="text-4xl md:text-[42px] leading-none font-extrabold tracking-tight"
               style={{ color: PINK }}
             >
               {d.title || 'Recruitment Dashboard'}
@@ -227,7 +227,7 @@ export default function RecruitmentSection() {
           </p>
         </div>
 
-        <div className="w-full h-px mt-4" style={{ backgroundColor: PINK }} />
+        <div className="w-full h-px mt-6" style={{ backgroundColor: PINK }} />
       </div>
 
       {/* Department tabs */}

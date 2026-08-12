@@ -15,10 +15,10 @@ function PageHeader() {
     <div>
       <div className="flex items-center gap-4 mb-4">
         <div
-          className="w-24 h-24 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0"
+          className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 shadow-badge"
           style={{ backgroundColor: ORANGE }}
         >
-          <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full border-[1.5px] border-white/60 flex items-center justify-center">
             <ClipboardList className="w-6 h-6 text-white" strokeWidth={1.75} />
           </div>
           <span className="text-[9px] font-bold tracking-widest">
@@ -28,7 +28,7 @@ function PageHeader() {
 
         <div>
           <h1
-            className="text-4xl md:text-[42px] leading-none font-black"
+            className="text-4xl md:text-[42px] leading-none font-extrabold tracking-tight"
             style={{ color: ORANGE }}
           >
             Leadership Action

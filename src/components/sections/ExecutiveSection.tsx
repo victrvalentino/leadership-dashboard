@@ -89,7 +89,7 @@ function KpiCard({
 }) {
   return (
     <div
-      className="rounded-2xl p-5 min-h-[290px] flex flex-col items-center text-center shadow-sm"
+      className="rounded-2xl p-5 min-h-[320px] flex flex-col items-center text-center shadow-sm"
       style={{ backgroundColor: bg }}
     >
       <div
@@ -178,7 +178,7 @@ export default function ExecutiveSection() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10 space-y-8">
+    <div className="max-w-6xl mx-auto px-6 py-10 space-y-6">
       <h1 className="text-3xl md:text-4xl font-black text-center uppercase text-gray-900 tracking-tight">
         {d.title || 'Executive Snapshot'}
       </h1>

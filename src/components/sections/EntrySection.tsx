@@ -102,7 +102,7 @@ export default function EntrySection() {
   const d = data
 
   const cardClass =
-    'bg-white rounded-2xl p-5 min-h-[340px] flex flex-col items-center text-center shadow-sm'
+    'bg-white rounded-2xl p-5 min-h-[320px] flex flex-col items-center text-center shadow-sm'
 
   const titleClass =
     'text-sm font-bold uppercase tracking-widest text-gray-500 leading-snug'
@@ -110,7 +110,7 @@ export default function EntrySection() {
   const bigValueClass = 'text-5xl font-black'
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-10 space-y-6">
+    <div className="max-w-6xl mx-auto px-6 py-10 space-y-6">
       {/* Header */}
       <div>
         <div className="flex items-center gap-4">
@@ -138,7 +138,7 @@ export default function EntrySection() {
         </div>
 
         <div
-          className="w-full h-px mt-4"
+          className="w-full h-px mt-6"
           style={{ backgroundColor: GREEN }}
         />
       </div>

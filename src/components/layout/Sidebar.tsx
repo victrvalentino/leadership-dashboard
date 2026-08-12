@@ -14,6 +14,7 @@ import {
   DollarSign,
   ClipboardList,
   Pencil,
+  History,
   LogOut as LogOutIcon,
   type LucideIcon
 } from 'lucide-react'
@@ -29,6 +30,7 @@ export type Page =
   | 'exit'
   | 'cost'
   | 'leadership'
+  | 'history'
 
 interface NavItem {
   id: Page
@@ -49,6 +51,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'exit', label: 'Exit', icon: LogOut, color: '#C62828', group: 'lifecycle' },
   { id: 'cost', label: 'Cost', icon: DollarSign, color: '#00695C', group: 'lifecycle' },
   { id: 'leadership', label: 'Leadership Action', icon: ClipboardList, color: '#E65100', group: 'action' },
+  { id: 'history', label: 'Version History', icon: History, color: '#475569', group: 'action' },
 ]
 
 interface SidebarProps {
@@ -110,9 +113,9 @@ export default function Sidebar({ current, onNavigate, isOpen, onClose }: Sideba
         )}
       >
         {/* Logo */}
-        <div className="px-5 py-4 border-b border-gray-100" style={{ background: '#0D1B4B' }}>
-          <p className="text-white font-black text-xs uppercase tracking-widest">People Experience</p>
-          <p className="text-blue-200 text-[10px] tracking-widest">Leadership Dashboard</p>
+        <div className="px-5 py-5 border-b border-gray-100 shadow-sm" style={{ background: 'linear-gradient(135deg, #0D1B4B 0%, #16245e 100%)' }}>
+          <p className="text-white font-extrabold text-[13px] uppercase tracking-widest">People Experience</p>
+          <p className="text-blue-200 text-[10px] tracking-widest font-medium mt-0.5">Leadership Dashboard</p>
         </div>
 
         {/* Nav */}
@@ -171,9 +174,9 @@ function NavBtn({ item, active, onClick }: { item: NavItem; active: boolean; onC
     <button
       onClick={onClick}
       className={clsx(
-        'w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm font-medium transition-colors rounded-lg mx-2 my-0.5',
+        'w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm font-semibold transition-all duration-150 rounded-xl mx-2 my-0.5',
         active
-          ? 'text-white shadow-sm'
+          ? 'text-white shadow-badge'
           : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
       )}
       style={active ? { backgroundColor: item.color, width: 'calc(100% - 16px)' } : {}}

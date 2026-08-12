@@ -17,7 +17,7 @@ const STATUS_CONFIG: Record<StatusType, { label: string; className: string }> = 
 export function StatusBadge({ status }: { status: StatusType }) {
   const cfg = STATUS_CONFIG[status]
   return (
-    <span className={clsx('px-3 py-1 rounded text-xs font-bold uppercase tracking-wide', cfg.className)}>
+    <span className={clsx('px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider shadow-sm', cfg.className)}>
       {cfg.label}
     </span>
   )
@@ -60,23 +60,28 @@ export function SectionPageHeader({
   badgeText
 }: SectionHeaderProps) {
   return (
-    <div className="flex items-center gap-4 mb-6">
-      <div className={clsx(
-        'w-16 h-16 rounded-xl flex flex-col items-center justify-center text-white text-xs font-bold',
-        badgeBg
-      )}>
-        <div className="text-2xl">{icon}</div>
-        <span className="text-[9px] font-black tracking-widest mt-0.5">{badgeText}</span>
-      </div>
+    <div className="mb-8">
+      <div className="flex items-center gap-5">
+        <div className={clsx(
+          'w-[88px] h-[88px] rounded-[26px] flex flex-col items-center justify-center gap-1 text-white flex-shrink-0 shadow-badge',
+          badgeBg
+        )}>
+          <div className="w-11 h-11 rounded-full border-[1.5px] border-white/60 flex items-center justify-center">
+            <div className="text-xl leading-none">{icon}</div>
+          </div>
+          <span className="text-[8.5px] font-extrabold tracking-[0.14em]">{badgeText}</span>
+        </div>
 
-      <div>
-        <h1 className={clsx('text-3xl font-bold', accentColor)}>
-          {title}
-        </h1>
-        <p className="text-gray-500 text-sm font-medium">
-          {subtitle}
-        </p>
+        <div>
+          <h1 className={clsx('text-[34px] md:text-[40px] leading-[1.05] font-extrabold tracking-tight', accentColor)}>
+            {title}
+          </h1>
+          <p className="text-gray-500 text-[15px] font-semibold mt-1.5">
+            {subtitle}
+          </p>
+        </div>
       </div>
+      <div className="w-full h-px mt-6 bg-gradient-to-r from-gray-200 via-gray-200 to-transparent" />
     </div>
   )
 }
@@ -85,14 +90,14 @@ export function SectionPageHeader({
 export function KeyMetricsHeader({ color = '#374151' }: { color?: string }) {
   return (
     <div className="flex items-center gap-3 mb-6">
-      <div className="flex-1 h-px bg-gray-300" />
+      <div className="flex-1 h-px bg-gray-200" />
       <span
-        className="text-sm font-black tracking-widest uppercase px-2"
+        className="text-[13px] font-extrabold tracking-[0.18em] uppercase px-2"
         style={{ color }}
       >
         Key Metrics
       </span>
-      <div className="flex-1 h-px bg-gray-300" />
+      <div className="flex-1 h-px bg-gray-200" />
     </div>
   )
 }
@@ -115,25 +120,25 @@ export function LeadershipSignal({
 }: LeadershipSignalProps) {
   return (
     <div
-      className="rounded-2xl p-4 flex items-start gap-4 mt-4"
+      className="rounded-2xl p-5 flex items-start gap-4 mt-4 shadow-soft"
       style={{ backgroundColor: bgColor }}
     >
       <div
-        className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xl"
+        className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xl shadow-badge"
         style={{ backgroundColor: color }}
       >
         {icon ?? '📢'}
       </div>
 
-      <div className="border-l-2 border-gray-300 pl-4">
+      <div className="border-l-2 pl-4" style={{ borderColor: `${color}33` }}>
         <p
-          className="text-xs font-black tracking-widest uppercase mb-1"
+          className="text-[11px] font-extrabold tracking-[0.16em] uppercase mb-1"
           style={{ color }}
         >
           {label}
         </p>
 
-        <p className="text-sm text-gray-700">{text}</p>
+        <p className="text-[14px] text-gray-700 leading-relaxed font-medium">{text}</p>
       </div>
     </div>
   )
@@ -159,24 +164,44 @@ export function MetricCard({
 }: MetricCardProps) {
   return (
     <div className={clsx(
-      'rounded-2xl p-4 shadow-sm border border-gray-100 flex flex-col items-center text-center gap-2 h-full min-h-[320px]',
+      'rounded-3xl p-4 shadow-soft border border-gray-100 flex flex-col items-center text-center gap-2 h-full min-h-[320px] transition-shadow hover:shadow-elevated',
       bgColor
     )}>
       {children}
 
-      <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">
+      <p className="text-[11px] font-extrabold tracking-widest text-gray-400 uppercase">
         {label}
       </p>
 
       <div className="w-12 h-px bg-gray-200" />
 
-      <p className="text-3xl font-black text-gray-700">{value}</p>
+      <p className="text-3xl font-extrabold text-gray-700">{value}</p>
 
       {subValue && (
-        <p className="text-xs text-gray-400">{subValue}</p>
+        <p className="text-xs text-gray-400 font-medium">{subValue}</p>
       )}
 
       {status && <StatusBadge status={status} />}
+    </div>
+  )
+}
+
+// ── Icon Badge (shared circular icon used inside metric cards) ──────────────
+export function IconBadge({
+  children,
+  color = '#2563EB',
+}: {
+  children: React.ReactNode
+  color?: string
+}) {
+  return (
+    <div className="flex justify-center mb-2">
+      <div
+        className="w-14 h-14 rounded-full border-2 bg-white flex items-center justify-center shadow-sm"
+        style={{ borderColor: `${color}33`, color }}
+      >
+        {children}
+      </div>
     </div>
   )
 }
@@ -186,7 +211,7 @@ export function HomeButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="fixed bottom-6 right-6 w-12 h-12 bg-indigo-800 text-white rounded-xl shadow-lg flex items-center justify-center hover:bg-indigo-900 transition-colors z-50"
+      className="fixed bottom-6 right-6 w-12 h-12 bg-indigo-800 text-white rounded-xl shadow-badge flex items-center justify-center hover:bg-indigo-900 hover:shadow-elevated transition-all z-50"
       aria-label="Go to home"
     >
       <Home className="w-5 h-5" />

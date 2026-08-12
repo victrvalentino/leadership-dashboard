@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import { logAudit } from '@/lib/auditLog'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -12,10 +13,12 @@ export async function POST(req: Request) {
 
     const { id, title, subtitle, ...dynamicFields } = body
 
-    const { error: sectionError } = await supabase
+    const { data: sectionRow, error: sectionError } = await supabase
       .from('dashboard_sections')
       .update({ title, subtitle })
       .eq('id', id)
+      .select('section_key')
+      .single()
 
     if (sectionError) {
       return NextResponse.json(
@@ -59,6 +62,13 @@ export async function POST(req: Request) {
           { status: 500 }
         )
       }
+
+      await logAudit({
+        targetSection: sectionRow.section_key,
+        before: null,
+        after: newContent,
+        action: 'draft_save',
+      })
     } else {
       const { error } = await supabase
         .from('draft_content')
@@ -75,6 +85,13 @@ export async function POST(req: Request) {
           { status: 500 }
         )
       }
+
+      await logAudit({
+        targetSection: sectionRow.section_key,
+        before: existing.content_json,
+        after: newContent,
+        action: 'draft_save',
+      })
     }
 
     return NextResponse.json({

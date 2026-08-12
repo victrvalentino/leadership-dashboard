@@ -13,6 +13,7 @@ import TurnoverSection from '@/components/sections/TurnoverSection'
 import ExitSection from '@/components/sections/ExitSection'
 import CostSection from '@/components/sections/CostSection'
 import LeadershipSection from '@/components/sections/LeadershipSection'
+import VersionHistorySection from '@/components/sections/VersionHistorySection'
 
 export default function DashboardPage() {
   const [page, setPage] = useState<Page>('home')
@@ -45,6 +46,8 @@ export default function DashboardPage() {
         return <CostSection />
       case 'leadership':
         return <LeadershipSection />
+      case 'history':
+        return <VersionHistorySection />
       default:
         return <HomeSection onNavigate={navigate} />
     }
@@ -68,7 +71,7 @@ export default function DashboardPage() {
 
         <main
           key={page}
-          className="flex-1 overflow-y-auto"
+          className="flex-1 overflow-y-auto section-enter"
         >
           <Section />
         </main>
@@ -77,7 +80,7 @@ export default function DashboardPage() {
       {page !== 'home' && (
         <button
           onClick={() => navigate('home')}
-          className="fixed bottom-6 right-6 w-12 h-12 bg-indigo-800 text-white rounded-xl shadow-lg flex items-center justify-center hover:bg-indigo-900 transition-colors z-50"
+          className="fixed bottom-6 right-6 w-12 h-12 bg-indigo-800 text-white rounded-xl shadow-badge flex items-center justify-center hover:bg-indigo-900 hover:shadow-elevated transition-all z-50"
           aria-label="Go to home"
         >
           <Home className="w-6 h-6" strokeWidth={2} />

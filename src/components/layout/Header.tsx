@@ -14,6 +14,7 @@ const PAGE_LABELS: Record<Page, string> = {
   exit: 'Exit Intelligence',
   cost: 'Cost & Investment',
   leadership: 'Leadership Action',
+  history: 'Version History',
 }
 
 function getCookie(name: string): string | null {

@@ -106,7 +106,7 @@ function TrendCard({
   unit: string
 }) {
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-sm">
+    <div className="bg-white rounded-2xl p-4 shadow-soft border border-gray-100">
       <p className="text-sm font-bold uppercase tracking-wide text-center text-gray-800 leading-tight">
         {title}
       </p>
@@ -272,10 +272,10 @@ export default function CostSection() {
       <div>
         <div className="flex items-center gap-4">
           <div
-            className="w-24 h-24 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0"
+            className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 shadow-badge"
             style={{ backgroundColor: TEAL }}
           >
-            <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full border-[1.5px] border-white/60 flex items-center justify-center">
               <DollarSign className="w-6 h-6 text-white" strokeWidth={1.75} />
             </div>
             <span className="text-[10px] font-bold tracking-widest">
@@ -285,7 +285,7 @@ export default function CostSection() {
 
           <div>
             <h1
-              className="text-4xl md:text-[42px] leading-none font-black"
+              className="text-4xl md:text-[42px] leading-none font-extrabold tracking-tight"
               style={{ color: TEAL }}
             >
               {d.title || 'Cost'}
@@ -297,7 +297,7 @@ export default function CostSection() {
         </div>
 
         <div
-          className="w-full h-px mt-4"
+          className="w-full h-px mt-6"
           style={{ backgroundColor: TEAL }}
         />
       </div>
@@ -388,7 +388,7 @@ export default function CostSection() {
           />
 
           {/* Cost breakdown */}
-          <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col">
+          <div className="bg-white rounded-2xl p-4 shadow-soft border border-gray-100 flex flex-col">
             <p className="text-sm font-bold uppercase tracking-wide text-center text-gray-800 leading-tight">
               Cost Breakdown
             </p>

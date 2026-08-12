@@ -118,7 +118,7 @@ export default function HomeSection({ onNavigate }: { onNavigate: (page: Page) =
   }, [])
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
+    <div className="max-w-6xl mx-auto px-6 py-10 space-y-6">
       {/* Updated as of */}
       {updatedAt && (
         <p className="text-right text-sm font-black text-gray-900 -mb-6">

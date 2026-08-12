@@ -226,10 +226,10 @@ export default function ExitSection() {
       <div>
         <div className="flex items-center gap-4">
           <div
-            className="w-24 h-24 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0"
+            className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 shadow-badge"
             style={{ backgroundColor: RED }}
           >
-            <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full border-[1.5px] border-white/60 flex items-center justify-center">
               <LogOut className="w-6 h-6 text-white" strokeWidth={1.75} />
             </div>
             <span className="text-[10px] font-bold tracking-widest">
@@ -239,7 +239,7 @@ export default function ExitSection() {
 
           <div>
             <h1
-              className="text-4xl md:text-[42px] leading-none font-black"
+              className="text-4xl md:text-[42px] leading-none font-extrabold tracking-tight"
               style={{ color: RED }}
             >
               {d.title || 'Exit'}
@@ -251,7 +251,7 @@ export default function ExitSection() {
         </div>
 
         <div
-          className="w-full h-px mt-4"
+          className="w-full h-px mt-6"
           style={{ backgroundColor: RED }}
         />
       </div>
@@ -335,7 +335,7 @@ export default function ExitSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Resignation reasons */}
-          <div className="bg-white rounded-2xl p-4 shadow-sm space-y-2">
+          <div className="bg-white rounded-2xl p-4 shadow-soft border border-gray-100 space-y-2">
             <p className={chartTitleClass}>Top Resignation Reasons</p>
 
             <p className="text-[11px] font-semibold text-gray-500 text-center pb-1">
@@ -354,7 +354,7 @@ export default function ExitSection() {
           </div>
 
           {/* Tenure donut */}
-          <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center">
+          <div className="bg-white rounded-2xl p-4 shadow-soft border border-gray-100 flex flex-col items-center">
             <p className={chartTitleClass}>Tenure at Resignation</p>
 
             <p className="text-[11px] font-semibold text-gray-500 text-center pb-2">
@@ -400,7 +400,7 @@ export default function ExitSection() {
           </div>
 
           {/* Top affected roles */}
-          <div className="bg-white rounded-2xl p-4 shadow-sm space-y-2">
+          <div className="bg-white rounded-2xl p-4 shadow-soft border border-gray-100 space-y-2">
             <p className={chartTitleClass}>Top Affected Roles</p>
 
             <p className="text-[11px] font-semibold text-gray-500 text-center pb-1">
