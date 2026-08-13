@@ -80,6 +80,67 @@ function ContactAvatar({ contact }: { contact: Contact }) {
   )
 }
 
+// Small tooltip that shows the email address on hover (desktop) or tap
+// (touch, where hover doesn't apply). Only one is open at a time — opening
+// one closes any other, and tapping outside closes it too.
+function MailButton({
+  contact,
+  openEmail,
+  onToggle,
+}: {
+  contact: Contact
+  openEmail: string | null
+  onToggle: (email: string | null) => void
+}) {
+  const isOpen = openEmail === contact.email
+
+  return (
+    <div className="relative flex-shrink-0">
+      <button
+        type="button"
+        onMouseEnter={() => onToggle(contact.email)}
+        onMouseLeave={() => onToggle(null)}
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          onToggle(isOpen ? null : contact.email)
+        }}
+        className="w-9 h-9 rounded-full bg-gray-50 hover:bg-blue-50 flex items-center justify-center transition-colors"
+        aria-label={`Show email for ${contact.name}`}
+      >
+        <Mail
+          className={
+            'w-4 h-4 transition-colors ' +
+            (isOpen ? 'text-blue-600' : 'text-gray-400')
+          }
+          strokeWidth={2}
+        />
+      </button>
+
+      <div
+        className={
+          'absolute right-full top-1/2 -translate-y-1/2 mr-2 transition-all duration-150 origin-right ' +
+          (isOpen
+            ? 'opacity-100 scale-100 pointer-events-auto'
+            : 'opacity-0 scale-95 pointer-events-none')
+        }
+      >
+        <div className="bg-gray-900 text-white text-[11.5px] font-medium pl-3 pr-2.5 py-2 rounded-lg shadow-lg whitespace-nowrap flex items-center gap-2">
+          {contact.email}
+          <a
+            href={`mailto:${contact.email}`}
+            onClick={(e) => e.stopPropagation()}
+            className="text-blue-300 hover:text-blue-200 font-bold flex-shrink-0"
+          >
+            Send
+          </a>
+        </div>
+        <div className="absolute top-1/2 left-full -translate-y-1/2 -ml-1 w-2 h-2 bg-gray-900 rotate-45" />
+      </div>
+    </div>
+  )
+}
+
 export default function ContactModal({
   open,
   onClose,
@@ -88,6 +149,7 @@ export default function ContactModal({
   onClose: () => void
 }) {
   const [mounted, setMounted] = useState(false)
+  const [openEmail, setOpenEmail] = useState<string | null>(null)
 
   useEffect(() => {
     if (open) {
@@ -95,6 +157,7 @@ export default function ContactModal({
       document.body.style.overflow = 'hidden'
     } else {
       setMounted(false)
+      setOpenEmail(null)
     }
     return () => {
       document.body.style.overflow = ''
@@ -121,6 +184,7 @@ export default function ContactModal({
       />
 
       <div
+        onClick={() => setOpenEmail(null)}
         className={
           'relative bg-white rounded-[28px] shadow-2xl max-w-[440px] w-full p-8 transition-all duration-300 ease-out ' +
           (mounted ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-2')
@@ -150,27 +214,26 @@ export default function ContactModal({
 
         <div className="space-y-2.5">
           {CONTACTS.map((c) => (
-            <a
+            <div
               key={c.email}
-              href={`mailto:${c.email}`}
-              className="flex items-center gap-3 p-3 rounded-2xl border border-gray-100 hover:bg-gray-50 hover:border-gray-200 transition-colors group"
+              className="flex items-center gap-3 p-3 rounded-2xl border border-gray-100 hover:bg-gray-50 hover:border-gray-200 transition-colors"
             >
-              <ContactAvatar contact={c} />
+              <a
+                href={`mailto:${c.email}`}
+                className="flex items-center gap-3 min-w-0 flex-1"
+              >
+                <ContactAvatar contact={c} />
 
-              <div className="min-w-0 flex-1">
-                <p className="text-[13.5px] font-bold text-gray-900 truncate">{c.name}</p>
-                <p className="text-[11px] text-gray-500 font-medium truncate">
-                  {c.departments.join(' · ')}
-                </p>
-              </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[13.5px] font-bold text-gray-900 truncate">{c.name}</p>
+                  <p className="text-[11px] text-gray-500 font-medium truncate">
+                    {c.departments.join(' · ')}
+                  </p>
+                </div>
+              </a>
 
-              <div className="w-9 h-9 rounded-full bg-gray-50 group-hover:bg-blue-50 flex items-center justify-center flex-shrink-0 transition-colors">
-                <Mail
-                  className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors"
-                  strokeWidth={2}
-                />
-              </div>
-            </a>
+              <MailButton contact={c} openEmail={openEmail} onToggle={setOpenEmail} />
+            </div>
           ))}
         </div>
       </div>

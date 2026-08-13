@@ -1,5 +1,32 @@
 # Redesign Changelog
 
+## Update 29 — email tooltip on the mail icon in the contact popup
+
+`ContactModal.tsx`: hovering (or tapping, for touch devices) the mail icon now shows a
+small dark tooltip with that person's actual email address, plus a "Send" link inside
+it to open the mail client.
+
+This needed a structural change, not just adding a tooltip on top of what existed: the
+mail icon used to sit *inside* the row's `<a href="mailto:...">`, and an icon that
+needs its own independent hover/click behavior can't be a nested interactive element
+inside another link (invalid HTML — an `<a>` inside an `<a>`, or a `<button>` inside an
+`<a>`, isn't something browsers handle predictably). Split the row into two siblings:
+the avatar+name area is still its own `mailto:` link (click it, straight to your mail
+app, same as before), and the icon is now a separate `<button>` with its own tooltip.
+
+A couple of things worth knowing:
+- Only one tooltip is open at a time — hovering a different contact's icon closes
+  whichever was open, rather than stacking multiple tooltips.
+- Positioned to the **left** of the icon rather than above it, specifically to avoid a
+  real edge case: the first contact in the list sits close enough to the modal's top
+  edge that an above-positioned tooltip risked getting clipped. Left never has that
+  problem regardless of which row it's on.
+- Tapping anywhere else in the modal closes an open tooltip — matters most on touch
+  devices, which don't have a "hover away" to close it automatically the way a mouse
+  does.
+
+---
+
 ## Update 28 — welcome popup now shows every time, not once per day
 
 Removed the `localStorage`-based "once per calendar day" gate entirely from
