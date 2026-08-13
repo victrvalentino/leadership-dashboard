@@ -135,7 +135,7 @@ export default function RiskHeatmapTab() {
       </span>
 
       {/* Table */}
-      <div className="rounded-2xl overflow-hidden shadow-soft bg-white border border-gray-100">
+      <div className="rounded-2xl overflow-hidden shadow-soft panel-gradient border border-gray-100">
         <div
           className="grid grid-cols-[1.2fr_1fr_2fr] px-4 py-4 text-white text-lg md:text-xl font-extrabold uppercase tracking-wide text-center"
           style={{ backgroundColor: ORANGE }}

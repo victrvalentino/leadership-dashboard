@@ -94,7 +94,7 @@ function MetricBox({
   Icon: LucideIcon
 }) {
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-soft border border-gray-100 flex flex-col items-center">
+    <div className="panel-gradient rounded-2xl p-4 shadow-soft border border-gray-100 flex flex-col items-center">
       {/* Fixed-height zones keep all cards in the row aligned even
           when titles wrap to a different number of lines. */}
       <div className="h-[44px] flex items-center justify-center">
@@ -265,7 +265,7 @@ export default function TurnoverSection() {
         <div className="lg:col-span-2 space-y-4">
           <BannerHeader text="Key Metrics" withBars />
 
-          <div className="rounded-2xl p-4 space-y-4 bg-white border border-gray-100 shadow-soft">
+          <div className="rounded-2xl p-4 space-y-4 panel-gradient border border-gray-100 shadow-soft">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <MetricBox
                 label="Turnover Rate"
@@ -294,7 +294,7 @@ export default function TurnoverSection() {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {/* Repeated replacement roles */}
-              <div className="bg-white rounded-2xl p-4 shadow-soft border border-gray-100 flex flex-col items-center">
+              <div className="panel-gradient rounded-2xl p-4 shadow-soft border border-gray-100 flex flex-col items-center">
                 <div className="h-[44px] flex items-center justify-center">
                   <p className={cardTitleClass}>
                     Repeated Replacement Roles
@@ -321,7 +321,7 @@ export default function TurnoverSection() {
               </div>
 
               {/* Time to backfill */}
-              <div className="bg-white rounded-2xl p-4 shadow-soft border border-gray-100 flex flex-col items-center">
+              <div className="panel-gradient rounded-2xl p-4 shadow-soft border border-gray-100 flex flex-col items-center">
                 <div className="h-[44px] flex items-center justify-center">
                   <p className={cardTitleClass}>
                     Time-to-Backfill
@@ -351,7 +351,7 @@ export default function TurnoverSection() {
               </div>
 
               {/* By role */}
-              <div className="bg-white rounded-2xl p-4 shadow-soft border border-gray-100 space-y-2">
+              <div className="panel-gradient rounded-2xl p-4 shadow-soft border border-gray-100 space-y-2">
                 <p className={`${cardTitleClass} mb-2`}>
                   Turnover Background
                   <br />
@@ -374,7 +374,7 @@ export default function TurnoverSection() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {/* By manager */}
-              <div className="bg-white rounded-2xl p-4 shadow-soft border border-gray-100 space-y-2">
+              <div className="panel-gradient rounded-2xl p-4 shadow-soft border border-gray-100 space-y-2">
                 <p className={`${cardTitleClass} mb-3`}>
                   Turnover by Manager
                   <br />
@@ -395,7 +395,7 @@ export default function TurnoverSection() {
               </div>
 
               {/* Trend */}
-              <div className="bg-white rounded-2xl p-4 shadow-soft border border-gray-100">
+              <div className="panel-gradient rounded-2xl p-4 shadow-soft border border-gray-100">
                 <p className={`${cardTitleClass} mb-3`} style={{ color: ORANGE }}>
                   Turnover Trend
                   <br />
@@ -439,7 +439,7 @@ export default function TurnoverSection() {
         <div className="space-y-4">
           <BannerHeader text="Leadership Insight" />
 
-          <div className="rounded-2xl p-5 bg-white border border-gray-100 shadow-soft">
+          <div className="rounded-2xl p-5 panel-gradient border border-gray-100 shadow-soft">
             {insights.map((text, i) => (
               <div
                 key={i}

@@ -197,7 +197,7 @@ function GroupBlock({
   const changedCount = sections.filter((s) => s.changedToday).length
 
   return (
-    <div className="bg-white rounded-3xl shadow-soft border border-gray-100 overflow-hidden">
+    <div className="panel-gradient rounded-3xl shadow-soft border border-gray-100 overflow-hidden">
       <button
         onClick={() => setOpen((v) => !v)}
         className="w-full flex items-center justify-between px-5 py-3.5 bg-gray-50/70 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors"
@@ -283,7 +283,7 @@ export default function VersionHistorySection() {
       </div>
 
       {/* Date picker */}
-      <div className="bg-white rounded-3xl p-5 shadow-soft border border-gray-100 flex flex-wrap items-center gap-4">
+      <div className="panel-gradient rounded-3xl p-5 shadow-soft border border-gray-100 flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2">
           <button
             onClick={() => setDate((d) => shiftDate(d, -1))}
@@ -356,11 +356,11 @@ export default function VersionHistorySection() {
 
       {/* Per-section status, every section, changed or not */}
       {loading ? (
-        <div className="bg-white rounded-3xl shadow-soft border border-gray-100 p-10 text-center text-gray-400 text-sm font-semibold">
+        <div className="panel-gradient rounded-3xl shadow-soft border border-gray-100 p-10 text-center text-gray-400 text-sm font-semibold">
           Loading…
         </div>
       ) : sections.length === 0 ? (
-        <div className="bg-white rounded-3xl shadow-soft border border-gray-100 p-10 text-center text-gray-500 font-semibold">
+        <div className="panel-gradient rounded-3xl shadow-soft border border-gray-100 p-10 text-center text-gray-500 font-semibold">
           No sections found.
         </div>
       ) : (

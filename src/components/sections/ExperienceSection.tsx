@@ -271,7 +271,7 @@ export default function ExperienceSection() {
         <div className="w-full h-px mt-6 bg-gray-200" />
       </div>
 
-      <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-soft">
+      <div className="panel-gradient rounded-3xl p-5 border border-gray-100 shadow-soft">
         <h2 className="text-sm font-extrabold uppercase tracking-widest text-gray-800 mb-5">
           Key Metrics
         </h2>
@@ -446,7 +446,7 @@ export default function ExperienceSection() {
         </div>
       </div>
 
-      <div className="rounded-2xl px-6 py-5 flex items-center gap-4 bg-white border border-gray-100 shadow-soft">
+      <div className="rounded-2xl px-6 py-5 flex items-center gap-4 panel-gradient border border-gray-100 shadow-soft">
         <div
           className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft"
           style={{ backgroundColor: '#1D4ED8' }}

@@ -70,7 +70,7 @@ function FeatureRow({
   return (
     <button
       onClick={onClick}
-      className="w-full rounded-2xl px-6 py-5 flex items-center justify-between gap-4 bg-white border border-gray-100 shadow-soft hover:shadow-elevated transition-all text-left"
+      className="w-full rounded-2xl px-6 py-5 flex items-center justify-between gap-4 panel-gradient border border-gray-100 shadow-soft hover:shadow-elevated transition-all text-left"
       style={bgColor ? { backgroundColor: bgColor } : undefined}
     >
       <div className="flex items-center gap-5 min-w-0">
@@ -167,7 +167,7 @@ export default function HomeSection({ onNavigate }: { onNavigate: (page: Page) =
             <button
               key={id}
               onClick={() => onNavigate(id)}
-              className="rounded-2xl p-5 flex flex-col items-start bg-white border border-gray-100 shadow-soft hover:shadow-elevated hover:-translate-y-0.5 transition-all text-left"
+              className="rounded-2xl p-5 flex flex-col items-start panel-gradient border border-gray-100 shadow-soft hover:shadow-elevated hover:-translate-y-0.5 transition-all text-left"
             >
               <div
                 className="w-12 h-12 rounded-full flex items-center justify-center icon-gradient shadow-soft mb-3"

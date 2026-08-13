@@ -47,7 +47,7 @@ function CostKPI({
   chg?: string
 }) {
   return (
-    <div className="bg-white rounded-2xl p-4 flex flex-col items-center text-center shadow-sm">
+    <div className="panel-gradient rounded-2xl p-4 flex flex-col items-center text-center shadow-sm">
       {/* Fixed-height zones keep all five cards aligned even when
           titles/subtitles wrap to a different number of lines. */}
       <div className="h-[52px] flex flex-col items-center justify-center">
@@ -59,16 +59,18 @@ function CostKPI({
         )}
       </div>
 
-      <div className="h-[80px] flex items-center justify-center gap-3 whitespace-nowrap">
+      <div className="h-[44px] flex items-center justify-center">
         <div
-          className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft"
+          className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft"
           style={{ backgroundColor: TEAL }}
         >
-          <Icon className="w-8 h-8 text-white" strokeWidth={1.75} />
+          <Icon className="w-5 h-5 text-white" strokeWidth={1.75} />
         </div>
+      </div>
 
+      <div className="h-[44px] flex items-center justify-center">
         <p
-          className="text-[28px] md:text-[30px] font-black leading-none"
+          className="text-4xl font-black leading-none"
           style={{ color: TEAL }}
         >
           {value}
@@ -106,7 +108,7 @@ function TrendCard({
   unit: string
 }) {
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-soft border border-gray-100">
+    <div className="panel-gradient rounded-2xl p-4 shadow-soft border border-gray-100">
       <p className="text-sm font-bold uppercase tracking-wide text-center text-gray-800 leading-tight">
         {title}
       </p>
@@ -326,7 +328,7 @@ export default function CostSection() {
       </div>
 
       {/* Workforce economics panel */}
-      <div className="rounded-2xl p-6 space-y-5 bg-white border border-gray-100 shadow-soft">
+      <div className="rounded-2xl p-6 space-y-5 panel-gradient border border-gray-100 shadow-soft">
         <div className="text-center">
           <h2 className="text-3xl font-black uppercase text-gray-900">
             Workforce Economics
@@ -408,7 +410,7 @@ export default function CostSection() {
           />
 
           {/* Cost breakdown */}
-          <div className="bg-white rounded-2xl p-4 shadow-soft border border-gray-100 flex flex-col">
+          <div className="panel-gradient rounded-2xl p-4 shadow-soft border border-gray-100 flex flex-col">
             <p className="text-sm font-bold uppercase tracking-wide text-center text-gray-800 leading-tight">
               Cost Breakdown
             </p>
@@ -466,7 +468,7 @@ export default function CostSection() {
       </div>
 
       {/* Leadership signal */}
-      <div className="rounded-2xl px-6 py-5 flex flex-wrap items-center gap-5 bg-white border border-gray-100 shadow-soft">
+      <div className="rounded-2xl px-6 py-5 flex flex-wrap items-center gap-5 panel-gradient border border-gray-100 shadow-soft">
         <div className="flex items-center gap-4 max-w-full md:max-w-[320px]">
           <div
             className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-badge"

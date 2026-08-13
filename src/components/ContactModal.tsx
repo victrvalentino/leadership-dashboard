@@ -8,6 +8,7 @@ type Contact = {
   email: string
   departments: string[]
   color: string
+  photo: string
 }
 
 const CONTACTS: Contact[] = [
@@ -16,24 +17,28 @@ const CONTACTS: Contact[] = [
     email: 'debora.wiguna@esb.co.id',
     departments: ['Business Operations'],
     color: '#2563EB',
+    photo: '/contacts/debora.jpg',
   },
   {
     name: 'Ilham Haqiqie',
     email: 'ilham.haqiqie@esb.co.id',
     departments: ['Operations Support'],
     color: '#F97316',
+    photo: '/contacts/ilham.jpg',
   },
   {
     name: 'Vania Natalia',
     email: 'vania.natalia@esb.co.id',
     departments: ['Marketing', 'Technology'],
     color: '#9333EA',
+    photo: '/contacts/vania.jpg',
   },
   {
     name: 'Victor Valentino Budianto',
     email: 'victor.valentino@esb.co.id',
     departments: ['CEO Office', 'Finance & Legal', 'People Experience'],
     color: '#0F1B4D',
+    photo: '/contacts/victor.jpg',
   },
 ]
 
@@ -45,6 +50,34 @@ function initials(name: string) {
     .map((p) => p[0])
     .join('')
     .toUpperCase()
+}
+
+// Shows the real photo; falls back to the colored initials circle if the
+// image ever fails to load, rather than showing a broken-image icon.
+function ContactAvatar({ contact }: { contact: Contact }) {
+  const [failed, setFailed] = useState(false)
+
+  if (failed) {
+    return (
+      <div
+        className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xs font-extrabold icon-gradient shadow-soft"
+        style={{ backgroundColor: contact.color }}
+      >
+        {initials(contact.name)}
+      </div>
+    )
+  }
+
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={contact.photo}
+      alt={contact.name}
+      onError={() => setFailed(true)}
+      className="w-10 h-10 rounded-full flex-shrink-0 object-cover shadow-soft ring-2 ring-white"
+      style={{ boxShadow: `0 0 0 1.5px ${contact.color}40` }}
+    />
+  )
 }
 
 export default function ContactModal({
@@ -122,12 +155,7 @@ export default function ContactModal({
               href={`mailto:${c.email}`}
               className="flex items-center gap-3 p-3 rounded-2xl border border-gray-100 hover:bg-gray-50 hover:border-gray-200 transition-colors group"
             >
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xs font-extrabold icon-gradient shadow-soft"
-                style={{ backgroundColor: c.color }}
-              >
-                {initials(c.name)}
-              </div>
+              <ContactAvatar contact={c} />
 
               <div className="min-w-0 flex-1">
                 <p className="text-[13.5px] font-bold text-gray-900 truncate">{c.name}</p>
@@ -136,10 +164,12 @@ export default function ContactModal({
                 </p>
               </div>
 
-              <Mail
-                className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 transition-colors"
-                strokeWidth={2}
-              />
+              <div className="w-9 h-9 rounded-full bg-gray-50 group-hover:bg-blue-50 flex items-center justify-center flex-shrink-0 transition-colors">
+                <Mail
+                  className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors"
+                  strokeWidth={2}
+                />
+              </div>
             </a>
           ))}
         </div>

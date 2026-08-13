@@ -26,3 +26,10 @@ body { font-family: var(--font-nunito), system-ui, sans-serif; background-color:
     rgba(0, 0, 0, 0.1) 100%
   );
 }
+
+/* Premium panel gradient — a barely-there diagonal shift from pure white
+   to a whisper of cool gray, used on card/panel backgrounds instead of
+   flat white so surfaces read with a little depth. */
+.panel-gradient {
+  background: linear-gradient(150deg, #ffffff 0%, #fafbfd 55%, #f3f6f9 100%);
+}

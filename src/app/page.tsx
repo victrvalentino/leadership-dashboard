@@ -56,39 +56,55 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50">
-      <Sidebar
-        current={page}
-        onNavigate={navigate}
-        isOpen={menuOpen}
-        onClose={() => setMenuOpen(false)}
+    <>
+      {/* Company logo watermark — fixed to the viewport (not the scrolling
+          content) so it stays vertically centered on screen regardless of
+          which section is open or how far the page is scrolled. Kept as a
+          top-level sibling with its own low z-index, and everything real
+          is wrapped in one explicitly higher z-index below, so the layering
+          is unambiguous rather than depending on DOM order. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/logo-icon-blue.png"
+        alt=""
+        aria-hidden="true"
+        className="fixed right-16 top-1/2 -translate-y-1/2 w-[420px] h-auto opacity-[0.05] pointer-events-none select-none z-0"
       />
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <Header
+      <div className="relative z-10 flex h-screen overflow-hidden">
+        <Sidebar
           current={page}
-          menuOpen={menuOpen}
-          onToggleMenu={() => setMenuOpen((v) => !v)}
+          onNavigate={navigate}
+          isOpen={menuOpen}
+          onClose={() => setMenuOpen(false)}
         />
 
-        <main
-          key={page}
-          className="flex-1 overflow-y-auto section-enter"
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+          <Header
+            current={page}
+            menuOpen={menuOpen}
+            onToggleMenu={() => setMenuOpen((v) => !v)}
+          />
+
+          <main
+            key={page}
+            className="flex-1 overflow-y-auto section-enter"
+          >
+            <Section />
+          </main>
+        </div>
+
+        <button
+          onClick={() => setContactOpen(true)}
+          className="fixed bottom-6 right-6 w-12 h-12 bg-indigo-800 text-white rounded-xl icon-gradient shadow-badge flex items-center justify-center hover:bg-indigo-900 transition-all z-50"
+          aria-label="Contact your PEX representative"
+          style={{ backgroundColor: '#0D1B4B' }}
         >
-          <Section />
-        </main>
+          <MessageCircle className="w-6 h-6" strokeWidth={2} />
+        </button>
+
+        <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
       </div>
-
-      <button
-        onClick={() => setContactOpen(true)}
-        className="fixed bottom-6 right-6 w-12 h-12 bg-indigo-800 text-white rounded-xl icon-gradient shadow-badge flex items-center justify-center hover:bg-indigo-900 transition-all z-50"
-        aria-label="Contact your PEX representative"
-        style={{ backgroundColor: '#0D1B4B' }}
-      >
-        <MessageCircle className="w-6 h-6" strokeWidth={2} />
-      </button>
-
-      <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
-    </div>
+    </>
   )
 }

@@ -110,7 +110,7 @@ function DevCard({
   detailSub
 }: DevCardProps) {
   return (
-    <div className="bg-white rounded-[20px] p-5 shadow-sm h-full flex flex-col">
+    <div className="panel-gradient rounded-[20px] p-5 shadow-sm h-full flex flex-col">
       <div className="flex items-center gap-4 min-h-[72px]">
         <div
           className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-badge"
@@ -272,7 +272,7 @@ export default function DevelopmentSection() {
       </div>
 
       {/* Key metrics */}
-      <div className="rounded-[24px] bg-white border border-gray-100 shadow-soft px-5 py-6">
+      <div className="rounded-[24px] panel-gradient border border-gray-100 shadow-soft px-5 py-6">
         <h2 className="text-sm font-extrabold uppercase tracking-widest text-gray-800 mb-6">
           Key Metrics
         </h2>

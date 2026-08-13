@@ -12,7 +12,6 @@ import {
   TrendingUp,
   AlertTriangle,
   CalendarDays,
-  ChevronRight,
   type LucideIcon
 } from 'lucide-react'
 import { executiveData } from '@/data/dashboardData'
@@ -91,7 +90,7 @@ function KpiCard({
 }) {
   return (
     <div
-      className="rounded-2xl p-4 min-h-[250px] flex flex-col items-center text-center shadow-soft border border-black/5"
+      className="rounded-2xl p-4 min-h-[250px] flex flex-col items-center text-center shadow-soft border border-black/5 panel-gradient"
       style={{ backgroundColor: bg }}
     >
       <div
@@ -105,20 +104,22 @@ function KpiCard({
       </div>
 
       {/* Fixed-height zones below the icon keep all five cards aligned
-          even when titles wrap to a different number of lines. */}
-      <div className="h-[36px] mt-2.5 flex items-center justify-center">
+          even when titles wrap to a different number of lines. Spacing
+          between every element follows one consistent scale (12 / 8 / 8 /
+          8 / 12) rather than a mix of zero-gap and mismatched margins. */}
+      <div className="h-[36px] mt-3 flex items-center justify-center">
         <p className="text-xs font-bold uppercase tracking-widest text-gray-600 leading-snug">
           {label}
         </p>
       </div>
 
-      <div className="w-3/4 h-px" style={{ backgroundColor: `${iconColor}50` }} />
+      <div className="w-3/4 h-px mt-2" style={{ backgroundColor: `${iconColor}50` }} />
 
-      <div className="h-[48px] flex items-center justify-center">
+      <div className="h-[48px] mt-2 flex items-center justify-center">
         <p className="text-4xl font-black text-gray-600">{value}</p>
       </div>
 
-      <div className="w-1/3 h-px bg-gray-300 mt-1" />
+      <div className="w-1/3 h-px bg-gray-300 mt-2" />
 
       <div className="h-[34px] mt-3 flex items-center justify-center">
         {footer}
@@ -222,7 +223,7 @@ export default function ExecutiveSection() {
       >
         <div
           className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft"
-          style={{ backgroundColor: '#6D4FD1' }}
+          style={{ backgroundColor: '#2E2A70' }}
         >
           <Building2 className="w-7 h-7 text-white" strokeWidth={1.5} />
         </div>
@@ -324,7 +325,6 @@ export default function ExecutiveSection() {
         >
           <TrendingUp className="w-9 h-9" strokeWidth={2} />
           <AlertTriangle className="w-8 h-8" strokeWidth={2} />
-          <ChevronRight className="w-5 h-5 text-gray-400" strokeWidth={2} />
         </div>
       </div>
     </div>

@@ -125,19 +125,14 @@ export default function LoginPage() {
         className="hidden md:flex md:w-[46%] lg:w-[42%] flex-col justify-between px-14 lg:px-16 py-14 text-white relative overflow-hidden"
         style={{ background: 'linear-gradient(160deg, #0A1638 0%, #0D1B4B 45%, #123170 85%, #1565C0 145%)' }}
       >
-        {/* faint oversized logo watermark */}
-        <svg
-          viewBox="0 0 200 200"
-          className="absolute -right-16 top-1/3 w-[420px] h-[420px] opacity-[0.05] pointer-events-none"
-          fill="none"
-        >
-          <path
-            d="M130 40c-30-18-70-8-70 20 0 24 26 28 55 34 32 6 55 14 55 38 0 30-42 42-74 22"
-            stroke="white"
-            strokeWidth="16"
-            strokeLinecap="round"
-          />
-        </svg>
+        {/* faint oversized logo watermark — the real logo shape, not a hand-drawn approximation */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/logo-icon-white.png"
+          alt=""
+          aria-hidden="true"
+          className="absolute -right-16 top-1/3 w-[300px] h-auto opacity-[0.07] pointer-events-none select-none"
+        />
         {/* bottom-right glow */}
         <div className="absolute -bottom-32 -right-20 w-[420px] h-[420px] rounded-full bg-blue-500/25 blur-3xl pointer-events-none" />
 

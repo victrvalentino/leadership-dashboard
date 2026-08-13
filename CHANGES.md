@@ -1,5 +1,160 @@
 # Redesign Changelog
 
+## Update 27 — Executive Snapshot KPI cards: consistent spacing rhythm
+
+Found the actual cause of the "not neat" spacing: the gaps between elements
+(label → divider → value → divider → footer) weren't just tight, they were
+genuinely inconsistent — 0px between label and the first divider, 0px between that
+divider and the value, then 4px before the second divider, then 12px before the
+footer. Four different gap sizes including two literal zeros in the same short
+stack of elements.
+
+Rebuilt with one consistent scale: 12px after the icon, 8px around both dividers
+consistently, 12px before the footer (12 / 8 / 8 / 8 / 12) — symmetric, with the
+larger gaps at the two "section boundaries" (icon and footer) and even smaller gaps
+around the value in between. Cards grow by about 14px to accommodate the added
+spacing; since they use `min-height` rather than a fixed height, this is absorbed
+cleanly and all five cards still match each other exactly.
+
+---
+
+## Update 26 — Executive Snapshot: blended Directorate icon, removed Leadership Insight chevron
+
+- **Directorate banner icon**: was a vivid purple (`#6D4FD1`) that stood out sharply
+  against the dark navy banner (`#0F0C40 → #1B1464`). Changed to `#2E2A70` — a lighter
+  shade from the same navy/indigo family as the banner itself, rather than a different
+  hue entirely, so it now reads as "part of the banner" instead of an accent color
+  competing with it.
+- **Leadership Insight banner**: removed the trailing `>` chevron after the trend/alert
+  icons — matches the same removal already done on Entry, Experience, and Development's
+  equivalent banners; Executive's was the one section this hadn't reached yet since it
+  uses two icons plus a chevron rather than a lone chevron, so it needed its own check.
+  Removed the now-unused `ChevronRight` import.
+
+---
+
+## Update 25 — watermark had vanished entirely — a real regression from the last fix, now fixed
+
+Moving the watermark to `position: fixed` (Update 24) was correct, but the restructuring
+around it introduced a new bug: the wrapper div I created for the rest of the app
+(`<div className="relative z-10 flex h-screen ... bg-slate-50">`) carried its own opaque
+`bg-slate-50` background covering the *entire* screen. Since that div sits at `z-10`,
+above the watermark's `z-0`, its full-screen opaque background painted directly over the
+watermark everywhere — not just where cards happen to sit, the whole thing, which is why
+it disappeared completely rather than just being mispositioned.
+
+The fix: removed that `bg-slate-50` from the wrapper. It was redundant anyway —
+`layout.tsx`'s `<body>` already carries `bg-slate-50` globally, so the wrapper doesn't
+need its own copy. With it gone, the wrapper's genuinely empty areas (the margins around
+cards inside `<main>`, which have no background color of their own) are transparent, so
+the watermark shows through in the gaps exactly like your reference — while the sidebar,
+header, and every card still correctly paint over it where they actually sit.
+
+---
+
+## Update 24 — watermark wasn't actually centered — fixed the real cause
+
+The previous update's watermark used `position: absolute` *inside* `<main>`, which is
+the scrollable container. That meant it was positioned relative to the top of each
+section's content, not the visible screen — so on any page taller than one screen, it
+would scroll away with the rest of the content rather than staying put. That's the
+actual reason it read as "not middle enough": it was never anchored to the viewport at
+all.
+
+Moved it to `position: fixed` with `top-1/2 -translate-y-1/2`, which centers it on the
+visible screen and keeps it there regardless of scroll position or how long a given
+section's content is — the real meaning of "middle" here.
+
+Also restructured the stacking to remove the last bit of ambiguity: the watermark is
+now a top-level sibling of the whole app shell (not nested inside `<main>`), with an
+explicit `z-0`. Everything real — sidebar, header, all section content, the floating
+chat button, modals — is wrapped in one `relative z-10` container. Two siblings, two
+explicit z-index values, no dependence on DOM paint order or nested-stacking-context
+reasoning. `right-16` keeps it clearly on the right side rather than dead-center of the
+screen, matching "middle right."
+
+---
+
+## Update 23 — blue logo watermark on every section, added once at the shared layout level
+
+New asset: `public/logo-icon-blue.png` — same icon-only silhouette used for the login
+page watermark (Update 21), recolored blue (`#2563EB`) instead of white by reusing its
+existing alpha mask, rather than reprocessing from the original photo.
+
+Added to `src/app/page.tsx`, **not** duplicated into each of the 11+ section files —
+`<main>` is the one shared wrapper every section already renders through, so one change
+here makes the watermark appear consistently everywhere without touching Home,
+Executive, Recruitment, Entry, Experience, Development, Turnover, Exit, Cost,
+Leadership, or Version History individually. If the position or size ever needs
+adjusting, it's a one-line change in one file, not eleven.
+
+Layering was handled explicitly rather than relying on DOM order: `<main>` is now
+`relative`, the watermark sits at `z-0` inside it, and each section's actual content
+renders inside a `z-10` wrapper. This guarantees the watermark stays behind every card
+and panel regardless of what a given section renders, rather than depending on paint
+order happening to work out — confirmed no existing `absolute`-positioned elements
+(like Governance's numbered step badges) would be affected by `<main>` becoming a
+positioning context, since they already anchor to their own closer parent.
+
+---
+
+## Update 22 — real profile photos in the contact popup
+
+`ContactModal.tsx`'s four contacts now show actual photos instead of colored
+initials circles. Assets saved to `public/contacts/` (debora.jpg, ilham.jpg,
+vania.jpg, victor.jpg) — Victor's original was 1280×1280 (94KB) while the other
+three were already properly-sized 225×225 thumbnails, so resized his down to
+240×240 to match; checked the result before finalizing to confirm his face stayed
+well-centered after the crop rather than assuming it would.
+
+Built with a fallback: if a photo ever fails to load (missing file, bad path), it
+reverts to the original colored-initials circle instead of showing a broken-image
+icon — the `initials()` helper and per-contact `color` are both still there, just
+now serving as the safety net rather than the default.
+
+---
+
+## Update 21 — real logo watermark, clickable email icon, Cost rebalance, premium gradients
+
+**1. Login page watermark** — was a hand-drawn SVG approximation (my own guess at an
+"S" curve). Replaced with the real logo, cropped to just the icon mark (no "ESB" text —
+found the exact pixel column where the icon ends and the text begins by scanning alpha
+density column-by-column, rather than eyeballing a crop). Saved as a second asset,
+`public/logo-icon-white.png`, separate from the full lockup used in the sidebar/login
+header — using the full lockup here would have ghosted "ESB" text into the watermark,
+which the reference didn't show.
+
+**2. Contact popup mail icon** — this was actually already functional (the whole
+contact row has always been a `mailto:` link, icon included), but it didn't *look*
+clickable — no visual affordance. Gave the icon its own circular button treatment with
+a hover state, so it's now unambiguous that it's the click target, while the rest of
+the row stays clickable too.
+
+**3. Cost section rebalanced, not just resized** — shrinking the icon alone while
+keeping the icon+value side-by-side (as literally asked) would have risked longer
+currency values ("Rp 28.1B") overflowing that tight row, since Cost is the one section
+where values share horizontal space with the icon rather than sitting on their own row
+below it. Restructured to stack icon-above-value instead — smaller icon (64px → 44px),
+much bigger value (28-30px → **36px**, finally reaching the app-wide standard this
+section could never safely hit before). This also structurally guarantees no overflow
+regardless of value length, and better serves "emphasize the number" than a side-by-side
+resize would have — a number alone on its own row reads as more prominent than one
+sharing space with an icon.
+
+**4. Premium gradient backgrounds, all sections** — added `.panel-gradient` to
+`globals.css`: a barely-there diagonal shift from pure white to a whisper of cool gray
+(`150deg, #fff → #fafbfd → #f3f6f9`), replacing flat `bg-white` on every genuine card
+and panel — 37 of them, across every section including the Leadership sub-tabs and
+Version History. Deliberately left flat white: icon-circle badges, the sticky header
+bar, input-style elements, and internal content wrappers that sit inside an
+already-gradient-treated parent (adding a second gradient there would just look like a
+visible seam). Also caught a real gap in the process: Executive's 5 KPI cards had **no
+background at all** — just a border and shadow floating over the page's own background
+color — which was likely contributing to the "flat"/inconsistent impression on its own,
+independent of the gradient question. Fixed alongside everything else.
+
+---
+
 ## Update 20 — normalized icon and value sizing across every "Key Metrics" card
 
 Earlier passes unified container widths, title sizes, and header badges (Update 17), but

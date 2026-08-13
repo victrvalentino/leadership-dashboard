@@ -119,7 +119,7 @@ export default function ActionBoxTab() {
         className="rounded-2xl p-4"
         style={{ backgroundColor: PALE }}
       >
-        <div className="rounded-2xl overflow-hidden shadow-soft bg-white border border-gray-100">
+        <div className="rounded-2xl overflow-hidden shadow-soft panel-gradient border border-gray-100">
           {/* Header banner */}
           <div
             className="flex items-center gap-5 px-6 py-5 text-white rounded-t-2xl"

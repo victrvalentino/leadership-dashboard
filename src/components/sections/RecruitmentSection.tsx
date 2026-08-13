@@ -80,7 +80,7 @@ function KpiPill({
   value: string | number
 }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-xl px-3 py-2.5 flex items-center gap-3 shadow-sm">
+    <div className="panel-gradient border border-gray-200 rounded-xl px-3 py-2.5 flex items-center gap-3 shadow-sm">
       <div
         className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft"
         style={{ backgroundColor: color }}
@@ -265,7 +265,7 @@ export default function RecruitmentSection() {
       {/* Table + insight */}
       <div className="grid grid-cols-1 lg:grid-cols-[2.6fr_1fr] gap-4 items-start">
         {/* Positions table */}
-        <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-white">
+        <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm panel-gradient">
           <div
             className="grid grid-cols-[1.8fr_0.7fr_0.5fr_1fr_1fr_2fr] px-4 py-3 text-gray-800 text-sm md:text-base font-extrabold text-center items-center bg-gray-50 border-b border-gray-200"
           >
@@ -337,7 +337,7 @@ export default function RecruitmentSection() {
         </div>
 
         {/* Insight panel */}
-        <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-white">
+        <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm panel-gradient">
           <div className="px-4 py-3.5 flex items-center gap-2.5 border-b border-gray-100">
             <Lightbulb className="w-5 h-5" style={{ color: PINK_TEXT }} strokeWidth={1.75} />
             <span className="text-sm font-extrabold tracking-wide text-gray-900 uppercase">Insight</span>

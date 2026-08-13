@@ -59,7 +59,7 @@ function ExitKPI({
   caption?: string
 }) {
   return (
-    <div className="bg-white rounded-2xl p-4 flex flex-col items-center text-center shadow-sm">
+    <div className="panel-gradient rounded-2xl p-4 flex flex-col items-center text-center shadow-sm">
       {/* Fixed-height zones keep all five cards aligned even when
           titles/subtitles wrap to a different number of lines. */}
       <div className="h-[52px] flex flex-col items-center justify-center">
@@ -279,7 +279,7 @@ export default function ExitSection() {
       </div>
 
       {/* Exit intelligence panel */}
-      <div className="rounded-2xl p-6 space-y-5 bg-white border border-gray-100 shadow-soft">
+      <div className="rounded-2xl p-6 space-y-5 panel-gradient border border-gray-100 shadow-soft">
         <div className="text-center">
           <h2 className="text-3xl font-black uppercase text-gray-900">
             Exit Intelligence
@@ -354,7 +354,7 @@ export default function ExitSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Resignation reasons */}
-          <div className="bg-white rounded-2xl p-4 shadow-soft border border-gray-100 space-y-2">
+          <div className="panel-gradient rounded-2xl p-4 shadow-soft border border-gray-100 space-y-2">
             <p className={chartTitleClass}>Top Resignation Reasons</p>
 
             <p className="text-[11px] font-semibold text-gray-500 text-center pb-1">
@@ -373,7 +373,7 @@ export default function ExitSection() {
           </div>
 
           {/* Tenure donut */}
-          <div className="bg-white rounded-2xl p-4 shadow-soft border border-gray-100 flex flex-col items-center">
+          <div className="panel-gradient rounded-2xl p-4 shadow-soft border border-gray-100 flex flex-col items-center">
             <p className={chartTitleClass}>Tenure at Resignation</p>
 
             <p className="text-[11px] font-semibold text-gray-500 text-center pb-2">
@@ -419,7 +419,7 @@ export default function ExitSection() {
           </div>
 
           {/* Top affected roles */}
-          <div className="bg-white rounded-2xl p-4 shadow-soft border border-gray-100 space-y-2">
+          <div className="panel-gradient rounded-2xl p-4 shadow-soft border border-gray-100 space-y-2">
             <p className={chartTitleClass}>Top Affected Roles</p>
 
             <p className="text-[11px] font-semibold text-gray-500 text-center pb-1">
@@ -455,7 +455,7 @@ export default function ExitSection() {
       </div>
 
       {/* Leadership signal */}
-      <div className="rounded-2xl px-6 py-5 flex flex-wrap items-center gap-5 bg-white border border-gray-100 shadow-soft">
+      <div className="rounded-2xl px-6 py-5 flex flex-wrap items-center gap-5 panel-gradient border border-gray-100 shadow-soft">
         <div className="flex items-center gap-4 max-w-full md:max-w-[300px]">
           <IconCircle
             Icon={Lightbulb}
