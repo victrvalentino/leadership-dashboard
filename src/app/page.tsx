@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Home } from 'lucide-react'
+import { MessageCircle } from 'lucide-react'
 import Sidebar, { type Page } from '@/components/layout/Sidebar'
 import Header from '@/components/layout/Header'
 import HomeSection from '@/components/sections/HomeSection'
@@ -14,10 +14,12 @@ import ExitSection from '@/components/sections/ExitSection'
 import CostSection from '@/components/sections/CostSection'
 import LeadershipSection from '@/components/sections/LeadershipSection'
 import VersionHistorySection from '@/components/sections/VersionHistorySection'
+import ContactModal from '@/components/ContactModal'
 
 export default function DashboardPage() {
   const [page, setPage] = useState<Page>('home')
   const [menuOpen, setMenuOpen] = useState(false)
+  const [contactOpen, setContactOpen] = useState(false)
 
   const navigate = (p: Page) => {
     setPage(p)
@@ -77,15 +79,16 @@ export default function DashboardPage() {
         </main>
       </div>
 
-      {page !== 'home' && (
-        <button
-          onClick={() => navigate('home')}
-          className="fixed bottom-6 right-6 w-12 h-12 bg-indigo-800 text-white rounded-xl shadow-badge flex items-center justify-center hover:bg-indigo-900 hover:shadow-elevated transition-all z-50"
-          aria-label="Go to home"
-        >
-          <Home className="w-6 h-6" strokeWidth={2} />
-        </button>
-      )}
+      <button
+        onClick={() => setContactOpen(true)}
+        className="fixed bottom-6 right-6 w-12 h-12 bg-indigo-800 text-white rounded-xl icon-gradient shadow-badge flex items-center justify-center hover:bg-indigo-900 transition-all z-50"
+        aria-label="Contact your PEX representative"
+        style={{ backgroundColor: '#0D1B4B' }}
+      >
+        <MessageCircle className="w-6 h-6" strokeWidth={2} />
+      </button>
+
+      <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
     </div>
   )
 }

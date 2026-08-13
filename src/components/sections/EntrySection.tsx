@@ -8,15 +8,11 @@ import {
   ShieldCheck,
   ClipboardCheck,
   Megaphone,
+  CalendarDays,
   type LucideIcon
 } from 'lucide-react'
 import { entryData } from '@/data/dashboardData'
-import {
-  KeyMetricsHeader,
-  LeadershipSignal,
-  StatusBadge,
-  DonutChart
-} from '@/components/ui'
+import { StatusBadge, DonutChart } from '@/components/ui'
 
 type EntryContent = {
   title?: string
@@ -47,16 +43,17 @@ function toStatus(value: unknown, fallback: Status): Status {
 }
 
 const GREEN = '#1D7A34'
-const GREEN_DARK = '#14532D'
+const GREEN_TINT = '#E7F5EA'
 
 function CardIcon({ Icon }: { Icon: LucideIcon }) {
   return (
     <div className="flex justify-center">
-      <Icon
-        className="w-12 h-12"
-        style={{ color: GREEN }}
-        strokeWidth={1.5}
-      />
+      <div
+        className="w-16 h-16 rounded-full flex items-center justify-center icon-gradient shadow-soft"
+        style={{ backgroundColor: GREEN_TINT }}
+      >
+        <Icon className="w-7 h-7" style={{ color: GREEN }} strokeWidth={1.75} />
+      </div>
     </div>
   )
 }
@@ -65,6 +62,22 @@ export default function EntrySection() {
   const [data, setData] = useState<EntryContent>(
     entryData as EntryContent
   )
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch('/api/dashboard/last-updated', { cache: 'no-store' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json) => {
+        if (json?.updatedAt) {
+          const d = new Date(json.updatedAt)
+          const dd = String(d.getDate()).padStart(2, '0')
+          const mm = String(d.getMonth() + 1).padStart(2, '0')
+          const yyyy = d.getFullYear()
+          setUpdatedAt(`${dd}/${mm}/${yyyy}`)
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     async function loadData() {
@@ -102,53 +115,55 @@ export default function EntrySection() {
   const d = data
 
   const cardClass =
-    'bg-white rounded-2xl p-5 min-h-[320px] flex flex-col items-center text-center shadow-sm'
+    'bg-white rounded-2xl p-5 min-h-[320px] flex flex-col items-center text-center shadow-soft border border-gray-100'
 
   const titleClass =
-    'text-sm font-bold uppercase tracking-widest text-gray-500 leading-snug'
+    'text-sm font-bold uppercase tracking-widest text-gray-800 leading-snug'
 
-  const bigValueClass = 'text-5xl font-black'
+  const bigValueClass = 'text-4xl font-black'
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 space-y-6">
       {/* Header */}
       <div>
-        <div className="flex items-center gap-4">
-          <div
-            className="w-20 h-20 rounded-xl flex flex-col items-center justify-center gap-1 flex-shrink-0 icon-gradient shadow-badge"
-            style={{ backgroundColor: GREEN }}
-          >
-            <LogIn className="w-8 h-8 text-white" strokeWidth={1.75} />
-            <span className="text-[10px] font-black tracking-widest text-white">
-              ENTRY
-            </span>
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+          <div className="flex items-center gap-4">
+            <div
+              className="w-20 h-20 rounded-xl flex flex-col items-center justify-center gap-1 flex-shrink-0 icon-gradient shadow-badge"
+              style={{ backgroundColor: GREEN }}
+            >
+              <LogIn className="w-8 h-8 text-white" strokeWidth={1.75} />
+              <span className="text-[10px] font-black tracking-widest text-white">
+                ENTRY
+              </span>
+            </div>
+
+            <div>
+              <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight uppercase">
+                {d.title || 'Entry'}
+              </h1>
+              <p className="text-gray-500 font-medium mt-1.5">
+                {d.subtitle || 'Hiring and onboarding metrics'}
+              </p>
+            </div>
           </div>
 
-          <div>
-            <h1
-              className="text-3xl md:text-4xl font-black"
-              style={{ color: GREEN }}
-            >
-              {d.title || 'Entry (Hiring & Onboarding)'}
-            </h1>
-            <p className="text-base md:text-lg text-gray-900 font-bold">
-              {d.subtitle || 'Are We Bringing the Right People In?'}
+          {updatedAt && (
+            <p className="text-sm text-gray-400 font-medium flex items-center gap-1.5 mt-1.5 flex-shrink-0">
+              Updated as of {updatedAt}
+              <CalendarDays className="w-4 h-4" strokeWidth={2} />
             </p>
-          </div>
+          )}
         </div>
 
-        <div
-          className="w-full h-px mt-6"
-          style={{ backgroundColor: GREEN }}
-        />
+        <div className="w-full h-px mt-6 bg-gray-200" />
       </div>
 
       {/* Key metrics */}
-      <div
-        className="rounded-2xl p-6"
-        style={{ backgroundColor: '#E9F9EF' }}
-      >
-        <KeyMetricsHeader color="#111827" />
+      <div className="rounded-2xl p-6 bg-white border border-gray-100 shadow-soft">
+        <h2 className="text-sm font-extrabold uppercase tracking-widest text-gray-800 mb-6">
+          Key Metrics
+        </h2>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 items-stretch">
           {/* Joiners */}
@@ -304,13 +319,24 @@ export default function EntrySection() {
         </div>
       </div>
 
-      <LeadershipSignal
-        text={d.leadershipSignal}
-        color={GREEN_DARK}
-        bgColor="#E9F9EF"
-        label="LEADERSHIP SIGNAL"
-        icon={<Megaphone className="w-6 h-6 text-white" strokeWidth={1.75} />}
-      />
+      <div className="rounded-2xl px-6 py-5 flex items-center gap-4 bg-white border border-gray-100 shadow-soft">
+        <div
+          className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft"
+          style={{ backgroundColor: GREEN }}
+        >
+          <Megaphone className="w-6 h-6 text-white" strokeWidth={1.75} />
+        </div>
+
+        <div className="flex-1">
+          <p
+            className="text-sm font-extrabold uppercase tracking-wide"
+            style={{ color: GREEN }}
+          >
+            Leadership Signal
+          </p>
+          <p className="text-sm text-gray-600 mt-0.5">{d.leadershipSignal}</p>
+        </div>
+      </div>
     </div>
   )
 }

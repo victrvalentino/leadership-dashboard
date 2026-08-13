@@ -9,10 +9,10 @@ import {
   Users,
   BookOpen,
   Megaphone,
+  CalendarDays,
   type LucideIcon
 } from 'lucide-react'
 import { developmentData } from '@/data/dashboardData'
-import { LeadershipSignal } from '@/components/ui'
 
 const PURPLE = '#6B21A8'
 const PURPLE_BRIGHT = '#7C3AED'
@@ -111,13 +111,13 @@ function DevCard({
 }: DevCardProps) {
   return (
     <div className="bg-white rounded-[20px] p-5 shadow-sm h-full flex flex-col">
-      <div className="flex items-center gap-4 min-h-[88px]">
+      <div className="flex items-center gap-4 min-h-[72px]">
         <div
-          className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-badge"
+          className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-badge"
           style={{ backgroundColor: '#F3E8FA' }}
         >
           <Icon
-            className="w-10 h-10"
+            className="w-8 h-8"
             style={{ color: PURPLE_BRIGHT }}
             strokeWidth={1.5}
           />
@@ -137,7 +137,7 @@ function DevCard({
 
         <div className="flex items-center gap-4">
           <p
-            className="text-5xl leading-none font-black flex-shrink-0"
+            className="text-4xl leading-none font-black flex-shrink-0"
             style={{ color: PURPLE_DEEP }}
           >
             {rate}%
@@ -190,6 +190,22 @@ export default function DevelopmentSection() {
   const [data, setData] = useState(
     developmentData as DevelopmentContent
   )
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch('/api/dashboard/last-updated', { cache: 'no-store' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json) => {
+        if (json?.updatedAt) {
+          const d = new Date(json.updatedAt)
+          const dd = String(d.getDate()).padStart(2, '0')
+          const mm = String(d.getMonth() + 1).padStart(2, '0')
+          const yyyy = d.getFullYear()
+          setUpdatedAt(`${dd}/${mm}/${yyyy}`)
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     async function loadData() {
@@ -219,47 +235,47 @@ export default function DevelopmentSection() {
     <div className="max-w-6xl mx-auto px-6 py-10 space-y-6">
       {/* Header */}
       <div>
+        <div className="flex items-start justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-4">
           <div
-            className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 icon-gradient shadow-badge"
+            className="w-20 h-20 rounded-xl flex flex-col items-center justify-center gap-1 flex-shrink-0 icon-gradient shadow-badge"
             style={{ backgroundColor: PURPLE_DEEP }}
           >
-            <div className="w-12 h-12 rounded-full border-[1.5px] border-white/60 flex items-center justify-center">
-              <BarChart3 className="w-6 h-6 text-white" strokeWidth={1.75} />
-            </div>
-            <span className="text-[9px] font-bold tracking-wider">
+            <BarChart3 className="w-8 h-8 text-white" strokeWidth={1.75} />
+            <span className="text-[8px] font-black tracking-wider text-white">
               DEVELOPMENT
             </span>
           </div>
 
           <div>
-            <h1
-              className="text-4xl md:text-[42px] leading-none font-extrabold tracking-tight"
-              style={{ color: PURPLE }}
-            >
+            <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight uppercase">
               {d.title || 'Development'}
             </h1>
-            <p className="text-base md:text-lg text-gray-900 font-bold mt-2">
-              {d.subtitle || 'Are We Growing Talent or Consuming Talent?'}
+            <p className="text-gray-500 font-medium mt-1.5">
+              {d.subtitle || 'Learning and growth metrics'}
             </p>
           </div>
         </div>
 
-        <div
-          className="w-full h-px mt-6"
-          style={{ backgroundColor: PURPLE }}
-        />
+        {updatedAt && (
+          <p className="hidden sm:flex text-sm text-gray-400 font-medium items-center gap-1.5 mt-1.5 flex-shrink-0">
+            Updated as of {updatedAt}
+            <CalendarDays className="w-4 h-4" strokeWidth={2} />
+          </p>
+        )}
+      </div>
+
+      <div
+        className="w-full h-px mt-6"
+        style={{ backgroundColor: PURPLE }}
+      />
       </div>
 
       {/* Key metrics */}
-      <div className="rounded-[24px] bg-[#F8EFFC] px-5 py-6">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="flex-1 h-px bg-gray-400/60" />
-          <p className="text-lg font-black tracking-wide text-gray-900 uppercase">
-            Key Metrics
-          </p>
-          <div className="flex-1 h-px bg-gray-400/60" />
-        </div>
+      <div className="rounded-[24px] bg-white border border-gray-100 shadow-soft px-5 py-6">
+        <h2 className="text-sm font-extrabold uppercase tracking-widest text-gray-800 mb-6">
+          Key Metrics
+        </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
           <DevCard
@@ -297,12 +313,27 @@ export default function DevelopmentSection() {
         </div>
       </div>
 
-      <LeadershipSignal
-        text={d.leadershipSignal}
-        color={PURPLE_DEEP}
-        bgColor="#F8EFFC"
-        icon={<Megaphone className="w-6 h-6 text-white" strokeWidth={1.75} />}
-      />
+      <div
+        className="rounded-2xl px-6 py-5 flex items-center gap-4"
+        style={{ backgroundColor: '#F8EFFC' }}
+      >
+        <div
+          className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft"
+          style={{ backgroundColor: PURPLE_DEEP }}
+        >
+          <Megaphone className="w-6 h-6 text-white" strokeWidth={1.75} />
+        </div>
+
+        <div className="flex-1">
+          <p
+            className="text-sm font-extrabold uppercase tracking-wide"
+            style={{ color: PURPLE_DEEP }}
+          >
+            Leadership Signal
+          </p>
+          <p className="text-sm text-gray-600 mt-0.5">{d.leadershipSignal}</p>
+        </div>
+      </div>
     </div>
   )
 }

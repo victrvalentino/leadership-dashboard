@@ -80,7 +80,7 @@ export default function Header({
           </div>
         )}
 
-        <div className="w-8 h-8 rounded-full bg-indigo-800 text-white text-xs font-black flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft">
+        <div className="w-8 h-8 rounded-full text-white text-xs font-black flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft" style={{ backgroundColor: '#1565C0' }}>
           {userName ? getInitials(userName) : 'PX'}
         </div>
       </div>

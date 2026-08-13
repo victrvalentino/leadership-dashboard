@@ -41,7 +41,7 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: 'home', label: 'Home', icon: Home, color: '#374151' },
+  { id: 'home', label: 'Home', icon: Home, color: '#1565C0' },
   { id: 'executive', label: 'Executive Snapshot', icon: BarChart3, color: '#1565C0', group: 'overview' },
   { id: 'recruitment', label: 'Recruitment', icon: UserSearch, color: '#E8636F', group: 'lifecycle' },
   { id: 'entry', label: 'Entry', icon: LogIn, color: '#2E7D32', group: 'lifecycle' },
@@ -114,6 +114,12 @@ export default function Sidebar({ current, onNavigate, isOpen, onClose }: Sideba
       >
         {/* Logo */}
         <div className="px-5 py-5 border-b border-gray-100 shadow-sm" style={{ background: 'linear-gradient(135deg, #0D1B4B 0%, #16245e 100%)' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo-esb-white.png"
+            alt="ESB"
+            className="h-8 w-auto mb-4"
+          />
           <p className="text-white font-extrabold text-[13px] uppercase tracking-widest">People Experience</p>
           <p className="text-blue-200 text-[10px] tracking-widest font-medium mt-0.5">Leadership Dashboard</p>
         </div>
@@ -175,15 +181,13 @@ function NavBtn({ item, active, onClick }: { item: NavItem; active: boolean; onC
       onClick={onClick}
       className={clsx(
         'w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm font-semibold transition-all duration-150 rounded-xl mx-2 my-0.5',
-        active
-          ? 'text-white shadow-badge'
-          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+        active ? 'font-bold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
       )}
-      style={active ? { backgroundColor: item.color, width: 'calc(100% - 16px)' } : {}}
+      style={active ? { backgroundColor: `${item.color}14`, color: item.color, width: 'calc(100% - 16px)' } : {}}
     >
       <item.icon
         className="w-4.5 h-4.5 flex-shrink-0"
-        style={{ width: 18, height: 18, color: active ? '#FFFFFF' : item.color }}
+        style={{ width: 18, height: 18, color: item.color }}
         strokeWidth={2}
       />
       <span className="truncate">{item.label}</span>

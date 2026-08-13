@@ -1,5 +1,378 @@
 # Redesign Changelog
 
+## Update 20 — normalized icon and value sizing across every "Key Metrics" card
+
+Earlier passes unified container widths, title sizes, and header badges (Update 17), but
+never checked the sizing *inside* each section's metric cards — icon circles and value
+numbers had drifted section by section as each one got its own redesign pass. Audited
+every section's actual icon diameter and value font-size and found real outliers:
+
+| Section | Icon (was → now) | Value (was → now) |
+|---|---|---|
+| Executive | 64px (no change) | 30px → **36px** |
+| Entry | 64px (no change) | 48px → **36px** |
+| Experience | 56px → **64px** | 30px → **36px** |
+| Development | 80px → **64px** | 48px → **36px** |
+| Turnover | 64px (already correct) | 36px (already correct) |
+| Exit | 64px (already correct) | 36px (already correct) |
+| Cost | 64px (no change) | 24-26px → **28-30px*** |
+
+\* Cost's values are currency strings ("Rp 2.34B", "Rp 847M") sharing a horizontal row
+with the icon, unlike every other section where the value sits on its own row below the
+icon with the full card width available. Jumping straight to 36px risked overflowing
+that tight row. Bumped it most of the way there (28-30px) rather than the full amount,
+to close the gap without risking broken/clipped text — flagging this as the one
+deliberate partial fix rather than a full match.
+
+Also checked and intentionally left alone: Development's secondary detail-box icon
+(56px) and Executive/Cost's small secondary signal icons (44-48px) — these are
+genuinely smaller *by role* (secondary/detail elements, not the primary card icon), not
+inconsistencies. Entry's and Exit's donut-chart center text already matched each other
+exactly. Card padding (p-4 vs p-5) left as-is — a minor, largely content-driven
+difference between denser 6-column and roomier 4-column layouts, not a real "zoom"
+driver like the icon/font issues were.
+
+---
+
+## Update 19 — Turnover/Exit/Cost panels: white with drop shadow, matching Experience
+
+Last update lightened these panels to a faint tint (~18% color). This update goes
+further, per your reference screenshot of Experience's "Key Metrics" panel: pure white
+background, a subtle border, and `shadow-soft` — exactly Experience's actual panel
+class (`bg-white border border-gray-100 shadow-soft`), copied directly rather than
+approximated. Applied to both panels in each section (the metrics grid wrapper and the
+Leadership Insight/Signal panel) — 6 panels total across the three sections:
+
+- `TurnoverSection.tsx`: both the Key Metrics wrapper and Leadership Insight panel
+- `ExitSection.tsx`: both the Exit Intelligence panel and Leadership Signal panel
+- `CostSection.tsx`: both the Workforce Economics panel and Leadership Signal panel
+
+Removed the now-unused `PANEL` color constants from `ExitSection.tsx` and
+`CostSection.tsx` since nothing references them anymore. `ActionBoxTab.tsx` (Leadership
+Action) was left untouched — this request named only Turnover, Exit, and Cost, unlike
+the broader "all four" instruction in Update 17.
+
+---
+
+## Update 18 — real logo asset + 9 targeted fixes
+
+**Real logo, not a hand-drawn approximation.** Your uploaded PNG had a solid white
+background (not transparent), so a CSS filter alone couldn't isolate the shape — I
+processed it directly: removed the white background and recolored the mark to pure
+white with proper anti-aliased alpha (based on distance-from-white per pixel, not a
+flat threshold, so edges stay smooth rather than jagged). Rendered a test preview on
+navy to confirm it looked clean before wiring it in. Saved as
+`public/logo-esb-white.png`, replacing the hand-drawn SVG approximation in both
+`Sidebar.tsx` and the login page — this is now your actual logo shape, not my
+best-guess recreation of it.
+
+Eight smaller fixes, all confirmed against what you flagged specifically:
+
+1. **Executive Snapshot** — added spacing (`mt-3` on the footer zone, small gap above
+   the divider) so the People icon / LOW / HIGH / Rp / MEDIUM badges sit lower, with
+   real breathing room below the value number instead of crowding it.
+2. **Recruitment** — Remarks, This Week Update, and Next Action numbered lists switched
+   from `list-inside` to `list-outside` with proper padding. `list-inside` is a classic
+   CSS trap: when text wraps to a second line, the wrapped line starts flush-left
+   instead of aligning under the first line's text, which is exactly the "not neat"
+   look you were seeing.
+3. **Entry** — removed both the `<` `>` pagination arrows from the Key Metrics panel
+   and the `>` from the Leadership Signal banner, plus the now-unused icon imports.
+4. **Experience** — removed the `>` from the Leadership Signal banner.
+5. **Development** — "DEVELOPMENT" label in the purple badge reduced from 10px to 8px
+   (it's the longest label of any section badge, so it was sitting tighter against the
+   edges than the others); removed the `>` from its Leadership Signal banner too.
+6. **Turnover / Exit / Cost / Action Box** — all four panel background tints (orange,
+   pink, teal, orange) recomputed to a much lighter blend (~82% white-mixed instead of
+   the original saturated pastel) — "only a bit sense of the color," as asked, rather
+   than a solid fill.
+7. **Leadership Action** title changed back to orange (I'd made it neutral dark in the
+   previous update to match its reference image literally — you're overriding that
+   here, which is a legitimate call since you're looking at the live result).
+8. **Contact popup** — "PEX" reverted to "PBX." I'd flagged this as an assumption last
+   time specifically so it'd be easy to correct — confirmed now, fixed.
+
+---
+
+## Update 17 — Development/Turnover/Exit/Cost/Leadership redesigned, chat popup, global consistency
+
+The biggest batch yet — 5 sections against 7 reference images, plus three cross-cutting
+requests (icon gradients everywhere, uniform sizing, and a new contact popup). Handled
+in two turns; here's everything that landed.
+
+**New: Chat contact popup** — the floating bottom-right button is now a chat icon
+instead of Home (`src/app/page.tsx`), opening `src/components/ContactModal.tsx`. Shows
+all 4 PEX representatives with mailto: links. **Judgment call**: you wrote "PBX
+representative," but since this app consistently uses "PEX"/"People Experience"
+terminology everywhere else (including the "PX" avatar in your Governance Model
+reference), I treated that as PEX in the popup title. Flagging clearly in case "PBX" was
+intentional — easy one-line fix either way.
+
+**Development, Turnover, Exit, Cost, Leadership Action** — all five already had solid
+functionality in place (Development's target-bar chart, Turnover's real recharts line
+chart + bar lists, Exit's donut + multi-item signal row, Cost's two line charts + donut).
+None of that logic changed — this was about matching each section's actual reference
+image, which turned out to **differ from section to section** rather than following one
+single rule:
+- Header badge shape unified to the plain rounded-square pattern (icon directly visible,
+  no inner ring) across all five — previously each used the older circle-in-square hero
+  pattern.
+- Title colors matched **per reference as shown**, not forced to one rule: Development
+  and Leadership Action use neutral dark titles; Turnover, Exit, and Cost use their
+  section's own color (orange/red/teal) — because that's genuinely what each reference
+  image shows, even though they're inconsistent with each other.
+- Icon fill style also matched per reference: Turnover converted from solid-color fill
+  to a light tonal tint (its reference clearly shows this); Exit and Cost's solid fills
+  were already correct and left alone (their references show solid fill).
+- Added "Updated as of [date]" to all five headers — none of them had it before.
+- Development's outer panel changed from a light purple tint to white, its "Key Metrics"
+  label simplified from flanking lines to plain text, and its Leadership Signal banner
+  rebuilt with a trailing chevron (kept the light purple tint here specifically, since
+  that's what its reference shows — unlike Entry/Experience, which use white).
+- Cost's outline-only signal icons (transparent circle, border only) converted to filled
+  tonal circles so they could carry the gradient treatment.
+- Leadership's 3 sub-tabs (Risk Heatmap, Action Box, Governance) already matched their
+  references closely from earlier polish work — added the small "Key Metrics" tag to
+  Risk Heatmap (present in its reference, missing before). Governance's Partnership
+  handshake circle stays as an intentional outline-only exception — it's shown that way
+  in its own reference, distinct from every other (filled) badge around it.
+- Confirmed "CANDENCE" in your Governance reference is a typo in the mockup — the actual
+  code already spells it "Cadence" correctly, no change needed.
+
+**Global gradient pass** — swept the *entire* codebase (every section, layout component,
+and modal) for any circular/rounded icon container missing the `icon-gradient` class.
+Found and fixed real gaps: Entry's `CardIcon` (pale green circles) was missing it
+entirely, and `WelcomeModal`'s wave-emoji circle too. Everything else that came up in
+the sweep was confirmed as correctly excluded — navigation arrows, close buttons, plain
+text buttons, and the one intentional outline exception in Governance.
+
+**"Same zoom size"** — confirmed all 10 main sections share identical title sizing
+(`text-3xl md:text-4xl`) and badge dimensions (80px rounded-square). `VersionHistorySection`
+was still on the older, larger sizing from before this whole redesign effort started —
+brought it in line with everything else.
+
+---
+
+## Update 16 — Experience redesigned; same conversion as Entry, less work needed
+
+This section already had the right chart components in place (`DonutChart` with legend,
+`SimpleHBar` progress rows, `CircularProgress` rings) — they already closely matched
+your reference, so none of that logic changed. This was mostly a restyle around them,
+following the same pattern as the Entry update:
+
+- **Stopped using `KeyMetricsHeader`/`LeadershipSignal`** (custom inline markup instead),
+  for the same reason as Entry — your reference's layout (left-aligned label, no
+  flanking lines; chevron-ended signal banner) doesn't match what those shared
+  components produce, and changing the shared versions would've affected
+  `DevelopmentSection`, which is now the only remaining user of both and is untouched.
+- **Icon style**: changed from a white circle with a blue border to a pale blue tonal
+  fill (`#E8EFFE`) — same treatment as Entry, and what your reference shows here too.
+- **Card labels**: darkened from blue to neutral dark gray, and added a short divider
+  beneath each one (between the label and the chart/list below it) — six cards, one
+  divider each, all inserted the same way.
+- **Header & panel**: badge shape changed from the circle-in-square hero pattern to the
+  plain rounded-square badge (matching Entry); title neutralized from blue to dark;
+  subtitle lightened and its fallback text updated to "Experience and engagement
+  overview"; added "Updated as of" with a calendar icon; the "Key Metrics" panel
+  background changed from a light blue tint to white; divider under the header changed
+  from blue to gray. No pagination arrows here — your reference for this section didn't
+  show any, unlike Entry's.
+- **Leadership Signal**: background from blue-tinted to white, added the trailing
+  chevron.
+
+---
+
+## Update 15 — Entry redesigned; stopped using two shared components on purpose
+
+`KeyMetricsHeader` and `LeadershipSignal` (from `ui/index.tsx`) are also used by
+`DevelopmentSection` and `ExperienceSection`, and your reference's layout for both —
+left-aligned "Key Metrics" label with pagination arrows instead of a centered label
+with flanking lines, and a chevron-ended signal banner instead of a plain one — didn't
+match what those shared components produce. Modifying the shared components would have
+changed Development and Experience too, which weren't part of this ask. So `EntrySection.tsx`
+now has its own inline markup for both instead, and the shared components themselves are
+untouched — confirmed by grepping `ui/index.tsx` for changes before packaging.
+
+- **Icon style**: changed from a bare icon with no background to a pale green circle
+  (`#E7F5EA`) with a green icon inside — a lighter, "tonal" treatment that's different
+  from the solid-fill-white-icon style used everywhere else, but it's what your
+  reference clearly shows, so it's intentional here specifically.
+- **Header**: title color changed from green to neutral dark, subtitle lightened, added
+  the "Updated as of [date]" row (wasn't present in this section before — now uses the
+  same shared endpoint Home/Executive/Recruitment use), divider changed from green to
+  gray. Also updated the *fallback* default title/subtitle text (only shown when no CMS
+  content exists) from "Entry (Hiring & Onboarding)" / "Are We Bringing the Right People
+  In?" to "Entry" / "Hiring and onboarding metrics" to match your reference — actual CMS
+  content, if set, displays exactly as before.
+- **Key Metrics panel**: background changed from a light green tint to white with a
+  subtle border, matching the neutral-panel direction used in Executive/Recruitment.
+  Added the left-aligned "Key Metrics" label + two circular arrow buttons on the right,
+  matching your reference. **These arrows are intentionally inert** — Entry has exactly
+  4 fixed metrics that already fit in one row, so there's nothing to actually page
+  through. Styled them visibly muted (light gray, `cursor-default`, no click handler)
+  rather than making them look clickable and do nothing, which would be misleading.
+  Card labels darkened from light gray to bold dark gray to match.
+- **Leadership Signal**: background changed from green-tinted to white, added a trailing
+  chevron — same treatment as Executive's Leadership Insight banner. Kept the icon
+  itself solid green (not tonal) since that's what the reference shows there.
+- Removed an unused `GREEN_DARK` constant left over from the component it replaced.
+
+---
+
+## Update 14 — Recruitment redesigned; KPI pills and department tabs were already close
+
+This one needed less work than the others — the 6 KPI pills and the department tab row
+already matched your reference closely from an earlier pass, so those were left mostly
+alone. **All department-switching logic, data fetching, and the `stats`/`positions`/
+`thisWeek`/`keyInsight`/`nextAction` bindings are completely untouched** — every change
+below is styling only.
+
+- **Header badge**: switched from the circle-in-square "hero badge" pattern (used by
+  Turnover, Exit, etc.) to the plain rounded-square badge pattern from `EntrySection` —
+  icon directly visible, no inner ring — matching what's in your reference.
+- **Title & subtitle**: title color changed from pink to neutral dark (matching Home/
+  Executive), subtitle changed from bold dark to lighter gray. "Updated as of" moved to
+  the top-right corner with a calendar icon, same position/style as Home and Executive.
+  This still reads from the same `d.updatedAs` CMS field as before — didn't switch it
+  to the shared `/api/dashboard/last-updated` endpoint Home/Executive use, since this
+  one's already wired to real per-record admin data and changing that would be a
+  data-source change, not a styling one.
+- **Department tabs**: active tab changed from a top-rounded rectangle to a fully
+  rounded pill, and removed the underline that ran across the whole tab row — both
+  closer to the reference.
+- **Table header**: was a solid pink fill with white text; now a light gray background
+  with dark text, matching the neutral-header direction used elsewhere. Row text
+  recolored to differentiate: Position and Lead Time keep a pink accent color, Level/HC/
+  Remarks are now neutral dark gray (previously everything in the row was the same
+  orange-brown regardless of column).
+- **Insight panel**: header changed from a solid pink banner reading "Insight" to a
+  lightbulb icon + label, matching how "insight" callouts look everywhere else in the
+  app. Group titles ("This Week Update", "Key Insight", "Next Action") changed from
+  centered to left-aligned; the actual insight text changed from a dark orange-brown to
+  neutral gray, so only the section titles carry color now, not every line.
+- Removed an unused `ORANGE_TEXT` color constant left over from the styling it replaced.
+
+---
+
+## Update 13 — Executive Snapshot rebuilt to match the reference, aligned with Home's language
+
+You gave the OK to lean on Home's patterns where it made sense, so this reused several
+pieces directly rather than inventing parallel ones:
+
+- **Title block**: was centered with no subtitle and no "Updated as of" line at all.
+  Now left-aligned title + subtitle + right-aligned "Updated as of [date]" with a
+  calendar icon — identical structure to Home, including the same
+  `/api/dashboard/last-updated` fetch (this section wasn't calling that endpoint
+  before, so the date was simply missing).
+- **Directorate banner**: icon circle changed from a translucent white/15 ring to a
+  solid purple fill (`#6D4FD1`) matching the reference, and the flat navy background
+  became a subtle two-tone gradient for a bit more depth.
+- **KPI cards**: Total Headcount's background changed from a light teal tint to plain
+  white, matching the reference (it's the only one of the five that isn't tinted). The
+  underline beneath each label now picks up that card's own accent color at low opacity
+  instead of a generic gray, so the color-coding reads through the whole card, not just
+  the icon.
+- **Leadership Insight banner**: label color changed from purple to the same dark navy
+  used for its icon (was two different colors doing the same job), and added a chevron
+  after the two trend/alert icons — matching both the reference and the same
+  divider-icon-chevron affordance used on Home's `FeatureRow`. This one stays visual
+  only (not wired to navigate anywhere) since there's no single obvious destination for
+  it the way Home's rows have one each.
+
+---
+
+## Update 12 — Home rebuilt to match the reference, plus Sidebar & Header updated to match
+
+**Scope note:** the reference image showed the whole page — sidebar and topbar included,
+not just the content area. Since `Sidebar.tsx` and `Header.tsx` are shared across every
+page, matching the reference "100%" meant updating those too, not just `HomeSection.tsx`
+— otherwise Home would look right but every other page would still show the old dark
+sidebar, and the app would feel like two different products depending which page you're
+on. Flagging this clearly since it's a bigger blast radius than "redesign Home" implies.
+
+**`Sidebar.tsx`:**
+- Added the "S" + "ESB" logo mark above the "People Experience / Leadership Dashboard"
+  text (reused the same SVG approximation built for the login page).
+- Home's identity color changed from gray (`#374151`) to blue (`#1565C0`) to match the
+  reference's active-state treatment.
+- Active nav item restyled from a solid color fill + white text to a light tint of the
+  item's own color (`${color}14` — ~8% opacity) + colored text, matching the softer
+  look in the reference. Every icon (active or not) now always shows its own identity
+  color, matching how Recruitment/Entry/Experience/etc. already behaved.
+
+**`Header.tsx`:** avatar circle changed from `bg-indigo-800` to the app's primary blue
+(`#1565C0`) to match. Everything else here was already close to the reference, so left
+alone.
+
+**`HomeSection.tsx`** — full rewrite:
+- Title block is now left-aligned (was centered) with "Updated as of..." moved into the
+  same row, right-aligned, with a calendar icon — was previously its own separate line
+  above the title.
+- Removed the dotted-line `SectionDivider` treatment entirely; "Lifecycle Intelligence"
+  is now a plain bold label with a single line extending right, matching the reference.
+- The three featured rows (Executive Snapshot, Recruitment Dashboard, Leadership Action
+  Focus) rebuilt as a new shared `FeatureRow` component: white or lightly-tinted
+  background (Executive is white; Recruitment gets a light rose tint; Leadership gets a
+  light cream tint), title case instead of ALL CAPS, and a new right-side affordance —
+  a vertical divider, an outlined preview icon, and a chevron — that didn't exist before.
+- The 6-card lifecycle grid: labels changed from ALL CAPS to title case, removed the
+  colored underline rule beneath each label, cards changed from a cream tint to white,
+  and added a small arrow icon at the bottom of each card (present in the reference,
+  missing before).
+
+---
+
+## Update 11 — welcome modal on Home, shown once per day
+
+New `src/components/WelcomeModal.tsx`, rendered inside `HomeSection.tsx`. Matches the
+reference structure (waving-hand badge, "Welcome to One Leadership Dashboard.", the
+date line, the tagline, the tip box) but restyled with the same restrained, soft-shadow
+language as the rest of this redesign rather than a literal pixel copy — you'd said
+that was fine.
+
+- **Date is fully dynamic** — computed from the visitor's own clock via `new Date()`,
+  formatted as "Thursday, 13th August 2026" with correct ordinal suffixes (1st, 2nd,
+  3rd, 11th–13th as an exception, 21st, etc. — verified all of these directly before
+  shipping). Never hardcoded.
+- **Shows once per calendar day**, not once per session and not on every visit to Home.
+  Tracked via `localStorage` (`ld-welcome-shown-date`), compared against today's date —
+  so it reappears each new day rather than nagging on every navigation back to Home.
+  If `localStorage` is unavailable (e.g. private browsing), it just doesn't show rather
+  than erroring.
+- Dismiss via the X button, clicking the backdrop, or pressing Escape — all three mark
+  today as "seen." Body scroll is locked while it's open.
+- Entrance is a soft fade + scale-up (220–300ms), not an abrupt snap — consistent with
+  the `section-enter` motion already used for section switches and category expand/
+  collapse elsewhere in the app.
+
+---
+
+## Update 10 — login page rebuilt to match the reference image
+
+Rebuilt `admin/login/page.tsx` to match the provided reference as closely as possible.
+Auth logic (`handleLogin`, `handleForgotPassword`, cookie-setting, error handling) is
+byte-for-byte unchanged — only the JSX markup changed. What's new:
+
+- **ESB logo mark** added at the top of the left panel — a rounded-square outline badge
+  with a stylized "S" glyph, next to "ESB" text. **This is an approximation**, not your
+  actual vector logo — I don't have that file, so I built an SVG that's visually close
+  to the reference screenshot. If you have the real logo as an SVG or PNG, send it and
+  I'll drop it in for a pixel-exact match.
+- Feature bullets now match the reference exactly: icons (Users, Navigation, ShieldCheck)
+  and copy ("Clarity across workforce health / and organizational performance.", etc.),
+  each with a bold headline line + a lighter continuation line.
+- Added the short blue underline accent below the subtitle, and a large `Quote` icon
+  above the closing tagline ("A clearer picture of our people...") — both present in
+  the reference but missing from the previous version.
+- Background: added a faint oversized "S" watermark shape and repositioned the glow to
+  concentrate at the bottom-right corner, matching the reference more closely than the
+  previous generic blurred circles.
+- **New footer row** on the right panel — "© [current year] ESB. All rights reserved."
+  and "Secure sign-in" with a shield icon, both absent before. Year is computed from
+  the visitor's clock rather than hardcoded.
+
+---
+
 ## Update 9 — collapse/expand extended one level deeper, to each section row
 
 Update 8 made the three category headers (Lifecycle Sections, Leadership Action,

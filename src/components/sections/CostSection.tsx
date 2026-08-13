@@ -26,7 +26,7 @@ import {
 } from 'recharts'
 
 const TEAL = '#12897B'
-const PANEL = '#DFF2EF'
+const TEAL_TINT = '#D7EEEA'
 const LINE_BLUE = '#2563EB'
 
 function CostKPI({
@@ -68,7 +68,7 @@ function CostKPI({
         </div>
 
         <p
-          className="text-2xl md:text-[26px] font-black leading-none"
+          className="text-[28px] md:text-[30px] font-black leading-none"
           style={{ color: TEAL }}
         >
           {value}
@@ -222,6 +222,22 @@ export default function CostSection() {
     costBreakdown: costData.costBreakdown,
     costPerEmployeeTrend: costData.costPerEmployeeTrend,
   })
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch('/api/dashboard/last-updated', { cache: 'no-store' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json) => {
+        if (json?.updatedAt) {
+          const d = new Date(json.updatedAt)
+          const dd = String(d.getDate()).padStart(2, '0')
+          const mm = String(d.getMonth() + 1).padStart(2, '0')
+          const yyyy = d.getFullYear()
+          setUpdatedAt(`${dd}/${mm}/${yyyy}`)
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     async function loadData() {
@@ -270,31 +286,38 @@ export default function CostSection() {
     <div className="max-w-6xl mx-auto px-6 py-10 space-y-6">
       {/* Header */}
       <div>
+        <div className="flex items-start justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-4">
           <div
-            className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 icon-gradient shadow-badge"
+            className="w-20 h-20 rounded-xl flex flex-col items-center justify-center gap-1 flex-shrink-0 icon-gradient shadow-badge"
             style={{ backgroundColor: TEAL }}
           >
-            <div className="w-12 h-12 rounded-full border-[1.5px] border-white/60 flex items-center justify-center">
-              <DollarSign className="w-6 h-6 text-white" strokeWidth={1.75} />
-            </div>
-            <span className="text-[10px] font-bold tracking-widest">
+            <DollarSign className="w-8 h-8 text-white" strokeWidth={1.75} />
+            <span className="text-[10px] font-black tracking-widest text-white">
               COST
             </span>
           </div>
 
           <div>
             <h1
-              className="text-4xl md:text-[42px] leading-none font-extrabold tracking-tight"
+              className="text-3xl md:text-4xl font-extrabold tracking-tight uppercase"
               style={{ color: TEAL }}
             >
               {d.title || 'Cost'}
             </h1>
-            <p className="text-base md:text-lg text-gray-900 font-bold mt-2">
+            <p className="text-gray-500 font-medium mt-1.5">
               {d.subtitle || 'People Cost & Investment'}
             </p>
           </div>
         </div>
+
+        {updatedAt && (
+          <p className="hidden sm:flex text-sm text-gray-400 font-medium items-center gap-1.5 mt-1.5 flex-shrink-0">
+            Updated as of {updatedAt}
+            <CalendarDays className="w-4 h-4" strokeWidth={2} />
+          </p>
+        )}
+      </div>
 
         <div
           className="w-full h-px mt-6"
@@ -303,10 +326,7 @@ export default function CostSection() {
       </div>
 
       {/* Workforce economics panel */}
-      <div
-        className="rounded-2xl p-6 space-y-5"
-        style={{ backgroundColor: PANEL }}
-      >
+      <div className="rounded-2xl p-6 space-y-5 bg-white border border-gray-100 shadow-soft">
         <div className="text-center">
           <h2 className="text-3xl font-black uppercase text-gray-900">
             Workforce Economics
@@ -446,10 +466,7 @@ export default function CostSection() {
       </div>
 
       {/* Leadership signal */}
-      <div
-        className="rounded-2xl px-6 py-5 flex flex-wrap items-center gap-5"
-        style={{ backgroundColor: PANEL }}
-      >
+      <div className="rounded-2xl px-6 py-5 flex flex-wrap items-center gap-5 bg-white border border-gray-100 shadow-soft">
         <div className="flex items-center gap-4 max-w-full md:max-w-[320px]">
           <div
             className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-badge"
@@ -478,9 +495,9 @@ export default function CostSection() {
             ? d.signalItems.map((s, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-xl"
+                    className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-xl icon-gradient shadow-soft"
                     style={{
-                      border: `2px solid ${TEAL}`,
+                      backgroundColor: TEAL_TINT,
                       color: TEAL
                     }}
                   >
@@ -494,8 +511,8 @@ export default function CostSection() {
             : DEFAULT_SIGNAL_ITEMS.map((s, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ border: `2px solid ${TEAL}` }}
+                    className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft"
+                    style={{ backgroundColor: TEAL_TINT }}
                   >
                     <s.Icon
                       className="w-6 h-6"

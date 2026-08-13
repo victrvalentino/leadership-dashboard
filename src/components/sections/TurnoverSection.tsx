@@ -8,6 +8,7 @@ import {
   RefreshCw,
   Clock,
   AlertTriangle,
+  CalendarDays,
   type LucideIcon
 } from 'lucide-react'
 import { turnoverData } from '@/data/dashboardData'
@@ -23,6 +24,7 @@ import {
 } from 'recharts'
 
 const ORANGE = '#F4611A'
+const ORANGE_TINT = '#FCE3D4'
 
 function BannerHeader({
   text,
@@ -71,9 +73,9 @@ function IconCircle({
   return (
     <div
       className={`${size} rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft`}
-      style={{ backgroundColor: ORANGE }}
+      style={{ backgroundColor: ORANGE_TINT }}
     >
-      <Icon className={`${iconSize} text-white`} strokeWidth={1.75} />
+      <Icon className={iconSize} style={{ color: ORANGE }} strokeWidth={1.75} />
     </div>
   )
 }
@@ -160,6 +162,22 @@ export default function TurnoverSection() {
     byManager: turnoverData.byManager,
     trend: turnoverData.trend
   })
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch('/api/dashboard/last-updated', { cache: 'no-store' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json) => {
+        if (json?.updatedAt) {
+          const d = new Date(json.updatedAt)
+          const dd = String(d.getDate()).padStart(2, '0')
+          const mm = String(d.getMonth() + 1).padStart(2, '0')
+          const yyyy = d.getFullYear()
+          setUpdatedAt(`${dd}/${mm}/${yyyy}`)
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     async function loadData() {
@@ -203,31 +221,38 @@ export default function TurnoverSection() {
     <div className="max-w-6xl mx-auto px-6 py-10 space-y-6">
       {/* Header */}
       <div>
+        <div className="flex items-start justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-4">
           <div
-            className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 icon-gradient shadow-badge"
+            className="w-20 h-20 rounded-xl flex flex-col items-center justify-center gap-1 flex-shrink-0 icon-gradient shadow-badge"
             style={{ backgroundColor: ORANGE }}
           >
-            <div className="w-12 h-12 rounded-full border-[1.5px] border-white/60 flex items-center justify-center">
-              <RefreshCw className="w-6 h-6 text-white" strokeWidth={1.75} />
-            </div>
-            <span className="text-[10px] font-bold tracking-widest">
+            <RefreshCw className="w-8 h-8 text-white" strokeWidth={1.75} />
+            <span className="text-[10px] font-black tracking-widest text-white">
               TURNOVER
             </span>
           </div>
 
           <div>
             <h1
-              className="text-4xl md:text-[42px] leading-none font-extrabold tracking-tight"
+              className="text-3xl md:text-4xl font-extrabold tracking-tight uppercase"
               style={{ color: ORANGE }}
             >
               {d.title || 'Turnover'}
             </h1>
-            <p className="text-base md:text-lg text-gray-900 font-bold mt-2">
+            <p className="text-gray-500 font-medium mt-1.5">
               {d.subtitle || 'Workforce Continuity Risk'}
             </p>
           </div>
         </div>
+
+        {updatedAt && (
+          <p className="hidden sm:flex text-sm text-gray-400 font-medium items-center gap-1.5 mt-1.5 flex-shrink-0">
+            Updated as of {updatedAt}
+            <CalendarDays className="w-4 h-4" strokeWidth={2} />
+          </p>
+        )}
+      </div>
 
         <div
           className="w-full h-px mt-6"
@@ -240,7 +265,7 @@ export default function TurnoverSection() {
         <div className="lg:col-span-2 space-y-4">
           <BannerHeader text="Key Metrics" withBars />
 
-          <div className="rounded-2xl p-4 space-y-4" style={{ backgroundColor: '#FDEDE3' }}>
+          <div className="rounded-2xl p-4 space-y-4 bg-white border border-gray-100 shadow-soft">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <MetricBox
                 label="Turnover Rate"
@@ -414,10 +439,7 @@ export default function TurnoverSection() {
         <div className="space-y-4">
           <BannerHeader text="Leadership Insight" />
 
-          <div
-            className="rounded-2xl p-5"
-            style={{ backgroundColor: '#FDEDE3' }}
-          >
+          <div className="rounded-2xl p-5 bg-white border border-gray-100 shadow-soft">
             {insights.map((text, i) => (
               <div
                 key={i}

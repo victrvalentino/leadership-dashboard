@@ -262,22 +262,22 @@ export default function VersionHistorySection() {
     <div className="max-w-6xl mx-auto px-6 py-10 space-y-6">
       {/* Header */}
       <div>
-        <div className="flex items-center gap-5">
-          <div className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 icon-gradient shadow-badge" style={{ backgroundColor: '#475569' }}>
-            <div className="w-12 h-12 rounded-full border-[1.5px] border-white/60 flex items-center justify-center">
-              <History className="w-6 h-6 text-white" strokeWidth={1.75} />
-            </div>
-            <span className="text-[9px] font-extrabold tracking-widest">AUDIT TRAIL</span>
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div className="flex items-center gap-4">
+          <div className="w-20 h-20 rounded-xl flex flex-col items-center justify-center gap-1 flex-shrink-0 icon-gradient shadow-badge" style={{ backgroundColor: '#475569' }}>
+            <History className="w-8 h-8 text-white" strokeWidth={1.75} />
+            <span className="text-[10px] font-black tracking-widest text-white">AUDIT TRAIL</span>
           </div>
 
           <div>
-            <h1 className="text-4xl md:text-[42px] leading-none font-extrabold tracking-tight text-slate-700">
+            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-700 uppercase">
               Version History
             </h1>
-            <p className="text-base md:text-lg text-gray-900 font-bold mt-2">
+            <p className="text-gray-500 font-medium mt-1.5">
               Every section&apos;s status, for any day you choose
             </p>
           </div>
+        </div>
         </div>
         <div className="w-full h-px mt-6 bg-slate-300" />
       </div>

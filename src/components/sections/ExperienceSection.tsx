@@ -12,8 +12,6 @@ import {
 } from 'lucide-react'
 import { experienceData } from '@/data/dashboardData'
 import {
-  KeyMetricsHeader,
-  LeadershipSignal,
   DonutChart,
   CircularProgress,
   StatusBadge,
@@ -101,7 +99,7 @@ function normalizeTenureMix(
 function CardIcon({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex justify-center mb-2">
-      <div className="w-14 h-14 rounded-full border-2 border-blue-200 bg-white flex items-center justify-center text-blue-600 icon-gradient shadow-soft">
+      <div className="w-16 h-16 rounded-full flex items-center justify-center text-blue-600 icon-gradient shadow-soft" style={{ backgroundColor: '#E8EFFE' }}>
         {children}
       </div>
     </div>
@@ -120,7 +118,7 @@ function CardFooter({
   return (
     <div className="border-t border-gray-100 mt-auto pt-3 text-center">
       <p className="text-xs text-gray-500">{label}</p>
-      <p className="text-3xl font-black text-blue-700">
+      <p className="text-4xl font-black text-blue-700">
         {value}
         {unit && (
           <span className="text-sm ml-1 font-semibold">{unit}</span>
@@ -158,6 +156,22 @@ export default function ExperienceSection() {
   const [data, setData] = useState(
     experienceData as unknown as ExperienceContent
   )
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch('/api/dashboard/last-updated', { cache: 'no-store' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json) => {
+        if (json?.updatedAt) {
+          const d = new Date(json.updatedAt)
+          const dd = String(d.getDate()).padStart(2, '0')
+          const mm = String(d.getMonth() + 1).padStart(2, '0')
+          const yyyy = d.getFullYear()
+          setUpdatedAt(`${dd}/${mm}/${yyyy}`)
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     async function loadData() {
@@ -218,54 +232,58 @@ export default function ExperienceSection() {
     'bg-white rounded-3xl p-4 shadow-soft border border-gray-100 min-h-[320px] flex flex-col'
 
   const titleClass =
-    'text-xs font-black text-blue-600 uppercase tracking-wide mb-3 text-center leading-tight'
+    'text-xs font-black text-gray-800 uppercase tracking-wide mb-3 text-center leading-tight'
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 space-y-6">
       {/* Header */}
       <div>
-        <div className="flex items-center gap-4">
-          <div
-            className="w-24 h-24 rounded-[26px] flex flex-col items-center justify-center gap-1.5 text-white flex-shrink-0 icon-gradient shadow-badge"
-            style={{ backgroundColor: '#1D4ED8' }}
-          >
-            <div className="w-12 h-12 rounded-full border-[1.5px] border-white/60 flex items-center justify-center">
-              <Users className="w-6 h-6 text-white" strokeWidth={1.75} />
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+          <div className="flex items-center gap-4">
+            <div
+              className="w-20 h-20 rounded-xl flex flex-col items-center justify-center gap-1 flex-shrink-0 icon-gradient shadow-badge"
+              style={{ backgroundColor: '#1D4ED8' }}
+            >
+              <Users className="w-8 h-8 text-white" strokeWidth={1.75} />
+              <span className="text-[10px] font-black tracking-widest text-white">
+                EXPERIENCE
+              </span>
             </div>
-            <span className="text-[9px] font-bold tracking-widest">
-              EXPERIENCE
-            </span>
+
+            <div>
+              <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight uppercase">
+                {d.title || 'Experience'}
+              </h1>
+              <p className="text-gray-500 font-medium mt-1.5">
+                {d.subtitle || 'Experience and engagement overview'}
+              </p>
+            </div>
           </div>
 
-          <div>
-            <h1
-              className="text-4xl md:text-[42px] leading-none font-extrabold tracking-tight"
-              style={{ color: '#1D4ED8' }}
-            >
-              {d.title || 'Experience'}
-            </h1>
-            <p className="text-base md:text-lg text-gray-900 font-bold mt-2">
-              {d.subtitle || 'What Is The Current Team Condition'}
+          {updatedAt && (
+            <p className="text-sm text-gray-400 font-medium flex items-center gap-1.5 mt-1.5 flex-shrink-0">
+              Updated as of {updatedAt}
+              <CalendarDays className="w-4 h-4" strokeWidth={2} />
             </p>
-          </div>
+          )}
         </div>
 
-        <div
-          className="w-full h-px mt-6"
-          style={{ backgroundColor: '#1D4ED8' }}
-        />
+        <div className="w-full h-px mt-6 bg-gray-200" />
       </div>
 
-      <div className="bg-blue-50 rounded-3xl p-5 border border-blue-100">
-        <KeyMetricsHeader color="#2563EB" />
+      <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-soft">
+        <h2 className="text-sm font-extrabold uppercase tracking-widest text-gray-800 mb-5">
+          Key Metrics
+        </h2>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
           <div className={cardClass}>
             <CardIcon>
-              <Users size={26} strokeWidth={1.75} />
+              <Users size={28} strokeWidth={1.75} />
             </CardIcon>
 
             <h3 className={titleClass}>Gender Mix</h3>
+            <div className="w-3/4 h-px bg-gray-200 mx-auto mb-3" />
 
             <div className="flex items-center justify-center gap-2">
               <DonutChart
@@ -290,10 +308,11 @@ export default function ExperienceSection() {
 
           <div className={cardClass}>
             <CardIcon>
-              <ClipboardList size={26} strokeWidth={1.75} />
+              <ClipboardList size={28} strokeWidth={1.75} />
             </CardIcon>
 
             <h3 className={titleClass}>Employment Status</h3>
+            <div className="w-3/4 h-px bg-gray-200 mx-auto mb-3" />
 
             <div className="flex items-center justify-center gap-2">
               <DonutChart
@@ -320,10 +339,11 @@ export default function ExperienceSection() {
 
           <div className={cardClass}>
             <CardIcon>
-              <BarChart3 size={26} strokeWidth={1.75} />
+              <BarChart3 size={28} strokeWidth={1.75} />
             </CardIcon>
 
             <h3 className={titleClass}>Level Mix</h3>
+            <div className="w-3/4 h-px bg-gray-200 mx-auto mb-3" />
 
             <div className="space-y-2">
               {levelMix.map(item => (
@@ -345,10 +365,11 @@ export default function ExperienceSection() {
 
           <div className={cardClass}>
             <CardIcon>
-              <CalendarDays size={26} strokeWidth={1.75} />
+              <CalendarDays size={28} strokeWidth={1.75} />
             </CardIcon>
 
             <h3 className={titleClass}>Tenure Mix</h3>
+            <div className="w-3/4 h-px bg-gray-200 mx-auto mb-3" />
 
             <div className="space-y-2">
               {tenureMix.map(item => (
@@ -371,10 +392,11 @@ export default function ExperienceSection() {
 
           <div className={cardClass}>
             <CardIcon>
-              <CalendarCheck size={26} strokeWidth={1.75} />
+              <CalendarCheck size={28} strokeWidth={1.75} />
             </CardIcon>
 
             <h3 className={titleClass}>Attendance</h3>
+            <div className="w-3/4 h-px bg-gray-200 mx-auto mb-3" />
 
             <div className="flex justify-center mt-2">
               <CircularProgress
@@ -397,10 +419,11 @@ export default function ExperienceSection() {
 
           <div className={cardClass}>
             <CardIcon>
-              <UserX size={26} strokeWidth={1.75} />
+              <UserX size={28} strokeWidth={1.75} />
             </CardIcon>
 
             <h3 className={titleClass}>Absenteeism</h3>
+            <div className="w-3/4 h-px bg-gray-200 mx-auto mb-3" />
 
             <div className="flex justify-center mt-2">
               <CircularProgress
@@ -423,12 +446,24 @@ export default function ExperienceSection() {
         </div>
       </div>
 
-      <LeadershipSignal
-        text={d.leadershipSignal}
-        color="#1D4ED8"
-        bgColor="#EEF4FF"
-        icon={<Megaphone className="w-6 h-6 text-white" strokeWidth={1.75} />}
-      />
+      <div className="rounded-2xl px-6 py-5 flex items-center gap-4 bg-white border border-gray-100 shadow-soft">
+        <div
+          className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft"
+          style={{ backgroundColor: '#1D4ED8' }}
+        >
+          <Megaphone className="w-6 h-6 text-white" strokeWidth={1.75} />
+        </div>
+
+        <div className="flex-1">
+          <p
+            className="text-sm font-extrabold uppercase tracking-wide"
+            style={{ color: '#1D4ED8' }}
+          >
+            Leadership Signal
+          </p>
+          <p className="text-sm text-gray-600 mt-0.5">{d.leadershipSignal}</p>
+        </div>
+      </div>
     </div>
   )
 }

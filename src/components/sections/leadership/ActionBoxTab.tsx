@@ -13,7 +13,7 @@ import {
 import { actionBoxData } from '@/data/dashboardData'
 
 const ORANGE = '#F58220'
-const PALE = '#FDEEDD'
+const PALE = '#FFFCF9'
 
 type ActionItem = {
   number: number | string

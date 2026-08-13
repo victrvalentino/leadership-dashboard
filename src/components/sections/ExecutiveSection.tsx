@@ -11,6 +11,8 @@ import {
   Lightbulb,
   TrendingUp,
   AlertTriangle,
+  CalendarDays,
+  ChevronRight,
   type LucideIcon
 } from 'lucide-react'
 import { executiveData } from '@/data/dashboardData'
@@ -110,15 +112,15 @@ function KpiCard({
         </p>
       </div>
 
-      <div className="w-3/4 h-px bg-gray-400/60" />
+      <div className="w-3/4 h-px" style={{ backgroundColor: `${iconColor}50` }} />
 
       <div className="h-[48px] flex items-center justify-center">
-        <p className="text-3xl font-black text-gray-600">{value}</p>
+        <p className="text-4xl font-black text-gray-600">{value}</p>
       </div>
 
-      <div className="w-1/3 h-px bg-gray-400/60" />
+      <div className="w-1/3 h-px bg-gray-300 mt-1" />
 
-      <div className="h-[34px] flex items-center justify-center">
+      <div className="h-[34px] mt-3 flex items-center justify-center">
         {footer}
       </div>
     </div>
@@ -130,6 +132,22 @@ export default function ExecutiveSection() {
     executiveData as ExecutiveContent
   )
   const [loading, setLoading] = useState(true)
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch('/api/dashboard/last-updated', { cache: 'no-store' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json) => {
+        if (json?.updatedAt) {
+          const d = new Date(json.updatedAt)
+          const dd = String(d.getDate()).padStart(2, '0')
+          const mm = String(d.getMonth() + 1).padStart(2, '0')
+          const yyyy = d.getFullYear()
+          setUpdatedAt(`${dd}/${mm}/${yyyy}`)
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     async function loadExecutiveData() {
@@ -178,16 +196,34 @@ export default function ExecutiveSection() {
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 space-y-6">
-      <h1 className="text-3xl md:text-4xl font-black text-center uppercase text-gray-900 tracking-tight">
-        {d.title || 'Executive Snapshot'}
-      </h1>
+      {/* Title row */}
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight uppercase">
+            {d.title || 'Executive Snapshot'}
+          </h1>
+          <p className="text-gray-500 font-medium mt-1.5">
+            {d.subtitle || 'People Experience Directorate'}
+          </p>
+        </div>
+
+        {updatedAt && (
+          <p className="text-sm text-gray-400 font-medium flex items-center gap-1.5 mt-1.5 flex-shrink-0">
+            Updated as of {updatedAt}
+            <CalendarDays className="w-4 h-4" strokeWidth={2} />
+          </p>
+        )}
+      </div>
 
       {/* Directorate banner */}
       <div
         className="rounded-2xl px-6 py-5 flex items-center gap-5 shadow-md"
-        style={{ background: '#1B1464' }}
+        style={{ background: 'linear-gradient(120deg, #0F0C40 0%, #1B1464 100%)' }}
       >
-        <div className="w-14 h-14 rounded-full bg-white/15 border border-white/30 flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft">
+        <div
+          className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 icon-gradient shadow-soft"
+          style={{ backgroundColor: '#6D4FD1' }}
+        >
           <Building2 className="w-7 h-7 text-white" strokeWidth={1.5} />
         </div>
 
@@ -206,7 +242,7 @@ export default function ExecutiveSection() {
         <KpiCard
           Icon={Users}
           iconColor="#2E7CE4"
-          bg="#E2F3F0"
+          bg="#FFFFFF"
           label="Total Headcount"
           value={d.totalHeadcount}
           footer={<Users className="w-6 h-6 text-blue-600" strokeWidth={2} />}
@@ -273,7 +309,7 @@ export default function ExecutiveSection() {
         <div className="flex-1 text-left">
           <h3
             className="text-lg md:text-xl font-black uppercase tracking-wide"
-            style={{ color: '#3B2FA3' }}
+            style={{ color: '#12275A' }}
           >
             Leadership Insight
           </h3>
@@ -288,6 +324,7 @@ export default function ExecutiveSection() {
         >
           <TrendingUp className="w-9 h-9" strokeWidth={2} />
           <AlertTriangle className="w-8 h-8" strokeWidth={2} />
+          <ChevronRight className="w-5 h-5 text-gray-400" strokeWidth={2} />
         </div>
       </div>
     </div>

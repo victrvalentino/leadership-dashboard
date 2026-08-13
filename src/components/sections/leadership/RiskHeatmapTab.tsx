@@ -126,6 +126,14 @@ export default function RiskHeatmapTab() {
         </div>
       </div>
 
+      {/* Key Metrics tag */}
+      <span
+        className="inline-block text-white text-xs font-black px-4 py-1.5 rounded uppercase tracking-wider"
+        style={{ backgroundColor: ORANGE }}
+      >
+        Key Metrics
+      </span>
+
       {/* Table */}
       <div className="rounded-2xl overflow-hidden shadow-soft bg-white border border-gray-100">
         <div
