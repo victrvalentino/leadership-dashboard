@@ -3,8 +3,6 @@
 import { useEffect, useState } from 'react'
 import { X, CalendarDays, Sparkles } from 'lucide-react'
 
-const STORAGE_KEY = 'ld-welcome-shown-date'
-
 function ordinal(n: number) {
   const suffixes = ['th', 'st', 'nd', 'rd']
   const v = n % 100
@@ -22,21 +20,13 @@ export default function WelcomeModal() {
   const [mounted, setMounted] = useState(false)
   const [today] = useState(() => new Date())
 
-  // Show once per calendar day — reappears each new day, not on every
-  // navigation back to Home within the same day.
+  // Shows every time this component mounts — no "once per day" memory.
+  // A page refresh and a fresh mount are the same thing to React, so this
+  // is what "always show on refresh" mechanically requires.
   useEffect(() => {
-    try {
-      const todayKey = today.toISOString().slice(0, 10)
-      const lastShown = localStorage.getItem(STORAGE_KEY)
-      if (lastShown !== todayKey) {
-        setVisible(true)
-        requestAnimationFrame(() => setMounted(true))
-      }
-    } catch {
-      // localStorage unavailable (e.g. private browsing) — just skip
-      // the "once per day" memory and don't show, to be safe.
-    }
-  }, [today])
+    setVisible(true)
+    requestAnimationFrame(() => setMounted(true))
+  }, [])
 
   useEffect(() => {
     if (!visible) return
@@ -52,11 +42,6 @@ export default function WelcomeModal() {
 
   const dismiss = () => {
     setMounted(false)
-    try {
-      localStorage.setItem(STORAGE_KEY, today.toISOString().slice(0, 10))
-    } catch {
-      // ignore
-    }
     setTimeout(() => setVisible(false), 220)
   }
 

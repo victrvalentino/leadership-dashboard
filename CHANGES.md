@@ -1,5 +1,29 @@
 # Redesign Changelog
 
+## Update 28 — welcome popup now shows every time, not once per day
+
+Removed the `localStorage`-based "once per calendar day" gate entirely from
+`WelcomeModal.tsx`. It now shows unconditionally every time the component mounts.
+
+**Worth knowing — this is a real behavioral trade-off, not just a bug fix:** a page
+refresh and a fresh React mount are mechanically the same event, so there's no way to
+distinguish "show on refresh" from "show on every fresh render" — any persistence
+mechanism that survives a refresh (which is what the previous once-per-day version
+did, on purpose) would by definition also block it from reappearing on refresh. Removing
+the gate is the only way to satisfy "always show on refresh."
+
+The side effect: since `HomeSection` remounts fresh every time you navigate to Home
+from another section (`page.tsx` uses `key={page}` specifically so React treats each
+section switch as a full remount, not a re-render), the popup will now also appear
+every time you click "Home" in the sidebar during normal use — not just after login or
+a hard refresh. If that turns out to be more often than you want in practice, a more
+targeted version is possible (e.g., only suppressing it for in-app sidebar navigation
+while still showing on genuine page loads), but that needs a way to tell those two cases
+apart, which the current login flow doesn't provide on its own — flagging this now
+rather than silently building something narrower than what was asked for.
+
+---
+
 ## Update 27 — Executive Snapshot KPI cards: consistent spacing rhythm
 
 Found the actual cause of the "not neat" spacing: the gaps between elements
